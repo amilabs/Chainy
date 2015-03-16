@@ -1,0 +1,23 @@
+{
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/amilabs/devkit"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/ArtemKo7v/php-OP_RETURN"
+        }
+    ],
+    "require": {
+        "amilabs/devkit": "dev-develop",
+        "artemko7v/php-op_return": "dev-master",
+        "fguillot/json-rpc": "dev-master"
+    },
+    "autoload": {
+        "psr-0": {
+            "AmiLabs\\Chainy\\Frontend": "app/frontend/classes",
+            "AmiLabs\\Chainy\\Service": "app/service/classes"
+        }
+    }
+}
