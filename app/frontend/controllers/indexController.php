@@ -24,9 +24,7 @@ class indexController extends Controller {
         //$addr = TX::encodeBase58((int)$aPos['block'] * 10000 + $aPos['position']);
         //var_dump($addr);
         //die();
-        
-        
-        // var_dump($oRequest->getActionName());
+
         $code  = $oRequest->getCallParameters(0);
         $strPos = TX::decodeBase58($code);
         if($strPos < 3000000000){
@@ -54,9 +52,7 @@ class indexController extends Controller {
         );
 
         if($this->isChainyTransaction($txNo)){
-            $data = $this->decodeChainyTransaction($txNo);
-            var_dump($data);
-            die();
+            $aTransaction += $this->decodeChainyTransaction($txNo);
             $this->oView->set('aTX', $aTransaction);
         }else{
             $this->notFound();
@@ -83,7 +79,8 @@ class indexController extends Controller {
 
         // 1. Get OP_RETURN data
         $opData = TX::getDecodedOpReturn($data, true);
-        var_dump($opData);
+        $aTX['hash'] = substr($opData, 16);
+        $fileType = substr($opData, 15, 1);
         //die();
         /*
         $aTX = TX::decodeTransaction($result);
