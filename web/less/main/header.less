@@ -1,0 +1,137 @@
+/*
+ *  Document   : header.less
+ *  Author     : pixelcave
+ *
+ *  HEADER
+ *  Template's custom header related styles
+ *
+ */
+
+header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    padding: 25px 0;
+    color: #ffffff;
+    background: url('@{assets_folder}/template/ie8_opacity_dark_20.png');
+    background: rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    -webkit-transition: all ease-out 0.25s;
+    transition: all ease-out 0.25s;
+}
+
+header.header-scroll {
+    padding: 10px 0;
+    background: url('@{assets_folder}/template/ie8_opacity_dark_60.png');
+    background: rgba(0, 0, 0, 0.6);
+}
+
+header.header-scroll:hover {
+    background: rgba(0, 0, 0, 0.8);
+}
+
+/* Logo */
+a.site-logo {
+    display: block;
+    float: left;
+    color: #ffffff;
+    font-size: 24px;
+    height: 34px;
+    line-height: 34px;
+}
+
+a.site-logo:hover {
+    color: #ffffff;
+    text-decoration: none;
+}
+
+a.site-logo > i {
+    font-size: 14px;
+    opacity: 0.6;
+    -webkit-transition: all ease-in-out 0.25s;
+    transition: all ease-in-out 0.25s;
+}
+
+a.site-logo:hover > i {
+    -webkit-transform: rotate(360deg) scale(1.5);
+    transform: rotate(360deg) scale(1.5);
+}
+
+/* Menu */
+header nav {
+    float: right;
+}
+
+.site-nav {
+    position: fixed;
+    top: 0;
+    right: -260px;
+    bottom: 0;
+    overflow-y: auto;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    width: 250px;
+    background: #353535;
+    z-index: 1001;
+    -webkit-transition: all ease-in-out 0.3s;
+    transition: all ease-in-out 0.3s;
+}
+
+.site-nav.site-nav-visible {
+    right: 0;
+}
+
+.site-nav a {
+    display: block;
+    font-size: 13px;
+    color: #ffffff;
+    font-weight: 600;
+    padding: 0 10px;
+    margin: 2px 5px;
+    height: 34px;
+    line-height: 34px;
+    border-radius: 3px;
+    text-transform: uppercase;
+}
+
+.site-nav a:hover {
+    color: #333333;
+    background: #ffffff;
+    text-decoration: none;
+}
+
+.site-nav a.active,
+.site-nav a.active:hover,
+.site-nav li.active > a {
+    color: #ffffff;
+    background: url('@{assets_folder}/template/ie8_opacity_dark_40.png');
+    background: rgba(0, 0, 0, 0.4);
+}
+
+.site-nav i {
+    font-size: 14px;
+}
+
+.site-nav i.site-nav-arrow {
+    float: right;
+    line-height: 34px;
+    margin-left: 10px;
+}
+
+/* Submenu */
+.site-nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0 0 0 10px;
+}
+
+.site-nav ul a {
+    color: #dddddd;
+    text-transform: none;
+    height: auto;
+    line-height: normal;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
