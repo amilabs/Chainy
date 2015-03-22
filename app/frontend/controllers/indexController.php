@@ -34,15 +34,23 @@ class indexController extends Controller {
             $this->templateFile = 'index/add';
             return;
         }
-
-        $strPos = TX::decodeBase58($code);
-        if($strPos < 3000000000){
-            $this->notFound();
+        $byHash = false;
+        if($code == 'tx'){
+            $txNo = $oRequest->getCallParameters(1);
+            $aBlockData = TX::getPositionInBlockByTransaction($txNo);
+            $block = $aBlockData['block'];
+            $byHash = true;
+        }
+        if(!$byHash){
+            $strPos = TX::decodeBase58($code);
+            if($strPos < 3000000000){
+                $this->notFound();
+            }
+            $block = (int)substr($strPos, 0, 6);
+            $position = (int)substr($strPos, 6);
+            $txNo = TX::getTransactionByPositionInBlock($block, $position);
         }
         
-        $block = (int)substr($strPos, 0, 6);
-        $position = (int)substr($strPos, 6);
-        $txNo = TX::getTransactionByPositionInBlock($block, $position);
         $blockDate = TX::getBlockDate($block);
         $aTransaction = array(
             'tx'    => $txNo,
