@@ -3,6 +3,7 @@
 namespace AmiLabs\Chainy\Frontend;
 
 use \AmiLabs\DevKit\RPC;
+use \AmiLabs\DevKit\Registry;
 
 /**
  * Chainy transaction class.
@@ -165,7 +166,7 @@ class TX extends \AmiLabs\DevKit\TX {
         // Sha256
         $aTX['hash'] = substr($opReturnData, 16);
         // Filetype
-        $fileType = ord(substr($opData, 15, 1));
+        $fileType = ord(substr($opReturnData, 15, 1));
         switch($fileType){
             case self::FILE_TYPE_PDF:
                 $aTX['file_type'] = 'pdf';
@@ -183,7 +184,7 @@ class TX extends \AmiLabs\DevKit\TX {
                 $aTX['file_type'] = '';
         }
         // Url protocol
-        $isHttps = (int)substr(decbin(hexdec(substr($opData, 1, 1))), 0, 1);
+        $isHttps = (int)substr(decbin(hexdec(substr($opReturnData, 1, 1))), 0, 1);
 
         $aTrans = self::decodeTransaction($data);
         foreach($aTrans['vout'] as $aOut){
@@ -213,8 +214,10 @@ class TX extends \AmiLabs\DevKit\TX {
     public static function createHashLinkTransaction($url){
         set_time_limit(0);
         $tx = 'not created';
-        $destination = PATH_TMP . "/" . md5($url) . '.tmp';
-        if(!file_exists($destination)){
+        //$destination = PATH_TMP . "/" . md5($url) . '.tmp';
+        $destination = 'd:/ghost_in_the_shell.jpg';
+        if(false && !file_exists($destination)){
+            // Download
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_URL, $url);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -225,25 +228,69 @@ class TX extends \AmiLabs\DevKit\TX {
             curl_close ($ch);
             file_put_contents($destination, $data);
             chmod($destination, 0777);
-        }else{
-            $data = file_get_contents($destination);
         }
+        $hash = hash_file('sha256', $destination);
+        $fileSize = filesize($destination);
         $protocol = (strpos($url, 'https://') === 0) ? self::URL_TYPE_HTTPS : self::URL_TYPE_HTTP;
         $url = substr($url, $protocol ? 8 : 7);
 
         $fileType = self::getFileType($url);
-        
+
         $markerHex = pack('H*', self::MARKER);
         $sByte = str_pad(decbin(self::TX_TYPE_HASHLINK), 4, '0', STR_PAD_LEFT) . $protocol . self::PROTOCOL_VERSION;
-        var_dump($sByte);
-        $opretStr = chr(bindec($sByte)) . $markerHex . chr($fileType) . pack('H*', hash('sha256', $data));
-        
-        var_dump(reset(unpack('H*', $opretStr)));
-        
-        //var_dump(filesize($destination));
-        // unlink($destination);
+
+        $opretStr = chr(bindec($sByte)) . $markerHex . chr($fileType) . pack('H*', $hash);
+
+        $msigStr = $url . str_pad(pack('H*', dechex($fileSize)), 4, chr(0), STR_PAD_LEFT);
+
+        $aConfig = Registry::useStorage('CFG')->get('addresses');
+
+        // 1. create send
+        try{
+            $raw = $oRPC->execCounterpartyd(
+                'create_send',
+                array(
+                    "asset"                     => 'BTC',
+                    "source"                    => $aConfig['source']['address'],
+                    "destination"               => $aConfig['destination']['address'],
+                    "quantity"                  => 7800,
+                    "allow_unconfirmed_inputs"  => true,
+                    "encoding"                  => "multisig",
+                    "pubkey"                    => array($aConfig['source']['pubkey'])
+                ),
+                true
+            );
+        }catch(\Exception $e){ die('SEND: Exception'); }
+
+        if(!$raw){
+            die('SEND: empty response');
+        }
+
+        // 2. add op_return and multisig
+        $raw = self::addOpReturnOutput($raw, $opretStr);
+        $raw = self::addMultisigDataOutput($raw, $msigStr);
+
+        // 3. Sign
+        try{
+            $raw = $oRPC->execBitcoind('signrawtransaction', array($raw, array(), array($aConfig['source']['privkey'])), true);
+        }catch(\Exception $e){
+            die('SIGN: Exception');
+        }
+
+        // 4. broadcast
+        try{
+            $tx = $oRPC->execBitcoind('sendrawtransaction', array($raw), true);
+        }catch(\Exception $e){
+            die('BROADCAST: Exception');
+        }
+
+        // todo
+        echo($tx);
+        die();
+
+        unlink($destination);
+
         return $tx;
-    
     }
     /**
      * Returns file type by filename or url.
@@ -321,7 +368,12 @@ class TX extends \AmiLabs\DevKit\TX {
 
         return $data;
     }
-
+    /**
+     * Returns filesize with size dimension units.
+     *
+     * @param int $size
+     * @return string
+     */
     protected static function getFileSize($size){
         if($size < 1024){
             return $size . 'B';

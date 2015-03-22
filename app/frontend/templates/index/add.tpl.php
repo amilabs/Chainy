@@ -2,6 +2,7 @@
     
     function getFileInfo(evt){
         if (evt.target.readyState == FileReader.DONE){
+            var text = CryptoJS.enc.Latin1.parse(evt.target.result);
             var hash = CryptoJS.SHA256(evt.target.result).toString();
             console.log(hash);
         }
@@ -20,7 +21,7 @@
     }
 </script>
 <div style="background:white;margin-top:100px;padding:20px;">
-    <!--input type="file" id="sel-file"-->
+    <!-- input type="file" id="sel-file"><br><Br -->
     https://dropbox.com/s/oaib1ejwtpzh7aq/ghost_in_the_shell.jpg<br>
     https://dropbox.com/s/bisyhsix4ap488n/kill_bill.jpg<br>
     <form action="/add" method="POST">
@@ -30,6 +31,6 @@
 </div>
 
 <script>
-    //document.getElementById('sel-file').addEventListener('change', handleFileLoaded, false);
+    // document.getElementById('sel-file').addEventListener('change', handleFileLoaded, false);
 </script>
 

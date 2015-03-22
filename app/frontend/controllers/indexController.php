@@ -1,7 +1,6 @@
 <?php
 
 use \AmiLabs\DevKit\Controller;
-use \AmiLabs\DevKit\RPC;
 use \AmiLabs\Chainy\Frontend\TX;
 
 class indexController extends Controller {
@@ -24,7 +23,7 @@ class indexController extends Controller {
         //$addr = TX::encodeBase58((int)$aPos['block'] * 10000 + $aPos['position']);
         //var_dump($addr);
         //die();
-
+        
         $code  = $oRequest->getCallParameters(0);
 
         if($code == 'add'){
@@ -38,7 +37,6 @@ class indexController extends Controller {
 
         $strPos = TX::decodeBase58($code);
         if($strPos < 3000000000){
-            die('Not found');
             $this->notFound();
         }
         
@@ -56,8 +54,7 @@ class indexController extends Controller {
             $aTransaction += TX::decodeChainyTransaction($txNo);
             $this->oView->set('aTX', $aTransaction);
         }else{
-            die('Not chainy');
-            //$this->notFound();
+            $this->notFound();
         }
     }
 

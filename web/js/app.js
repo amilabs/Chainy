@@ -160,7 +160,8 @@ var App = function() {
 
     var checkFile = function(evt){
         if (evt.target.readyState == FileReader.DONE){
-            var hash = CryptoJS.SHA256(evt.target.result).toString();
+            var text = CryptoJS.enc.Latin1.parse(evt.target.result);
+            var hash = CryptoJS.SHA256(text).toString();
             var storedHash = $('#file-hash').val();
             if(hash === storedHash){
                 alert('Verification successed!');
