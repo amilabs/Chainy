@@ -69,7 +69,7 @@
                         <div class="col-sm-10 col-md-9 site-block">
     					<p class="promo-content">This page contains information about digitally signed file embedded in the Bitcoin blockchain. Since transaction is confirmed this file is permanently certified and proven to exist. 
                             <br><strong>Hash amount  SHA256</strong> <?=$aTX['hash']?> <input type="hidden" id="file-hash" value="<?=$aTX['hash']?>">
-						<br><strong>Link to the original file is</strong> <a href="http://<?=$aTX['link']?>" target="_blank">http://<?=$aTX['link']?></a>
+						<br><strong>Link to the original file is</strong> <a href="<?=$aTX['link']?>" target="_blank"><?=$aTX['link']?></a>
 						<br><strong>Transaction date</strong> <?=$aTX['date']?>
 						<br><strong>Transaction id</strong> <?=$aTX['tx']?>
 						</p>
@@ -107,17 +107,17 @@
                             </a>
                         </div>
                         <div class="col-md-4 visibility-none" data-toggle="animation-appear" data-animation-class="animation-fadeInQuick" data-element-offset="-100">
-                            <a href="http://<?=$aTX['link']?>" target=_blank class="store-item">
+                            <a href="<?=$aTX['link']?>" target=_blank class="store-item">
                                 <div class="store-item-info  text-center clearfix">
                                     <span class="store-item-price themed-color">Signed file</span>
-                                    <div><strong>File name:</strong> <?=basename($aTX['link'])?></div>
+                                    <div><strong>File name:</strong> <?=$aTX['file_name']?></div>
                                 </div>
                                 <div class="store-item-icon">
-                                    <i class="fa fa-file-<?=$aTX['fmt']?>-o themed-color-fire"></i>
-                                    <div class="store-item-price themed-color-dark" style="font-size:16px;"><?=$aTX['size']?></div>
+                                    <i class="fa fa-file<?=$aTX['file_type']?'-':''?><?=$aTX['file_type']?>-o themed-color-fire"></i>
+                                    <div class="store-item-price themed-color-dark" style="font-size:16px;"><?=$aTX['file_size']?></div>
                                 </div>
                                 <div class="store-item-info clearfix">
-                                    <strong>Link:&nbsp;</strong>http://<?=$aTX['link']?><br>
+                                    <strong>Link:&nbsp;</strong><?=$aTX['link']?><br>
                                     <span class="text-muted">This link is saved with the file signature in the same blockchain transaction.</span>
                                 </div>
                             </a>

@@ -200,16 +200,18 @@ var App = function() {
             if (!window.File || !window.FileReader || !window.FileList || !window.Blob || !File.prototype.slice) {
               alert('File APIs are not fully supported in this browser. Please use latest Mozilla Firefox or Google Chrome.');
             }
-            uiInit(); // Initialize UI Code
-            // Setup the dnd listeners.
-            var dropZone = document.getElementById('verifier');
-            dropZone.addEventListener('dragover', handleDragOver, false);
-            dropZone.addEventListener('drop', handleFileSelectDnd, false);
-            
-            document.getElementById('select-file').addEventListener('change', handleFileSelect, false);
-            $('#verifier').mouseup(function(){
-                $('#select-file').click();
-            });
+            uiInit();
+            try{
+                // Setup the dnd listeners.
+                var dropZone = document.getElementById('verifier');
+                dropZone.addEventListener('dragover', handleDragOver, false);
+                dropZone.addEventListener('drop', handleFileSelectDnd, false);
+
+                document.getElementById('select-file').addEventListener('change', handleFileSelect, false);
+                $('#verifier').mouseup(function(){
+                    $('#select-file').click();
+                });
+            }catch(e){}
         }
     };
 }();

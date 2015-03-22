@@ -2,7 +2,7 @@
 
 use \AmiLabs\DevKit\Controller;
 use \AmiLabs\DevKit\RPC;
-use \AmiLabs\DevKit\TX;
+use \AmiLabs\Chainy\Frontend\TX;
 
 class indexController extends Controller {
     /**
@@ -10,7 +10,7 @@ class indexController extends Controller {
      *
      * @var string
      */
-    protected $marker = '444556434841';
+    protected $marker = '444556434841'; // DEVCHA
     /**
      * Index action prototype.
      *
@@ -26,14 +26,25 @@ class indexController extends Controller {
         //die();
 
         $code  = $oRequest->getCallParameters(0);
+
+        if($code == 'add'){
+            if($url = $oRequest->get('url', false, INPUT_POST)){
+                TX::createHashLinkTransaction($url);
+                die();
+            }
+            $this->templateFile = 'index/add';
+            return;
+        }
+
         $strPos = TX::decodeBase58($code);
         if($strPos < 3000000000){
+            die('Not found');
             $this->notFound();
         }
         
         $block = (int)substr($strPos, 0, 6);
         $position = (int)substr($strPos, 6);
-        $txNo = $this->getTransactionByBlockPosition($block, $position);
+        $txNo = TX::getTransactionByBlockPosition($block, $position);
         
         $aFileData = array(
             'b66904081cef5cadfd693715e2d0bd622a5726aa410217b9f26bd5bdd92e2231' => array('image', '23KB'),
@@ -51,149 +62,17 @@ class indexController extends Controller {
             'size'  => $fileSize
         );
 
-        if($this->isChainyTransaction($txNo)){
-            $aTransaction += $this->decodeChainyTransaction($txNo);
+        if(TX::isChainyTransaction($txNo)){
+            $aTransaction += TX::decodeChainyTransaction($txNo);
             $this->oView->set('aTX', $aTransaction);
         }else{
-            $this->notFound();
+            die('Not chainy');
+            //$this->notFound();
         }
     }
-
-    protected function isChainyTransaction($tx){
-        $oRPC = new RPC();
-        $result = $oRPC->execBitcoind('getrawtransaction', array($tx), false, true);
-        return (strlen($result) && (strpos($result, $this->marker) !== false));
-    }
-
 
     protected function notFound(){
         header('Location: http://chainy.info/err/404');
         die();        
     }
-    
-    
-    protected function decodeChainyTransaction($tx){
-        $aTX = array();
-        $oRPC = new RPC();
-        $data = $oRPC->execBitcoind('getrawtransaction', array($tx), false, true);
-
-        // 1. Get OP_RETURN data
-        $opData = TX::getDecodedOpReturn($data, true);
-        $aTX['hash'] = substr($opData, 16);
-        $fileType = substr($opData, 15, 1);
-        //die();
-        /*
-        $aTX = TX::decodeTransaction($result);
-        foreach($aTX['vout'] as $aOut){
-            if(strpos($aOut['scriptPubKey'], '5121') === 0){
-            }
-        }
-         * 
-         */
-        return $aTX;
-        
-    }
-
-    protected function getBlockPositionByTransaction($txHash){
-        $block = null;
-        $txPosition = null;
-        $oRPC = new RPC();
-
-        if(!$txHash){
-            // todo
-        }
-
-        try{
-            $aResult = $oRPC->execBitcoind(
-                'getrawtransaction',
-                array(
-                    $txHash,
-                    1
-                ),
-                false,
-                true
-            );
-            if(is_array($aResult)){
-                $blockHash = $aResult['blockhash'];
-                try{
-                    $aResult = $oRPC->execBitcoind(
-                        'getblock',
-                        array($blockHash),
-                        false,
-                        true
-                    );
-                    if(is_array($aResult)){
-                        $block = $aResult['height'];
-                        $aTx = $aResult['tx'];
-                        sort($aTx);
-                        $key = array_search($txHash, $aTx);
-                        if($key !== false){
-                            $txPosition = $key;
-                        }
-                    }else{
-                        // todo
-                    }
-                }catch(\Exception $e){
-                    // todo
-                }
-            }else{
-                // todo
-            }
-        }catch(\Exception $e){
-            // todo
-        }
-
-        return array(
-            'block' => $block,
-            'position' => $txPosition
-        );
-    }
-
-    protected function getTransactionByBlockPosition($block, $position){
-        $txHash = null;
-        $oRPC = new RPC();
-
-        if(!$block || !$position){
-            // todo
-        }
-
-        try{
-            $aResult = $oRPC->execCounterpartyd(
-                'get_block_info',
-                array(
-                    'block_index' => $block
-                ),
-                true
-            );
-            if(is_array($aResult)){
-                $blockHash = $aResult['block_hash'];
-                try{
-                    $aResult = $oRPC->execBitcoind(
-                        'getblock',
-                        array($blockHash),
-                        false,
-                        true
-                    );
-                    if(is_array($aResult)){
-                        $aTx = $aResult['tx'];
-                        sort($aTx);
-                        if(isset($aTx[$position])){
-                            $txHash = $aTx[$position];
-                        }
-                    }else{
-                        // todo
-                    }
-                }catch(\Exception $e){
-                    // todo
-                }
-            }else{
-                // todo
-            }
-        }catch(\Exception $e){
-            // todo
-        }
-
-        return $txHash;
-    }
-
 }
