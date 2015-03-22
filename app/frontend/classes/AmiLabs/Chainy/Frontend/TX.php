@@ -43,12 +43,29 @@ class TX extends \AmiLabs\DevKit\TX {
      */
     protected static $alphabet = "123456789abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ";
     /**
+     * Returns the date block was generated.
+     *
+     * @param int $block
+     * @return boolean|string
+     */
+    public static function getBlockDate($block){
+        if(!$block){
+            return false;
+        }
+        $txHash = null;
+        $oRPC = new RPC();
+        try{
+            $aResult = $oRPC->execCounterpartyd('get_block_info', array('block_index' => $block), false, true);
+        }catch(\Exception $e){ /* todo */ }
+        return date('Y-m-d H:i:s', (int)$aResult['time']);
+    }
+    /**
      * Returns block and position inside a block by hash of the transaction.
      *
      * @param string $txHash
      * @return boolean|array
      */
-    public static function getBlockPositionByTransaction($txHash){
+    public static function getPositionInBlockByTransaction($txHash){
         if(!$txHash){
             return false;
         }
@@ -80,7 +97,7 @@ class TX extends \AmiLabs\DevKit\TX {
      * @param int $position
      * @return boolean|string
      */
-    public static function getTransactionByBlockPosition($block, $position){
+    public static function getTransactionByPositionInBlock($block, $position){
         if(!$block || !$position){
             return false;
         }
@@ -128,7 +145,7 @@ class TX extends \AmiLabs\DevKit\TX {
         switch($txType){
             case self::TX_TYPE_HASHLINK:
             default:
-                $aTX += self::decodeHashLinkTransaction($opReturnData, $data);
+                $aTX += self::decodeHashLinkTransaction($opData, $data);
         }
         return $aTX;
     }
@@ -146,7 +163,7 @@ class TX extends \AmiLabs\DevKit\TX {
             'link'      => ''
         );
         // Sha256
-        $aTX['hash'] = substr($opData, 16);
+        $aTX['hash'] = substr($opReturnData, 16);
         // Filetype
         $fileType = ord(substr($opData, 15, 1));
         switch($fileType){
@@ -167,9 +184,25 @@ class TX extends \AmiLabs\DevKit\TX {
         }
         // Url protocol
         $isHttps = (int)substr(decbin(hexdec(substr($opData, 1, 1))), 0, 1);
-        $aTX['link'] = 'http' . ($isHttps ? 's' : '') . '://' . $aTX['link'];
 
-        //$msigData = self::
+        $aTrans = self::decodeTransaction($data);
+        foreach($aTrans['vout'] as $aOut){
+            if(strpos($aOut['scriptPubKey'], '5121') === 0){
+                $data = self::decodeMultisigOutput($aOut['scriptPubKey']);
+            }
+        }
+        if(substr($data, strlen($data) - 4, 1) === '.'){
+            $filename = $data;
+            $size = 22000;
+        }else{
+            $filename = substr($data, 0, strlen($data) - 4);
+            $size = hexdec(bin2hex(substr($data, strlen($data) - 4, 4)));
+        }
+        $aTX['link'] = $filename;
+        $aTX['file_name'] = basename($filename);
+        $aTX['link'] = 'http' . ($isHttps ? 's' : '') . '://' . $aTX['link'];
+        $aTX['file_size'] = self::getFileSize($size);
+
         return $aTX;
     }
     /**
@@ -266,5 +299,39 @@ class TX extends \AmiLabs\DevKit\TX {
             $int_val += $j * strpos(self::$alphabet, $base58{$i});
         }
         return $int_val;
+    }
+    /**
+     * Decodes multisig output.
+     *
+     * @param string $outHex
+     * @param bool $withFileSize
+     * @return string
+     */
+    public static function decodeMultisigOutput($outHex){
+        $data = '';
+        $dataLength  = hexdec(substr($outHex, 4, 2));
+        $outHex = substr($outHex, 6);
+        $hex1 = substr($outHex, 0, 64);
+        $hex2 = substr($outHex, 66, 66);
+        $hex3 = substr($outHex, 134, 66);
+
+        $data = ltrim($hex1 . $hex2 . $hex3, '0');
+        $data = substr($data, 0, $dataLength);
+        $data = pack('H*', $data);
+
+        return $data;
+    }
+
+    protected static function getFileSize($size){
+        if($size < 1024){
+            return $size . 'B';
+        }
+        if($size < 1024 *  1024){
+            return round($size / 1024) . 'KB';
+        }
+        if($size < 1024 *  1024 * 1024){
+            return round($size / (1024 * 1024)) . 'MB';
+        }
+        return round($size / (1024 * 1024 * 1024)) . 'GB';
     }
 }
