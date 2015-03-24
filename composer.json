@@ -11,13 +11,15 @@
     ],
     "require": {
         "amilabs/devkit": "dev-develop",
-        "artemko7v/php-op_return": "dev-master",
-        "fguillot/json-rpc": "dev-master"
+        "amilabs/CryptoKit": "dev-develop",
+        "artemko7v/php-op_return": "dev-master"
     },
     "autoload": {
         "psr-0": {
             "AmiLabs\\Chainy\\Frontend": "app/frontend/classes",
             "AmiLabs\\Chainy\\Service": "app/service/classes"
         }
-    }
+    },
+	"minimum-stability": "dev",
+	"prefer-stable" : true
 }

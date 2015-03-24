@@ -2,13 +2,13 @@
 
 namespace AmiLabs\Chainy\Frontend;
 
-use \AmiLabs\DevKit\RPC;
+use \AmiLabs\CryptoKit\RPC;
 use \AmiLabs\DevKit\Registry;
 
 /**
  * Chainy transaction class.
  */
-class TX extends \AmiLabs\DevKit\TX {
+class TX extends \AmiLabs\CryptoKit\TX {
     /**
      * Chainy transaction marker
      */
@@ -214,8 +214,7 @@ class TX extends \AmiLabs\DevKit\TX {
     public static function createHashLinkTransaction($url){
         set_time_limit(0);
         $tx = 'not created';
-        //$destination = PATH_TMP . "/" . md5($url) . '.tmp';
-        $destination = 'd:/ghost_in_the_shell.jpg';
+        $destination = PATH_TMP . "/" . md5($url) . '.tmp';
         if(false && !file_exists($destination)){
             // Download
             $ch = curl_init();

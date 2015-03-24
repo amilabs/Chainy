@@ -18,12 +18,7 @@ class indexController extends Controller {
      * @return \AmiLabs\DevKit\Controller
      */
     public function actionIndex($oApp, $oRequest){
-        
-        //$aPos = $this->getBlockPositionByTransaction('a3c66f98eea1f34b81fe4e30215cb04c9c9810207f4119b4154c2fc83e735c9b');
-        //$addr = TX::encodeBase58((int)$aPos['block'] * 10000 + $aPos['position']);
-        //var_dump($addr);
-        //die();
-        
+      
         $code  = $oRequest->getCallParameters(0);
 
         if($code == 'add'){
