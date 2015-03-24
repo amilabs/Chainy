@@ -56,7 +56,7 @@ class TX extends \AmiLabs\CryptoKit\TX {
         $oRPC = new RPC();
         try{
             $aResult = $oRPC->execCounterpartyd('get_block_info', array('block_index' => $block), false, true);
-        }catch(\Exception $e){ echo $e->getMessage(); die(); /* todo */ }
+        }catch(\Exception $e){ /* todo */ }
         return date('Y-m-d H:i:s', (int)$aResult['block_time']);
     }
     /**

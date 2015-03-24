@@ -29,7 +29,7 @@
         <a href="javascript:;" id="to-bottom"><i class="fa fa-angle-down"></i></a>
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
         <script>!window.jQuery && document.write(decodeURI('%3Cscript src="js/jquery/jquery-1.11.1.min.js"%3E%3C/script%3E'));</script>
-        <script src="js/bootstrao/bootstrap.min.js"></script>
+        <script src="js/bootstrap/bootstrap.min.js"></script>
         <script src="js/plugins.js"></script>
         <script src="js/app.js"></script>
         <script src="<?=\AmiLabs\DevKit\Registry::useStorage('ENV')->get('subfolder');?>/js/amilabs.devkit.engine.js"></script>
