@@ -232,6 +232,7 @@ class TX extends \AmiLabs\CryptoKit\TX {
         }
         $hash = hash_file('sha256', $destination);
         $fileSize = filesize($destination);
+
         $protocol = (strpos($url, 'https://') === 0) ? self::URL_TYPE_HTTPS : self::URL_TYPE_HTTP;
         $url = substr($url, $protocol ? 8 : 7);
 
@@ -242,8 +243,9 @@ class TX extends \AmiLabs\CryptoKit\TX {
 
         $opretStr = chr(bindec($sByte)) . $markerHex . chr($fileType) . pack('H*', $hash);
 
-        $msigStr = $url . str_pad(pack('H*', dechex($fileSize)), 4, chr(0), STR_PAD_LEFT);
-
+        $msigStr = $url . pack('H*', str_pad(dechex($fileSize), 8, '0', STR_PAD_LEFT));
+        $sizeBytes = str_pad(pack('H*', dechex($fileSize)), 4, chr(0), STR_PAD_LEFT);
+        
         $aConfig = Registry::useStorage('CFG')->get('addresses');
 
         $oRPC = new RPC();
@@ -305,8 +307,11 @@ class TX extends \AmiLabs\CryptoKit\TX {
      * @return int
      */
     protected static function getFileType($url){
-        $urlNoParams = substr($url, 0, strpos($url, '?'));
-        $ext = strtolower(substr($url, strrpos($urlNoParams, '.') + 1));
+        $urlNoParams = $url;
+        if(strpos($url, '?') !== false){
+            $urlNoParams = substr($url, 0, strpos($url, '?'));
+        }
+        $ext = strtolower(substr($urlNoParams, strrpos($urlNoParams, '.') + 1));
         $fileType = self::FILE_TYPE_UNKNOWN;
         $aFileTypes = array(
             self::FILE_TYPE_PDF     => array('pdf'),
