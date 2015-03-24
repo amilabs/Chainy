@@ -69,11 +69,11 @@
                         <div class="col-sm-10 col-md-9 site-block">
     					<p class="promo-content">This page contains information about digitally signed file embedded in the Bitcoin blockchain. Since transaction is confirmed this file is permanently certified and proven to exist. 
                             <br><strong>Hash amount  SHA256</strong> <?=$aTX['hash']?> <input type="hidden" id="file-hash" value="<?=$aTX['hash']?>">
-						<br><strong>Link to the original file is</strong> <a href="<?=$aTX['link']?>" target="_blank"><?=$aTX['link']?></a>
-						<br><strong>Transaction date</strong> <?=$aTX['date']?>
+                            <br><strong>Link to the original file is</strong><br /><a href="<?=$aTX['link']?>" target="_blank"><?=$aTX['link']?></a>
+						<br><strong>Transaction date</strong> <?php if($aTX['block']): ?><?=$aTX['date']?><?php else: ?>Unknown<?php endif; ?>
 						<br><strong>Transaction id</strong> <?=$aTX['tx']?>
 						</p>
-						<p class="promo-content">Look up this transaction on 3rd party services: <?php if($aTX['block']): ?><a href="http://coinsecrets.org/?to=<?=($aTX['block'] + 1)?>.000000">CoinSecrets</a> and <?php endif; ?><a href="http://blockchain.info/tx/<?=$aTX['tx']?>">Blockchain.info</a>
+						<p class="promo-content">Look up this transaction on 3rd party services: <a href="http://coinsecrets.org/<?php if($aTX['block']): ?>?to=<?=($aTX['block'] + 1)?>.000000<?php endif; ?>">CoinSecrets</a> and <a href="http://blockchain.info/tx/<?=$aTX['tx']?>">Blockchain.info</a>
 						</p>
                             
                         </div>
