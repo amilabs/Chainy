@@ -73,7 +73,7 @@
 						<br><strong>Transaction date</strong> <?=$aTX['date']?>
 						<br><strong>Transaction id</strong> <?=$aTX['tx']?>
 						</p>
-						<p class="promo-content">Look up this transaction on 3rd party services: <a href="http://coinsecrets.org/?to=<?=$aTX['block']?>.000000">CoinSecrets</a> and <a href="http://blockchain.info/tx/<?=$aTX['tx']?>">Blockchain.info</a>
+						<p class="promo-content">Look up this transaction on 3rd party services: <?php if($aTX['block']): ?><a href="http://coinsecrets.org/?to=<?=($aTX['block'] + 1)?>.000000">CoinSecrets</a> and <?php endif; ?><a href="http://blockchain.info/tx/<?=$aTX['tx']?>">Blockchain.info</a>
 						</p>
                             
                         </div>
@@ -185,7 +185,7 @@
                         <div class="col-sm-12 col-md-12">
                             <h4 class="footer-heading"><span id="year-copy">2015</span> &copy; <a href="http://amilabs.co/">AmiLabs</a></h4>
                             <ul class="footer-nav list-inline">
-                                <li>Crafted with <a href="https://github.com/amilabs/devkit">AmiLabs/DevKit</a></li>
+                                <li>Crafted with <a href="https://github.com/amilabs/CryptoKit">AmiLabs/CryptoKit</a></li>
                             </ul>
                         </div>
                     </div>
