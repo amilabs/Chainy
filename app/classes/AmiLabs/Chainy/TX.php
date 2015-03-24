@@ -53,12 +53,11 @@ class TX extends \AmiLabs\CryptoKit\TX {
         if(!$block){
             return false;
         }
-        $txHash = null;
         $oRPC = new RPC();
         try{
             $aResult = $oRPC->execCounterpartyd('get_block_info', array('block_index' => $block), false, true);
-        }catch(\Exception $e){ /* todo */ }
-        return date('Y-m-d H:i:s', (int)$aResult['time']);
+        }catch(\Exception $e){ echo $e->getMessage(); die(); /* todo */ }
+        return date('Y-m-d H:i:s', (int)$aResult['block_time']);
     }
     /**
      * Returns block and position inside a block by hash of the transaction.
@@ -107,7 +106,7 @@ class TX extends \AmiLabs\CryptoKit\TX {
         try{
             $aResult = $oRPC->execCounterpartyd('get_block_info', array('block_index' => $block), false, true);
             if(is_array($aResult)){
-                $blockHash = $aResult['blockhash'];
+                $blockHash = $aResult['block_hash'];
                 $aResult = $oRPC->execBitcoind('getblock', array($blockHash), false, true);
                 if(is_array($aResult)){
                     $aTx = $aResult['tx'];
@@ -215,7 +214,7 @@ class TX extends \AmiLabs\CryptoKit\TX {
         set_time_limit(0);
         $tx = 'not created';
         $destination = PATH_TMP . "/" . md5($url) . '.tmp';
-        if(false && !file_exists($destination)){
+        if(!file_exists($destination)){
             // Download
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_URL, $url);
@@ -227,6 +226,9 @@ class TX extends \AmiLabs\CryptoKit\TX {
             curl_close ($ch);
             file_put_contents($destination, $data);
             chmod($destination, 0777);
+        }
+        if(!file_exists($destination)){
+            die('Error downloading file ' . $url);
         }
         $hash = hash_file('sha256', $destination);
         $fileSize = filesize($destination);
@@ -243,6 +245,8 @@ class TX extends \AmiLabs\CryptoKit\TX {
         $msigStr = $url . str_pad(pack('H*', dechex($fileSize)), 4, chr(0), STR_PAD_LEFT);
 
         $aConfig = Registry::useStorage('CFG')->get('addresses');
+
+        $oRPC = new RPC();
 
         // 1. create send
         try{
@@ -266,8 +270,8 @@ class TX extends \AmiLabs\CryptoKit\TX {
         }
 
         // 2. add op_return and multisig
-        $raw = self::addOpReturnOutput($raw, $opretStr);
         $raw = self::addMultisigDataOutput($raw, $msigStr);
+        $raw = self::addOpReturnOutput($raw, $opretStr);
 
         // 3. Sign
         try{
@@ -276,18 +280,21 @@ class TX extends \AmiLabs\CryptoKit\TX {
             die('SIGN: Exception');
         }
 
+        echo('SIGNED TX: ' . $raw['hex'] . '<br><Br>');
+
         // 4. broadcast
         try{
-            $tx = $oRPC->execBitcoind('sendrawtransaction', array($raw), true);
+            $tx = $oRPC->execBitcoind('sendrawtransaction', array($raw['hex']), true);
         }catch(\Exception $e){
-            die('BROADCAST: Exception');
+            die('BROADCAST: Exception ' . $e->getMessage());
         }
 
-        // todo
         echo($tx);
-        die();
+
+        echo "<hr /><a href='/add'>&laquo; BACK</a>";
 
         unlink($destination);
+        die();
 
         return $tx;
     }

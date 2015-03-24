@@ -36,6 +36,16 @@ class indexController extends Controller {
             $block = $aBlockData['block'];
             $byHash = true;
         }
+        if($code == 'getshort'){
+            $txNo = $oRequest->getCallParameters(1);
+            $pos = TX::getPositionInBlockByTransaction($txNo);
+            if(!is_null($pos['block'])){
+                echo TX::encodeBase58($pos['block'] . str_pad($pos['position'], 4, '0', STR_PAD_LEFT));
+            }else{
+                echo "Transaction was not included in a block yet.";
+            }
+            die();
+        }
         if(!$byHash){
             $strPos = TX::decodeBase58($code);
             if($strPos < 3000000000){
@@ -53,7 +63,7 @@ class indexController extends Controller {
             'date'  => $blockDate
         );
 
-        if(TX::isChainyTransaction($txNo)){
+        if($txNo && TX::isChainyTransaction($txNo)){
             $aTransaction += TX::decodeChainyTransaction($txNo);
             $this->oView->set('aTX', $aTransaction);
         }else{

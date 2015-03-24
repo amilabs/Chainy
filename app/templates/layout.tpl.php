@@ -3,6 +3,7 @@
 <!--[if gt IE 8]><!--><html class="no-js"><!--<![endif]-->
     <head>
         <meta charset="utf-8">
+        <base href="/<?=\AmiLabs\DevKit\Registry::useStorage('ENV')->get('subfolder');?>">
         <title>Chainy - proof of media</title>
         <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1.0">
         <link rel="shortcut icon" href="img/favicon.png">
