@@ -19,7 +19,7 @@
         <link rel="stylesheet" href="css/plugins.css">
         <link rel="stylesheet" href="css/main.css">
         <link rel="stylesheet" href="css/themes.css">
-        <script src="js/vendor/modernizr-2.7.1-respond-1.4.2.min.js"></script>
+        <script src="js/modernizr/modernizr-2.7.1-respond-1.4.2.min.js"></script>
     </head>
     <body>
         <div id="page-container">
@@ -28,8 +28,8 @@
         <a href="#" id="to-top"><i class="fa fa-angle-up"></i></a>
         <a href="javascript:;" id="to-bottom"><i class="fa fa-angle-down"></i></a>
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-        <script>!window.jQuery && document.write(decodeURI('%3Cscript src="js/vendor/jquery-1.11.1.min.js"%3E%3C/script%3E'));</script>
-        <script src="js/vendor/bootstrap.min.js"></script>
+        <script>!window.jQuery && document.write(decodeURI('%3Cscript src="js/jquery/jquery-1.11.1.min.js"%3E%3C/script%3E'));</script>
+        <script src="js/bootstrao/bootstrap.min.js"></script>
         <script src="js/plugins.js"></script>
         <script src="js/app.js"></script>
         <script src="<?=\AmiLabs\DevKit\Registry::useStorage('ENV')->get('subfolder');?>/js/amilabs.devkit.engine.js"></script>
