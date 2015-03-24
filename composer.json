@@ -6,6 +6,10 @@
         },
         {
             "type": "vcs",
+            "url": "https://github.com/amilabs/CryptoKit"
+        },
+        {
+            "type": "vcs",
             "url": "https://github.com/ArtemKo7v/php-OP_RETURN"
         }
     ],
