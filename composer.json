@@ -20,8 +20,7 @@
     },
     "autoload": {
         "psr-0": {
-            "AmiLabs\\Chainy\\Frontend": "app/frontend/classes",
-            "AmiLabs\\Chainy\\Service": "app/service/classes"
+            "AmiLabs\\Chainy": "app/classes"
         }
     },
 	"minimum-stability": "dev",

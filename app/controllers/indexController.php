@@ -1,7 +1,7 @@
 <?php
 
 use \AmiLabs\DevKit\Controller;
-use \AmiLabs\Chainy\Frontend\TX;
+use \AmiLabs\Chainy\TX;
 
 class indexController extends Controller {
     /**

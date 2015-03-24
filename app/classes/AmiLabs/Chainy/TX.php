@@ -1,6 +1,6 @@
 <?php
 
-namespace AmiLabs\Chainy\Frontend;
+namespace AmiLabs\Chainy;
 
 use \AmiLabs\CryptoKit\RPC;
 use \AmiLabs\DevKit\Registry;

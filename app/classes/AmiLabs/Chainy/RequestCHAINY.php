@@ -1,6 +1,6 @@
 <?php
 
-namespace AmiLabs\Chainy\Frontend;
+namespace AmiLabs\Chainy;
 
 use \AmiLabs\DevKit\RequestURI as RequestURI;
 use \AmiLabs\DevKit\IRequestDriver as IRequestDriver;

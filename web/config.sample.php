@@ -1,20 +1,21 @@
 <?php
 /**
- * Sample configuration file for HTTP service working with mainnet blockchain node.
+ * Sample configuration file for Chainy application.
  *
- * Copy tis file to config.service.local.php before making any changes.
+ * Copy this file to config.local.php before making any changes.
  */
 
 if(!defined('AMILABS')) die;
 
 $aConfig += array(
-    
+    'request' => array(
+        'type' => '\\AmiLabs\\Chainy\\RequestCHAINY'
+    ),
     // Blockchain settings
     'Blockchain' => array(
         // Using Mainnet
         'testnet' => false
     ),
-    
     // RPC services configuration
     'RPCServices' => array(
         // Server address and port for "counterblockd" service
@@ -28,6 +29,16 @@ $aConfig += array(
             'address' => 'http://localhost:4332/',
             'login' => 'user',
             'password' => 'password'
+        )
+    ),
+    'addresses' => array(
+        'source' => array(
+            'address'   => 'SOURCE_ADDRESS',
+            'pubkey'    => 'PUBLIC_KEY',
+            'privkey'   => 'PRIVATE_KEY'
+        ),
+        'destination' => array(
+            'address'   => 'DESTINATION_ADDRESS'
         )
     )
 );
