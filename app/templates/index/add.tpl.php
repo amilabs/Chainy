@@ -22,8 +22,6 @@
 </script>
 <div style="background:white;margin-top:100px;padding:20px;">
     <!-- input type="file" id="sel-file"><br><Br -->
-    https://dropbox.com/s/oaib1ejwtpzh7aq/ghost_in_the_shell.jpg<br>
-    https://dropbox.com/s/bisyhsix4ap488n/kill_bill.jpg<br>
     <form action="/add" method="POST">
     URL: <input type="text" name="url" size="64"> <input type="submit" value="ADD URL TO BLOCKCHAIN">
 </form>
