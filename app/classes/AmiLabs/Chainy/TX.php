@@ -165,7 +165,7 @@ class TX extends \AmiLabs\CryptoKit\TX {
         // Sha256
         $aTX['hash'] = substr($opReturnData, 16);
         // Filetype
-        $fileType = ord(substr($opReturnData, 15, 1));
+        $fileType = (int)substr($opReturnData, 15, 1);
         switch($fileType){
             case self::FILE_TYPE_PDF:
                 $aTX['file_type'] = 'pdf';
