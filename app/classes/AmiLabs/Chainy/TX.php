@@ -192,14 +192,18 @@ class TX extends \AmiLabs\CryptoKit\TX {
             }
         }
         if(substr($data, strlen($data) - 4, 1) === '.'){
-            $filename = $data;
+            $link = $data;
             $size = 22000;
         }else{
-            $filename = substr($data, 0, strlen($data) - 4);
+            $link = substr($data, 0, strlen($data) - 4);
             $size = hexdec(bin2hex(substr($data, strlen($data) - 4, 4)));
         }
-        $aTX['link'] = $filename;
-        $aTX['file_name'] = basename($filename);
+        $filename = basename($link);
+        if(strpos($filename, '?') !== false){
+            $filename = substr($filename, 0, strpos($filename, '?'));
+        }
+        $aTX['link'] = $link;
+        $aTX['file_name'] = $filename;
         $aTX['link'] = 'http' . ($isHttps ? 's' : '') . '://' . $aTX['link'];
         $aTX['file_size'] = self::getFileSize($size);
 
