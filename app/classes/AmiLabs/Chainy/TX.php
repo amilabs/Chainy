@@ -164,24 +164,6 @@ class TX extends \AmiLabs\CryptoKit\TX {
         );
         // Sha256
         $aTX['hash'] = substr($opReturnData, 16);
-        // Filetype
-        $fileType = (int)substr($opReturnData, 15, 1);
-        switch($fileType){
-            case self::FILE_TYPE_PDF:
-                $aTX['file_type'] = 'pdf';
-                break;
-            case self::FILE_TYPE_ARCHIVE:
-                $aTX['file_type'] = 'archive';
-                break;
-            case self::FILE_TYPE_TEXT:
-                $aTX['file_type'] = 'text';
-                break;
-            case self::FILE_TYPE_IMAGE:
-                $aTX['file_type'] = 'image';
-                break;
-            default:
-                $aTX['file_type'] = '';
-        }
         // Url protocol
         $isHttps = (int)substr(decbin(hexdec(substr($opReturnData, 1, 1))), 0, 1);
 
@@ -202,11 +184,31 @@ class TX extends \AmiLabs\CryptoKit\TX {
         if(strpos($filename, '?') !== false){
             $filename = substr($filename, 0, strpos($filename, '?'));
         }
-        $aTX['link'] = $link;
         $aTX['file_name'] = $filename;
-        $aTX['link'] = 'http' . ($isHttps ? 's' : '') . '://' . $aTX['link'];
+        $aTX['link'] = 'http' . ($isHttps ? 's' : '') . '://' . $link;
         $aTX['file_size'] = self::getFileSize($size);
 
+        // Filetype
+        $fileType = (int)substr($opReturnData, 15, 1);
+        if(!$fileType){
+            $fileType = self::getFileType($link);
+        }
+        switch($fileType){
+            case self::FILE_TYPE_PDF:
+                $aTX['file_type'] = 'pdf';
+                break;
+            case self::FILE_TYPE_ARCHIVE:
+                $aTX['file_type'] = 'archive';
+                break;
+            case self::FILE_TYPE_TEXT:
+                $aTX['file_type'] = 'text';
+                break;
+            case self::FILE_TYPE_IMAGE:
+                $aTX['file_type'] = 'image';
+                break;
+            default:
+                $aTX['file_type'] = '';
+        }
         return $aTX;
     }
     /**
