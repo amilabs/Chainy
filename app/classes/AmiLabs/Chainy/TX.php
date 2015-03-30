@@ -73,7 +73,7 @@ class TX extends \AmiLabs\CryptoKit\TX {
         $txPosition = null;
         $oRPC = new RPC();
         try{
-            $aResult = $oRPC->execBitcoind('getrawtransaction', array($txHash, 1), false, true);
+            $aResult = $oRPC->execBitcoind('getrawtransaction', array($txHash, 1), false, false);
             if(is_array($aResult)){
                 $blockHash = $aResult['blockhash'];
                 $aResult = $oRPC->execBitcoind('getblock', array($blockHash), false, true);
