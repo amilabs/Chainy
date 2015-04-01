@@ -211,47 +211,11 @@ class TX extends \AmiLabs\CryptoKit\TX {
         }
         return $aTX;
     }
-    /**
-     * 
-     * @param string $url
-     * @return string
-     */
-    public static function createHashLinkTransaction($url){
-        set_time_limit(0);
-        $tx = 'not created';
-        $destination = PATH_TMP . "/" . md5($url) . '.tmp';
-        if(!file_exists($destination)){
-            // Download
-            $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, $url);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-            curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-            $data = curl_exec($ch);
-            curl_close ($ch);
-            file_put_contents($destination, $data);
-            chmod($destination, 0777);
-        }
-        if(!file_exists($destination)){
-            die('Error downloading file ' . $url);
-        }
-        $hash = hash_file('sha256', $destination);
-        $fileSize = filesize($destination);
-
-        $protocol = (strpos($url, 'https://') === 0) ? self::URL_TYPE_HTTPS : self::URL_TYPE_HTTP;
-        $url = substr($url, $protocol ? 8 : 7);
-
-        $fileType = self::getFileType($url);
-
-        $markerHex = pack('H*', self::MARKER);
-        $sByte = str_pad(decbin(self::TX_TYPE_HASHLINK), 4, '0', STR_PAD_LEFT) . $protocol . self::PROTOCOL_VERSION;
-
-        $opretStr = chr(bindec($sByte)) . $markerHex . chr($fileType) . pack('H*', $hash);
-
-        $msigStr = $url . pack('H*', str_pad(dechex($fileSize), 8, '0', STR_PAD_LEFT));
-        $sizeBytes = str_pad(pack('H*', dechex($fileSize)), 4, chr(0), STR_PAD_LEFT);
+    public static function packChainyTransaction(){
         
+    }
+    public static function sendChainyTransaction($msigStr, $opretStr){
+
         $aConfig = Registry::useStorage('CFG')->get('addresses');
 
         $oRPC = new RPC();
@@ -297,14 +261,77 @@ class TX extends \AmiLabs\CryptoKit\TX {
             die('BROADCAST: Exception ' . $e->getMessage());
         }
 
-        echo($tx);
+        return $tx;
+    }
+    /**
+     * 
+     */
+    public static function createRedirectTransaction($url){
+        $tx = 'not created';
+        
+        $protocol = (strpos($url, 'https://') === 0) ? self::URL_TYPE_HTTPS : self::URL_TYPE_HTTP;
+        $url = substr($url, $protocol ? 8 : 7);
 
-        echo "<hr /><a href='/add'>&laquo; BACK</a>";
+        $fileType = self::getFileType($url);
+
+        $markerHex = pack('H*', self::MARKER);
+        $sByte = str_pad(decbin(self::TX_TYPE_REDIRECT), 4, '0', STR_PAD_LEFT) . $protocol . self::PROTOCOL_VERSION;
+    
+        $msigStr = false;
+        $opRetData = '';
+        if(strlen($url <= 33 )){
+            $opRetData = $url;
+        }else{
+            $msigStr = $url;
+        }
+        $opretStr = chr(bindec($sByte)) . $markerHex . $opRetData;
+
+        return self::sendChainyTransaction($msigStr, $opretStr);
+    }
+    /**
+     * 
+     * @param string $url
+     * @return string
+     */
+    public static function createHashLinkTransaction($url){
+        set_time_limit(0);
+        $tx = 'not created';
+        $destination = PATH_TMP . "/" . md5($url) . '.tmp';
+        if(!file_exists($destination)){
+            // Download
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+            $data = curl_exec($ch);
+            curl_close ($ch);
+            file_put_contents($destination, $data);
+            chmod($destination, 0777);
+        }
+        if(!file_exists($destination)){
+            die('Error downloading file ' . $url);
+        }
+        $hash = hash_file('sha256', $destination);
+        $fileSize = filesize($destination);
+
+        $protocol = (strpos($url, 'https://') === 0) ? self::URL_TYPE_HTTPS : self::URL_TYPE_HTTP;
+        $url = substr($url, $protocol ? 8 : 7);
+
+        $fileType = self::getFileType($url);
+
+        $markerHex = pack('H*', self::MARKER);
+        $sByte = str_pad(decbin(self::TX_TYPE_HASHLINK), 4, '0', STR_PAD_LEFT) . $protocol . self::PROTOCOL_VERSION;
+
+        $opretStr = chr(bindec($sByte)) . $markerHex . chr($fileType) . pack('H*', $hash);
+
+        $msigStr = $url . pack('H*', str_pad(dechex($fileSize), 8, '0', STR_PAD_LEFT));
+        $sizeBytes = str_pad(pack('H*', dechex($fileSize)), 4, chr(0), STR_PAD_LEFT);
 
         unlink($destination);
-        die();
 
-        return $tx;
+        return self::sendChainyTransaction($msigStr, $opretStr);
     }
     /**
      * Returns file type by filename or url.
