@@ -130,6 +130,12 @@ class TX extends \AmiLabs\CryptoKit\TX {
         $result = $oRPC->execBitcoind('getrawtransaction', array($tx), false, true);
         return (strlen($result) && (strpos($result, self::MARKER) !== false));
     }
+    public static function getTransactionType($tx){
+        $oRPC = new RPC();
+        $data = $oRPC->execBitcoind('getrawtransaction', array($tx), false, true);
+        $opData = TX::getDecodedOpReturn($data, true);
+        return hexdec(substr($opData, 0, 1));
+    }
     /**
      * Decode Chainy transaction.
      *
@@ -142,10 +148,43 @@ class TX extends \AmiLabs\CryptoKit\TX {
         $data = $oRPC->execBitcoind('getrawtransaction', array($tx), false, true);
         $opData = TX::getDecodedOpReturn($data, true);
         $txType = hexdec(substr($opData, 0, 1));
+        $aTX['type'] = $txType;
         switch($txType){
+            case self::TX_TYPE_REDIRECT:
+                $aTX += self::decodeRedirectTransaction($opData, $data);
+                break;
             case self::TX_TYPE_HASHLINK:
             default:
                 $aTX += self::decodeHashLinkTransaction($opData, $data);
+        }
+        return $aTX;
+    }
+    /**
+     * Decodes transacton of "Hash and Link" type.
+     *
+     * @param string $opReturnData
+     * @param string $data
+     * @return array
+     */
+    protected static function decodeRedirectTransaction($opReturnData, $data){
+        $aTX = array(
+            'link'      => ''
+        );
+        // Url protocol
+        $isHttps = (int)substr(decbin(hexdec(substr($opReturnData, 1, 1))), 0, 1);
+        if(strlen($opReturnData) > 16){
+            $link = substr($opReturnData, 15);
+        }else{
+            $aTrans = self::decodeTransaction($data);
+            foreach($aTrans['vout'] as $aOut){
+                if(strpos($aOut['scriptPubKey'], '5121') === 0){
+                    $link = self::decodeMultisigOutput($aOut['scriptPubKey']);                   
+                    break;
+                }
+            }
+        }
+        if($link){
+            $aTX['link'] = 'http' . ($isHttps ? 's' : '') . '://' . $link;
         }
         return $aTX;
     }
@@ -214,7 +253,7 @@ class TX extends \AmiLabs\CryptoKit\TX {
     public static function packChainyTransaction(){
         
     }
-    public static function sendChainyTransaction($msigStr, $opretStr){
+    public static function sendChainyTransaction($opretStr, $msigStr = false){
 
         $aConfig = Registry::useStorage('CFG')->get('addresses');
 
@@ -242,7 +281,9 @@ class TX extends \AmiLabs\CryptoKit\TX {
         }
 
         // 2. add op_return and multisig
-        $raw = self::addMultisigDataOutput($raw, $msigStr);
+        if($msigStr){
+            $raw = self::addMultisigDataOutput($raw, $msigStr);
+        }
         $raw = self::addOpReturnOutput($raw, $opretStr);
 
         // 3. Sign
@@ -286,7 +327,7 @@ class TX extends \AmiLabs\CryptoKit\TX {
         }
         $opretStr = chr(bindec($sByte)) . $markerHex . $opRetData;
 
-        return self::sendChainyTransaction($msigStr, $opretStr);
+        return self::sendChainyTransaction($opretStr, $msigStr);
     }
     /**
      * 
@@ -331,7 +372,7 @@ class TX extends \AmiLabs\CryptoKit\TX {
 
         unlink($destination);
 
-        return self::sendChainyTransaction($msigStr, $opretStr);
+        return self::sendChainyTransaction($opretStr, $msigStr);
     }
     /**
      * Returns file type by filename or url.

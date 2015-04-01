@@ -22,8 +22,8 @@ class indexController extends Controller {
         $code  = $oRequest->getCallParameters(0);
 
         if($code == 'add'){
-            $url = $oRequest->get('url', false, INPUT_POST)
-            $type = $oRequest->get('addType', false, INPUT_POST)
+            $url = $oRequest->get('url', false, INPUT_POST);
+            $type = $oRequest->get('addType', false, INPUT_POST);
             switch($type){
                 case 'filehash':
                     TX::createHashLinkTransaction($url);
@@ -73,7 +73,13 @@ class indexController extends Controller {
 
         if($txNo && TX::isChainyTransaction($txNo)){
             $aTransaction += TX::decodeChainyTransaction($txNo);
-            $this->oView->set('aTX', $aTransaction);
+            if($aTransaction['type'] == TX::TX_TYPE_HASHLINK){
+                $this->oView->set('aTX', $aTransaction);
+            }
+            if($aTransaction['type'] == TX::TX_TYPE_REDIRECT){
+                header('Location:' . $aTransaction['link']);
+                die();
+            }
         }else{
             $this->notFound();
         }
