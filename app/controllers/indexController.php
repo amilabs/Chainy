@@ -24,15 +24,18 @@ class indexController extends Controller {
         if($code == 'add'){
             $url = $oRequest->get('url', false, INPUT_POST);
             $type = $oRequest->get('addType', false, INPUT_POST);
+            $tx = false;
             switch($type){
                 case 'filehash':
-                    TX::createHashLinkTransaction($url);
-                    die();
+                    $tx = TX::createHashLinkTransaction($url);
                     break;
                 case 'redirect':
-                    TX::createRedirectTransaction($url);
-                    die();
+                    $tx = TX::createRedirectTransaction($url);
                     break;
+            }
+            if($tx){
+                echo 'Transaction Hash: ' . $tx;
+                die();
             }
             $this->templateFile = 'index/add';
             return;
