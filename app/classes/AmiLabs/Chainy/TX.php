@@ -173,7 +173,7 @@ class TX extends \AmiLabs\CryptoKit\TX {
         // Url protocol
         $isHttps = (int)substr(decbin(hexdec(substr($opReturnData, 1, 1))), 0, 1);
         if(strlen($opReturnData) > 16){
-            $link = hex2bin(substr($opReturnData, 15));
+            $link = hex2bin(substr($opReturnData, 14));
         }else{
             $aTrans = self::decodeTransaction($data);
             foreach($aTrans['vout'] as $aOut){
