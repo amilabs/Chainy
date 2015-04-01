@@ -22,9 +22,17 @@ class indexController extends Controller {
         $code  = $oRequest->getCallParameters(0);
 
         if($code == 'add'){
-            if($url = $oRequest->get('url', false, INPUT_POST)){
-                TX::createHashLinkTransaction($url);
-                die();
+            $url = $oRequest->get('url', false, INPUT_POST)
+            $type = $oRequest->get('addType', false, INPUT_POST)
+            switch($type){
+                case 'filehash':
+                    TX::createHashLinkTransaction($url);
+                    die();
+                    break;
+                case 'redirect':
+                    TX::createRedirectTransaction($url);
+                    die();
+                    break;
             }
             $this->templateFile = 'index/add';
             return;
