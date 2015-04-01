@@ -51,7 +51,8 @@ class indexController extends Controller {
             $txNo = $oRequest->getCallParameters(1);
             $pos = TX::getPositionInBlockByTransaction($txNo);
             if(!is_null($pos['block'])){
-                echo TX::encodeBase58($pos['block'] . str_pad($pos['position'], 4, '0', STR_PAD_LEFT));
+                $short = TX::encodeBase58($pos['block'] . str_pad($pos['position'], 4, '0', STR_PAD_LEFT));
+                echo '<a href="http://txn.me/' . $short . '">' .  $short . '</a>';
             }else{
                 echo "Transaction was not included in a block yet.";
             }
