@@ -25,8 +25,8 @@
     <form action="/add" method="POST">
     URL: <input type="text" name="url" size="64"> <input type="submit" value="ADD URL TO BLOCKCHAIN">
 </form>
-
-</div>
+<form action="/addredirect" method="POST">
+URL: <input type="text" name="url" size="64"><input type="submit" value="ADD REDIRECT TO BLOCKCHAIN"></form></div>
 
 <script>
     // document.getElementById('sel-file').addEventListener('change', handleFileLoaded, false);
