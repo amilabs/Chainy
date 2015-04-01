@@ -320,7 +320,7 @@ class TX extends \AmiLabs\CryptoKit\TX {
     
         $msigStr = false;
         $opRetData = '';
-        if(strlen($url <= 33 )){
+        if(strlen($url) <= 33){
             $opRetData = $url;
         }else{
             $msigStr = $url;
