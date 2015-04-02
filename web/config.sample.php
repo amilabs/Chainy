@@ -31,6 +31,11 @@ $aConfig += array(
             'password' => 'password'
         )
     ),
+    // Chainy transaction markers
+    // 434841494e59 - CHAINY
+    // 444556434841 - DEVCHA
+    'marker' => '444556434841',
+    'markers' => array('434841494e59', '444556434841'),
     'addresses' => array(
         'source' => array(
             'address'   => 'SOURCE_ADDRESS',

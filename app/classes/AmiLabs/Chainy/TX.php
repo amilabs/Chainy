@@ -10,10 +10,6 @@ use \AmiLabs\DevKit\Registry;
  */
 class TX extends \AmiLabs\CryptoKit\TX {
     /**
-     * Chainy transaction marker
-     */
-    const MARKER = '444556434841'; // DEVCHA
-    /**
      * Transaction types
      */
     const TX_TYPE_REDIRECT  = 1;
@@ -126,9 +122,19 @@ class TX extends \AmiLabs\CryptoKit\TX {
      * @return boolean
      */
     public static function isChainyTransaction($tx){
+        $result = false;
         $oRPC = new RPC();
-        $result = $oRPC->execBitcoind('getrawtransaction', array($tx), false, true);
-        return (strlen($result) && (strpos($result, self::MARKER) !== false));
+        $raw = $oRPC->execBitcoind('getrawtransaction', array($tx), false, true);
+        if(strlen($raw)){
+            $aMarkers = Registry::useStorage('CFG')->get('markers');
+            foreach($aMarkers as $marker){
+                if(strpos(strtolower($raw), $marker) !== false){
+                    $result = true;
+                    break;
+                }
+            }
+        }
+        return $result;
     }
     public static function getTransactionType($tx){
         $oRPC = new RPC();
@@ -304,6 +310,9 @@ class TX extends \AmiLabs\CryptoKit\TX {
 
         return $tx;
     }
+    public static function getMarker(){
+        return Registry::useStorage('CFG')->get('marker');
+    }
     /**
      * 
      */
@@ -315,7 +324,7 @@ class TX extends \AmiLabs\CryptoKit\TX {
 
         $fileType = self::getFileType($url);
 
-        $markerHex = pack('H*', self::MARKER);
+        $markerHex = pack('H*', self::getMarker());
         $sByte = str_pad(decbin(self::TX_TYPE_REDIRECT), 4, '0', STR_PAD_LEFT) . $protocol . self::PROTOCOL_VERSION;
     
         $msigStr = false;
@@ -362,7 +371,7 @@ class TX extends \AmiLabs\CryptoKit\TX {
 
         $fileType = self::getFileType($url);
 
-        $markerHex = pack('H*', self::MARKER);
+        $markerHex = pack('H*', self::getMarker());
         $sByte = str_pad(decbin(self::TX_TYPE_HASHLINK), 4, '0', STR_PAD_LEFT) . $protocol . self::PROTOCOL_VERSION;
 
         $opretStr = chr(bindec($sByte)) . $markerHex . chr($fileType) . pack('H*', $hash);
