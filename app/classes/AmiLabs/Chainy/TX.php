@@ -53,7 +53,7 @@ class TX extends \AmiLabs\CryptoKit\TX {
         try{
             $aResult = $oRPC->execCounterpartyd('get_block_info', array('block_index' => $block), false, true);
         }catch(\Exception $e){ /* todo */ }
-        return date('Y-m-d H:i:s', (int)$aResult['block_time']);
+        return is_array($aResult && isset($aResult['block_time'])) ? date('Y-m-d H:i:s', (int)$aResult['block_time']) : FALSE;
     }
     /**
      * Returns block and position inside a block by hash of the transaction.
