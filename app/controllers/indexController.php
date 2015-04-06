@@ -1,6 +1,7 @@
 <?php
 
 use \AmiLabs\DevKit\Controller;
+use \AmiLabs\DevKit\Logger;
 use \AmiLabs\Chainy\TX;
 
 class indexController extends Controller {
@@ -20,6 +21,11 @@ class indexController extends Controller {
     public function actionIndex($oApp, $oRequest){
       
         $code  = $oRequest->getCallParameters(0);
+
+        if(strlen($code) >= 5){
+            $oLogger = Logger::get('access-chainy');
+            $oLogger->log($code . ':' . $_SERVER['REMOTE_ADDR'] . ' from:' . $_SERVER['HTTP_REFERER']);
+        }
 
         if($code == 'add'){
             $url = $oRequest->get('url', false, INPUT_POST);
