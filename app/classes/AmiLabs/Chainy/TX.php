@@ -62,7 +62,7 @@ class TX extends \AmiLabs\CryptoKit\TX {
     /**
      * Returns block and position inside a block by hash of the transaction.
      *
-     * @param string $txHash
+     * @param string $txHash  Transaction hash
      * @return boolean|array
      */
     public static function getPositionInBlockByTransaction($txHash){
@@ -93,8 +93,8 @@ class TX extends \AmiLabs\CryptoKit\TX {
     /**
      * Returns transaction hash by block and position inside block.
      *
-     * @param int $block
-     * @param int $position
+     * @param int $block     Block index
+     * @param int $position  Position in block
      * @return boolean|string
      */
     public static function getTransactionByPositionInBlock($block, $position){
@@ -120,9 +120,9 @@ class TX extends \AmiLabs\CryptoKit\TX {
         return $txHash;
     }
     /**
-     * Detects Chainy transaction by special marker.
+     * Checks if specified transaction hash belongs to correct Chainy transaction.
      *
-     * @param string $tx
+     * @param string $tx  Transaction hash
      * @return boolean
      */
     public static function isChainyTransaction($tx){
@@ -131,7 +131,18 @@ class TX extends \AmiLabs\CryptoKit\TX {
         $raw = '';
         try{
             $raw = $oRPC->execBitcoind('getrawtransaction', array($tx), false, true);
+            $result = self::isChainyTransactionRaw($raw);
         }catch(\Exception $e){ /* todo */ }
+        return $result;
+    }
+    /**
+    * Detects Chainy transaction by special marker in raw hex.
+    *
+    * @param string $raw  Transaction raw hex
+    * @return boolean
+    */
+    protected static function isChainyTransactionRaw($raw){
+        $result = FALSE;
         if(strlen($raw)){
             $aMarkers = Registry::useStorage('CFG')->get('markers', array());
             foreach($aMarkers as $marker){
@@ -144,46 +155,62 @@ class TX extends \AmiLabs\CryptoKit\TX {
         return $result;
     }
     /**
-    * Returns Chainy transaction type.
-    *
-    * @param string $tx  Transaction hash
-    * @return int
-    */
+     * Returns Chainy transaction type.
+     *
+     * @param string $tx  Transaction hash
+     * @return int
+     */
     public static function getTransactionType($tx){
         $oRPC = new RPC();
         $result = self::TX_TYPE_INVALID;
         try{
-            if(self::isChainyTransaction($tx)){
-                $data = $oRPC->execBitcoind('getrawtransaction', array($tx), false, true);
+            $data = $oRPC->execBitcoind('getrawtransaction', array($tx), false, true);
+            if(self::isChainyTransactionRaw($data)){
                 $opData = TX::getDecodedOpReturn($data, true);
                 if($opData){
-                    $result = hexdec(substr($opData, 0, 1));
+                    $result = self::getTransactionTypeByOpReturn($opData);
                 }
             }
         }catch(\Exception $e){ /* todo */ }
         return $result;
     }
     /**
+     * Returns Chainy transaction type by OP_RETURN output raw data.
+     *
+     * @param string $opData  OP_RETURN output raw data
+     * @return int
+     */
+    protected static function getTransactionTypeByOpReturn($opData){
+        return hexdec(substr($opData, 0, 1));
+    }
+    /**
      * Decode Chainy transaction.
      *
-     * @param string $tx
+     * @param string $tx  Transaction hash
      * @return array
      */
     public static function decodeChainyTransaction($tx){
         $aTX = array();
         $oRPC = new RPC();
-        $data = $oRPC->execBitcoind('getrawtransaction', array($tx), false, true);
-        $opData = TX::getDecodedOpReturn($data, true);
-        $txType = hexdec(substr($opData, 0, 1));
-        $aTX['type'] = $txType;
-        switch($txType){
-            case self::TX_TYPE_REDIRECT:
-                $aTX += self::decodeRedirectTransaction($opData, $data);
-                break;
-            case self::TX_TYPE_HASHLINK:
-            default:
-                $aTX += self::decodeHashLinkTransaction($opData, $data);
-        }
+        try{
+            $data = $oRPC->execBitcoind('getrawtransaction', array($tx), false, true);
+            if(self::isChainyTransactionRaw($data)){
+                $opData = TX::getDecodedOpReturn($data, true);
+                $txType = self::getTransactionTypeByOpReturn($opData);
+                $aTX['type'] = $txType;
+                switch($txType){
+                    case self::TX_TYPE_REDIRECT:
+                        $aTX += self::decodeRedirectTransaction($opData, $data);
+                        break;
+                    case self::TX_TYPE_HASHLINK:
+                        $aTX += self::decodeHashLinkTransaction($opData, $data);
+                        break;
+                    case self::TX_TYPE_INVALID:
+                    default:
+                        // todo
+                }
+            }
+        }catch(\Exception $e){ /* todo */ }
         return $aTX;
     }
     /**

@@ -118,7 +118,9 @@ class Chainy_TXTest extends PHPUnit_Framework_TestCase{
         $isChainy = TX::isChainyTransaction(false);
         $this->assertEquals(FALSE, $isChainy);
     }
-
+    /**
+     * @covers \AmiLabs\Chainy\TX::getTransactionType
+     */
     public function testGetTransactionType(){
         // Valid Chainy (redirect, production marker)
         $type = TX::getTransactionType('4844e5edc2bb05bc2dbb416048da09288f4fb31b62ab489f2788e262ea8a42c5');
@@ -144,6 +146,47 @@ class Chainy_TXTest extends PHPUnit_Framework_TestCase{
         // False hash
         $type = TX::getTransactionType(false);
         $this->assertEquals(TX::TX_TYPE_INVALID, $type);
-
+    }
+    /**
+     * @covers \AmiLabs\Chainy\TX::decodeChainyTransaction
+     */
+    public function testDecodeChainyTransaction(){
+        // Valid Chainy (redirect, production marker)
+        $aInfo = TX::decodeChainyTransaction('4844e5edc2bb05bc2dbb416048da09288f4fb31b62ab489f2788e262ea8a42c5');
+        $this->assertEquals(TRUE, is_array($aInfo));
+        $this->assertEquals(TX::TX_TYPE_REDIRECT, $aInfo['type']);
+        $this->assertEquals('http://chainy.info/', $aInfo['link']);
+        $aInfo = TX::decodeChainyTransaction('cc68babc421b926a1e717a6aaadc88b0b61dce7c4227a5c25a3054d97568b910');
+        $this->assertEquals(TRUE, is_array($aInfo));
+        $this->assertEquals(TX::TX_TYPE_HASHLINK, $aInfo['type']);
+        $this->assertEquals('mrcad-issuance-2kg-310315.zip', $aInfo['file_name']);
+        $this->assertEquals('5MB', $aInfo['file_size']);
+        $this->assertEquals('https://midasrezerv.com/reports/mrcad-issuance-2kg-310315.zip', $aInfo['link']);
+        $this->assertEquals('ea18db53c498f72f21eb7122c75435133b9f5002c8a19aec7e787287dc1bec83', $aInfo['hash']);
+        $this->assertEquals('archive', $aInfo['file_type']);
+        $aInfo = TX::decodeChainyTransaction('9409ab2b2fcc200e13496efed876101a76d84a50f528bcf7ed3b22e51ac8ac41');
+        $this->assertEquals(TRUE, is_array($aInfo));
+        $this->assertEquals(TX::TX_TYPE_REDIRECT, $aInfo['type']);
+        $this->assertEquals('http://www.google.com', $aInfo['link']);
+        $aInfo = TX::decodeChainyTransaction('f9b6342b21f354a679f4761572c117fd807a52164fb6297c4d5a0f1b9d0224a3');
+        $this->assertEquals(TRUE, is_array($aInfo));
+        $this->assertEquals(TX::TX_TYPE_HASHLINK, $aInfo['type']);
+        $this->assertEquals('ghost_in_the_shell.jpg', $aInfo['file_name']);
+        $this->assertEquals('2MB', $aInfo['file_size']);
+        $this->assertEquals('https://dropbox.com/s/oaib1ejwtpzh7aq/ghost_in_the_shell.jpg?', $aInfo['link']);
+        $this->assertEquals('dc20759ec5ba2f92cdd825f8d0233f16732b1410afa8999b58396e6158f25337', $aInfo['hash']);
+        $this->assertEquals('image', $aInfo['file_type']);
+        $aInfo = TX::decodeChainyTransaction('dbf9a3c5bd5441e2e0a1facf837880049c580de7d4b77b320c0d2a576a2846ca');
+        $this->assertEquals(TRUE, is_array($aInfo));
+        $this->assertEquals(0, count($aInfo));
+        $aInfo = TX::decodeChainyTransaction('68dfc30898bf095058691f5740af98fcfdf30635f077e461565c9a2ace45e323');
+        $this->assertEquals(TRUE, is_array($aInfo));
+        $this->assertEquals(0, count($aInfo));
+        $aInfo = TX::decodeChainyTransaction('invalid_transaction_hash');
+        $this->assertEquals(TRUE, is_array($aInfo));
+        $this->assertEquals(0, count($aInfo));
+        $aInfo = TX::decodeChainyTransaction(false);
+        $this->assertEquals(TRUE, is_array($aInfo));
+        $this->assertEquals(0, count($aInfo));
     }
 }
