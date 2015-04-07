@@ -19,12 +19,14 @@ class indexController extends Controller {
      * @return \AmiLabs\DevKit\Controller
      */
     public function actionIndex($oApp, $oRequest){
-      
+
         $code  = $oRequest->getCallParameters(0);
 
+        $oLogger = Logger::get('access-chainy');
         if(strlen($code) >= 5){
-            $oLogger = Logger::get('access-chainy');
-            $oLogger->log($code . ':' . $_SERVER['REMOTE_ADDR'] . ' from:' . $_SERVER['HTTP_REFERER']);
+            $ipAddress = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : 'Unknown';
+            $referer = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : 'Unknown';
+            $oLogger->log('Code:' . $code . ', IP:' . $ipAddress . ', Referer:' . $referer);
         }
 
         if($code == 'add'){
@@ -67,13 +69,14 @@ class indexController extends Controller {
         if(!$byHash){
             $strPos = TX::decodeBase58($code);
             if($strPos < 3000000000){
+                $oLogger->log('ERROR: Code ' . $code . ' not found (404), cannot decode Base58.');
                 $this->notFound();
             }
             $block = (int)substr($strPos, 0, 6);
             $position = (int)substr($strPos, 6);
             $txNo = TX::getTransactionByPositionInBlock($block, $position);
         }
-        
+
         $blockDate = TX::getBlockDate($block);
         $aTransaction = array(
             'tx'    => $txNo,
@@ -91,12 +94,13 @@ class indexController extends Controller {
                 die();
             }
         }else{
+            $oLogger->log('ERROR: Code ' . $code . ' not found (404), no corresponding transaction.');
             $this->notFound();
         }
     }
 
     protected function notFound(){
         header('Location: http://chainy.info/err/404');
-        die();        
+        die();
     }
 }

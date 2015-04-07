@@ -127,7 +127,7 @@ class TX extends \AmiLabs\CryptoKit\TX {
         $oRPC = new RPC();
         $raw = $oRPC->execBitcoind('getrawtransaction', array($tx), false, true);
         if(strlen($raw)){
-            $aMarkers = Registry::useStorage('CFG')->get('markers');
+            $aMarkers = Registry::useStorage('CFG')->get('markers', array());
             foreach($aMarkers as $marker){
                 if(strpos(strtolower($raw), $marker) !== false){
                     $result = true;
@@ -185,7 +185,7 @@ class TX extends \AmiLabs\CryptoKit\TX {
             $aTrans = self::decodeTransaction($data);
             foreach($aTrans['vout'] as $aOut){
                 if(strpos($aOut['scriptPubKey'], '5121') === 0){
-                    $link = self::decodeMultisigOutput($aOut['scriptPubKey']);                   
+                    $link = self::decodeMultisigOutput($aOut['scriptPubKey']);
                     break;
                 }
             }
@@ -258,7 +258,7 @@ class TX extends \AmiLabs\CryptoKit\TX {
         return $aTX;
     }
     public static function packChainyTransaction(){
-        
+
     }
     public static function sendChainyTransaction($opretStr, $msigStr = false){
 
@@ -315,11 +315,11 @@ class TX extends \AmiLabs\CryptoKit\TX {
         return Registry::useStorage('CFG')->get('marker');
     }
     /**
-     * 
+     *
      */
     public static function createRedirectTransaction($url){
         $tx = 'not created';
-        
+
         $protocol = (strpos($url, 'https://') === 0) ? self::URL_TYPE_HTTPS : self::URL_TYPE_HTTP;
         $url = substr($url, $protocol ? 8 : 7);
 
@@ -327,7 +327,7 @@ class TX extends \AmiLabs\CryptoKit\TX {
 
         $markerHex = pack('H*', self::getMarker());
         $sByte = str_pad(decbin(self::TX_TYPE_REDIRECT), 4, '0', STR_PAD_LEFT) . $protocol . self::PROTOCOL_VERSION;
-    
+
         $msigStr = false;
         $opRetData = '';
         if(strlen($url) <= 33){
@@ -340,7 +340,7 @@ class TX extends \AmiLabs\CryptoKit\TX {
         return self::sendChainyTransaction($opretStr, $msigStr);
     }
     /**
-     * 
+     *
      * @param string $url
      * @return string
      */
