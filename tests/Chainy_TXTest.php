@@ -207,7 +207,7 @@ class Chainy_TXTest extends PHPUnit_Framework_TestCase{
     /**
      * @covers \AmiLabs\Chainy\TX::decodeBase58
      */
-    public function testEncodeBase58(){
+    public function testDecodeBase58(){
         $res = TX::decodeBase58("6khq4B");
         $this->assertEquals(3500000001, $res);
         $res = TX::decodeBase58("3Yq");
@@ -216,5 +216,22 @@ class Chainy_TXTest extends PHPUnit_Framework_TestCase{
         $this->assertEquals(1, $res);
         $res = TX::decodeBase58("");
         $this->assertEquals(0, $res);
+    }
+    /**
+     * @covers \AmiLabs\Chainy\TX::decodeMultisigOutput
+     */
+    public function testDecodeMultisigOutput(){
+        // Valid Multisig output
+        $res = TX::decodeMultisigOutput('5121720000000000000000000000000000000000000000000000000000000000000000210000000000000000006d6964617372657a6572762e636f6d2f7265706f7274732f216d726361642d69737375616e63652d326b672d3331303331352e7a6970004ded7553ae');
+        $this->assertEquals(pack('H*', '6d6964617372657a6572762e636f6d2f7265706f7274732f6d726361642d69737375616e63652d326b672d3331303331352e7a6970004ded75'), $res);
+        // Invalid output length
+        $res = TX::decodeMultisigOutput('5121720asdfasd000000000000000000000000000000000000000000000000000000000000000210000000000000000006d6964617372657a6572762e636f6d2f7265706f7274732f216d726361642d69737375616e63652d326b672d3331303331352e7a6970004ded7553ae');
+        $this->assertEquals('', $res);
+        // Empty output
+        $res = TX::decodeMultisigOutput('');
+        $this->assertEquals('', $res);
+        // Invalid output marker
+        $res = TX::decodeMultisigOutput('6121720000000000000000000000000000000000000000000000000000000000000000210000000000000000006d6964617372657a6572762e636f6d2f7265706f7274732f216d726361642d69737375616e63652d326b672d3331303331352e7a6970004ded7553ae');
+        $this->assertEquals('', $res);
     }
 }

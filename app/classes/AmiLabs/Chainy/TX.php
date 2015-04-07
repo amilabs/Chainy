@@ -505,16 +505,17 @@ class TX extends \AmiLabs\CryptoKit\TX {
      */
     public static function decodeMultisigOutput($outHex){
         $data = '';
-        $dataLength  = hexdec(substr($outHex, 4, 2));
-        $outHex = substr($outHex, 6);
-        $hex1 = substr($outHex, 0, 64);
-        $hex2 = substr($outHex, 66, 66);
-        $hex3 = substr($outHex, 134, 66);
+        if((strlen($outHex) == 210) && (strpos($outHex, '5121') === 0)){
+            $dataLength  = hexdec(substr($outHex, 4, 2));
+            $outHex = substr($outHex, 6);
+            $hex1 = substr($outHex, 0, 64);
+            $hex2 = substr($outHex, 66, 66);
+            $hex3 = substr($outHex, 134, 66);
 
-        $data = ltrim($hex1 . $hex2 . $hex3, '0');
-        $data = substr($data, 0, $dataLength);
-        $data = pack('H*', $data);
-
+            $data = ltrim($hex1 . $hex2 . $hex3, '0');
+            $data = substr($data, 0, $dataLength);
+            $data = pack('H*', $data);
+        }
         return $data;
     }
     /**
