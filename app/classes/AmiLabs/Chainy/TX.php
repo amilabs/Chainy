@@ -42,10 +42,11 @@ class TX extends \AmiLabs\CryptoKit\TX {
     /**
      * Returns the date block was generated.
      *
-     * @param int $block
+     * @param int $block         Block index
+     * @param bool $dateFormat   PHP date format, or return result as unix timestamp if false
      * @return boolean|string
      */
-    public static function getBlockDate($block){
+    public static function getBlockDate($block, $dateFormat = 'Y-m-d H:i:s'){
         if(!$block){
             return false;
         }
@@ -54,7 +55,8 @@ class TX extends \AmiLabs\CryptoKit\TX {
         try{
             $aResult = $oRPC->execCounterpartyd('get_block_info', array('block_index' => $block), false, true);
         }catch(\Exception $e){ /* todo */ }
-        return is_array($aResult) && isset($aResult['block_time']) ? date('Y-m-d H:i:s', (int)$aResult['block_time']) : FALSE;
+        $time = is_array($aResult) && isset($aResult['block_time']) ? $aResult['block_time'] : FALSE;
+        return ($time !== FALSE) ? ($dateFormat ? date($dateFormat, (int)$time) : $time) : $time;
     }
     /**
      * Returns block and position inside a block by hash of the transaction.

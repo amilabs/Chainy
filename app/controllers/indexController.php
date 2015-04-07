@@ -19,7 +19,6 @@ class indexController extends Controller {
      * @return \AmiLabs\DevKit\Controller
      */
     public function actionIndex($oApp, $oRequest){
-
         $code  = $oRequest->getCallParameters(0);
 
         $oLogger = Logger::get('access-chainy');
