@@ -66,7 +66,7 @@ class TX extends \AmiLabs\CryptoKit\TX {
      */
     public static function getPositionInBlockByTransaction($txHash){
         if(!$txHash){
-            return false;
+            return array('block' => null, 'position' => null);;
         }
         $block = null;
         $txPosition = null;
@@ -98,7 +98,7 @@ class TX extends \AmiLabs\CryptoKit\TX {
      */
     public static function getTransactionByPositionInBlock($block, $position){
         if(!$block || !$position){
-            return false;
+            return null;
         }
         $txHash = null;
         $oRPC = new RPC();
