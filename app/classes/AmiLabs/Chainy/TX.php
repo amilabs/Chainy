@@ -4,6 +4,7 @@ namespace AmiLabs\Chainy;
 
 use \AmiLabs\CryptoKit\RPC;
 use \AmiLabs\DevKit\Registry;
+use Moontoast\Math\BigNumber;
 
 /**
  * Chainy transaction class.
@@ -471,17 +472,16 @@ class TX extends \AmiLabs\CryptoKit\TX {
      * @return string
      */
     public static function encodeBase58($int){
-        $int = (int)$int;
-        $base58_string = "";
-        $base = strlen(self::$alphabet);
-        while($int >= $base) {
-            $div = floor($int / $base);
-            $mod = ($int - ($base * $div));
-            $base58_string = self::$alphabet{$mod} . $base58_string;
-            $int = $div;
-        }
-        if($int) $base58_string = self::$alphabet{$int} . $base58_string;
-        return $base58_string;
+        $number = new BigNumber($int);
+        $result = '';
+        do{
+            $tmpNumber = clone($number);
+            $reminder = (int)$tmpNumber->mod(58)->getValue();
+            $result .= self::$alphabet[$reminder];
+            $number = $number->divide(58)->floor();
+        }while($number->getValue() > 0);
+        $result = strrev($result);
+        return $result;
     }
     /**
      * Decodes base58 string into int.
