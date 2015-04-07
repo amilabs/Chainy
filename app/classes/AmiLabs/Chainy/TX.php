@@ -12,6 +12,7 @@ class TX extends \AmiLabs\CryptoKit\TX {
     /**
      * Transaction types
      */
+    const TX_TYPE_INVALID   = 0;
     const TX_TYPE_REDIRECT  = 1;
     const TX_TYPE_HASH      = 2;
     const TX_TYPE_TEXT      = 3;
@@ -142,11 +143,25 @@ class TX extends \AmiLabs\CryptoKit\TX {
         }
         return $result;
     }
+    /**
+    * Returns Chainy transaction type.
+    *
+    * @param string $tx  Transaction hash
+    * @return int
+    */
     public static function getTransactionType($tx){
         $oRPC = new RPC();
-        $data = $oRPC->execBitcoind('getrawtransaction', array($tx), false, true);
-        $opData = TX::getDecodedOpReturn($data, true);
-        return hexdec(substr($opData, 0, 1));
+        $result = self::TX_TYPE_INVALID;
+        try{
+            if(self::isChainyTransaction($tx)){
+                $data = $oRPC->execBitcoind('getrawtransaction', array($tx), false, true);
+                $opData = TX::getDecodedOpReturn($data, true);
+                if($opData){
+                    $result = hexdec(substr($opData, 0, 1));
+                }
+            }
+        }catch(\Exception $e){ /* todo */ }
+        return $result;
     }
     /**
      * Decode Chainy transaction.

@@ -118,4 +118,32 @@ class Chainy_TXTest extends PHPUnit_Framework_TestCase{
         $isChainy = TX::isChainyTransaction(false);
         $this->assertEquals(FALSE, $isChainy);
     }
+
+    public function testGetTransactionType(){
+        // Valid Chainy (redirect, production marker)
+        $type = TX::getTransactionType('4844e5edc2bb05bc2dbb416048da09288f4fb31b62ab489f2788e262ea8a42c5');
+        $this->assertEquals(TX::TX_TYPE_REDIRECT, $type);
+        // Valid Chainy (filehash, production marker)
+        $type = TX::getTransactionType('cc68babc421b926a1e717a6aaadc88b0b61dce7c4227a5c25a3054d97568b910');
+        $this->assertEquals(TX::TX_TYPE_HASHLINK, $type);
+        // Valid Chainy (redirect, development marker)
+        $type = TX::getTransactionType('9409ab2b2fcc200e13496efed876101a76d84a50f528bcf7ed3b22e51ac8ac41');
+        $this->assertEquals(TX::TX_TYPE_REDIRECT, $type);
+        // Valid Chainy (filehash, development marker)
+        $type = TX::getTransactionType('f9b6342b21f354a679f4761572c117fd807a52164fb6297c4d5a0f1b9d0224a3');
+        $this->assertEquals(TX::TX_TYPE_HASHLINK, $type);
+        // Not a Chainy transaction
+        $type = TX::getTransactionType('dbf9a3c5bd5441e2e0a1facf837880049c580de7d4b77b320c0d2a576a2846ca');
+        $this->assertEquals(TX::TX_TYPE_INVALID, $type);
+        // Not a Chainy transaction (no OP_RETURN)
+        $type = TX::getTransactionType('68dfc30898bf095058691f5740af98fcfdf30635f077e461565c9a2ace45e323');
+        $this->assertEquals(TX::TX_TYPE_INVALID, $type);
+        // Invalid hash
+        $type = TX::getTransactionType('invalid_transaction_hash');
+        $this->assertEquals(TX::TX_TYPE_INVALID, $type);
+        // False hash
+        $type = TX::getTransactionType(false);
+        $this->assertEquals(TX::TX_TYPE_INVALID, $type);
+
+    }
 }
