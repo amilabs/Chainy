@@ -89,4 +89,33 @@ class Chainy_TXTest extends PHPUnit_Framework_TestCase{
         $txn = TX::getTransactionByPositionInBlock(100000000, 1);
         $this->assertEquals(NULL, $txn);
     }
+    /**
+     * @covers \AmiLabs\Chainy\TX::isChainyTransaction
+     */
+    public function testIsChainyTransaction(){
+        // Valid Chainy (redirect, production marker)
+        $isChainy = TX::isChainyTransaction('4844e5edc2bb05bc2dbb416048da09288f4fb31b62ab489f2788e262ea8a42c5');
+        $this->assertEquals(TRUE, $isChainy);
+        // Valid Chainy (filehash, production marker)
+        $isChainy = TX::isChainyTransaction('cc68babc421b926a1e717a6aaadc88b0b61dce7c4227a5c25a3054d97568b910');
+        $this->assertEquals(TRUE, $isChainy);
+        // Valid Chainy (redirect, development marker)
+        $isChainy = TX::isChainyTransaction('9409ab2b2fcc200e13496efed876101a76d84a50f528bcf7ed3b22e51ac8ac41');
+        $this->assertEquals(TRUE, $isChainy);
+        // Valid Chainy (filehash, development marker)
+        $isChainy = TX::isChainyTransaction('f9b6342b21f354a679f4761572c117fd807a52164fb6297c4d5a0f1b9d0224a3');
+        $this->assertEquals(TRUE, $isChainy);
+        // Not a Chainy transaction
+        $isChainy = TX::isChainyTransaction('dbf9a3c5bd5441e2e0a1facf837880049c580de7d4b77b320c0d2a576a2846ca');
+        $this->assertEquals(FALSE, $isChainy);
+        // Not a Chainy transaction (no OP_RETURN)
+        $isChainy = TX::isChainyTransaction('68dfc30898bf095058691f5740af98fcfdf30635f077e461565c9a2ace45e323');
+        $this->assertEquals(FALSE, $isChainy);
+        // Invalid hash
+        $isChainy = TX::isChainyTransaction('invalid_transaction_hash');
+        $this->assertEquals(FALSE, $isChainy);
+        // False hash
+        $isChainy = TX::isChainyTransaction(false);
+        $this->assertEquals(FALSE, $isChainy);
+    }
 }
