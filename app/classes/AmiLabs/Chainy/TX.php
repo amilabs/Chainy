@@ -216,8 +216,8 @@ class TX extends \AmiLabs\CryptoKit\TX {
     /**
      * Decodes transacton of "Hash and Link" type.
      *
-     * @param string $opReturnData
-     * @param string $data
+     * @param string $opReturnData  OP_RETURN raw hex
+     * @param string $data          Transaction raw hex
      * @return array
      */
     protected static function decodeRedirectTransaction($opReturnData, $data){
@@ -304,15 +304,17 @@ class TX extends \AmiLabs\CryptoKit\TX {
         }
         return $aTX;
     }
-    public static function packChainyTransaction(){
-
-    }
+    /**
+     * Creates, compiles, signs and sends Chainy transaction.
+     *
+     * @param string $opretStr  OP_RETURN raw data
+     * @param string $msigStr   Multisig output data
+     * @return string
+     * @ignore
+     */
     public static function sendChainyTransaction($opretStr, $msigStr = false){
-
         $aConfig = Registry::useStorage('CFG')->get('addresses');
-
         $oRPC = new RPC();
-
         // 1. create send
         try{
             $raw = $oRPC->execCounterpartyd(
@@ -329,40 +331,41 @@ class TX extends \AmiLabs\CryptoKit\TX {
                 true
             );
         }catch(\Exception $e){ die('SEND: Exception'); }
-
         if(!$raw){
             die('SEND: empty response');
         }
-
         // 2. add op_return and multisig
         if($msigStr){
             $raw = self::addMultisigDataOutput($raw, $msigStr);
         }
         $raw = self::addOpReturnOutput($raw, $opretStr);
-
         // 3. Sign
         try{
             $raw = $oRPC->execBitcoind('signrawtransaction', array($raw, array(), array($aConfig['source']['privkey'])), true);
         }catch(\Exception $e){
             die('SIGN: Exception');
         }
-
-        echo('SIGNED TX: ' . $raw['hex'] . '<br><Br>');
-
         // 4. broadcast
         try{
             $tx = $oRPC->execBitcoind('sendrawtransaction', array($raw['hex']), true);
         }catch(\Exception $e){
             die('BROADCAST: Exception ' . $e->getMessage());
         }
-
         return $tx;
     }
+    /**
+     * Returns current Chainy marker from config.
+     *
+     * @return string
+     */
     public static function getMarker(){
         return Registry::useStorage('CFG')->get('marker');
     }
     /**
+     * Create Chainy transaction of "Redirect" type.
      *
+     * @param string $url  URL of redirect
+     * @return string
      */
     public static function createRedirectTransaction($url){
         $tx = 'not created';
@@ -387,8 +390,9 @@ class TX extends \AmiLabs\CryptoKit\TX {
         return self::sendChainyTransaction($opretStr, $msigStr);
     }
     /**
+     * Create Chainy transaction of "Hash and Link" type.
      *
-     * @param string $url
+     * @param string $url  URL of file
      * @return string
      */
     public static function createHashLinkTransaction($url){
@@ -396,7 +400,8 @@ class TX extends \AmiLabs\CryptoKit\TX {
         $tx = 'not created';
         $destination = PATH_TMP . "/" . md5($url) . '.tmp';
         if(!file_exists($destination)){
-            // Download
+            // Download file from web
+            // Todo: partial downloads of big files
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_URL, $url);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -411,6 +416,7 @@ class TX extends \AmiLabs\CryptoKit\TX {
         if(!file_exists($destination)){
             die('Error downloading file ' . $url);
         }
+        // Todo: calculate hash by reading parts of the file
         $hash = hash_file('sha256', $destination);
         $fileSize = filesize($destination);
 
@@ -434,7 +440,7 @@ class TX extends \AmiLabs\CryptoKit\TX {
     /**
      * Returns file type by filename or url.
      *
-     * @param string $url
+     * @param string $url  URL of file
      * @return int
      */
     protected static function getFileType($url){
@@ -461,10 +467,11 @@ class TX extends \AmiLabs\CryptoKit\TX {
     /**
      * Encodes int to base58 string.
      *
-     * @param int $int
+     * @param int $int  Number to encode
      * @return string
      */
     public static function encodeBase58($int){
+        $int = (int)$int;
         $base58_string = "";
         $base = strlen(self::$alphabet);
         while($int >= $base) {
@@ -479,12 +486,12 @@ class TX extends \AmiLabs\CryptoKit\TX {
     /**
      * Decodes base58 string into int.
      *
-     * @param string $base58
+     * @param string $base58  String to decode
      * @return int
      */
     public static function decodeBase58($base58){
         $int_val = 0;
-        for($i=strlen($base58)-1,$j=1,$base=strlen(self::$alphabet);$i>=0;$i--,$j*=$base) {
+        for($i = strlen($base58) - 1, $j = 1, $base = strlen(self::$alphabet); $i>=0; $i--, $j *= $base){
             $int_val += $j * strpos(self::$alphabet, $base58{$i});
         }
         return $int_val;

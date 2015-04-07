@@ -189,4 +189,32 @@ class Chainy_TXTest extends PHPUnit_Framework_TestCase{
         $this->assertEquals(TRUE, is_array($aInfo));
         $this->assertEquals(0, count($aInfo));
     }
+    /**
+     * @covers \AmiLabs\Chainy\TX::testEncodeBase58
+     */
+    public function testEncodeBase58(){
+        $res = TX::encodeBase58(3500000001);
+        $this->assertEquals("6khq4B", $res);
+        $res = TX::encodeBase58(10000);
+        $this->assertEquals("3Yq", $res);
+        $res = TX::encodeBase58(1);
+        $this->assertEquals("2", $res);
+        $res = TX::encodeBase58(0);
+        $this->assertEquals("", $res);
+        $res = TX::encodeBase58(-1);
+        $this->assertEquals("2", $res);
+    }
+    /**
+     * @covers \AmiLabs\Chainy\TX::decodeBase58
+     */
+    public function testEncodeBase58(){
+        $res = TX::decodeBase58("6khq4B");
+        $this->assertEquals(3500000001, $res);
+        $res = TX::decodeBase58("3Yq");
+        $this->assertEquals(10000, $res);
+        $res = TX::decodeBase58("2");
+        $this->assertEquals(1, $res);
+        $res = TX::decodeBase58("");
+        $this->assertEquals(0, $res);
+    }
 }
