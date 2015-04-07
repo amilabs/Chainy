@@ -125,9 +125,12 @@ class TX extends \AmiLabs\CryptoKit\TX {
      * @return boolean
      */
     public static function isChainyTransaction($tx){
-        $result = false;
+        $result = FALSE;
         $oRPC = new RPC();
-        $raw = $oRPC->execBitcoind('getrawtransaction', array($tx), false, true);
+        $raw = '';
+        try{
+            $raw = $oRPC->execBitcoind('getrawtransaction', array($tx), false, true);
+        }catch(\Exception $e){ /* todo */ }
         if(strlen($raw)){
             $aMarkers = Registry::useStorage('CFG')->get('markers', array());
             foreach($aMarkers as $marker){
