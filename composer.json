@@ -10,7 +10,7 @@
         },
         {
             "type": "vcs",
-            "url": "https://github.com/amilabs/JsonRPC"
+            "url": "https://github.com/Deepelopment/Net"
         },
         {
             "type": "vcs",
@@ -20,8 +20,8 @@
     "require": {
         "amilabs/devkit": "dev-develop",
         "amilabs/CryptoKit": "dev-develop",
-        "artemko7v/php-op_return": "dev-master",
-        "amilabs/JsonRPC": "dev-master"
+        "Deepelopment/Net": "dev-develop",
+        "artemko7v/php-op_return": "dev-master"
     },
     "autoload": {
         "psr-0": {
