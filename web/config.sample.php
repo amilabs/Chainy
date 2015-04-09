@@ -11,24 +11,28 @@ $aConfig += array(
     'request' => array(
         'type' => '\\AmiLabs\\Chainy\\RequestCHAINY'
     ),
-    // Blockchain settings
-    'Blockchain' => array(
-        // Using Mainnet
-        'testnet' => false
-    ),
-    // RPC services configuration
-    'RPCServices' => array(
-        // Server address and port for "counterblockd" service
-        'counterblockd' => array(
-            'driver'  => 'json',
-            'address' => 'http://localhost:4100/api/'
-        ),
-        // Server address and access data for "bitcoind" service
-        'bitcoind' => array(
-            'driver'  => 'json',
-            'address' => 'http://localhost:4332/',
-            'login' => 'user',
-            'password' => 'password'
+    // CryptoKit configuration
+    'CryptoKit' => array(
+        'layer' => 'Counterparty',
+        'testnet' => false,
+        'RPC' => array(
+            'services' => array(
+                array(
+                    // Server address and port for "Counterblock" service
+                    'counterblockd' => array(
+                        'address' => 'login:password@node.address:4100',
+                    ),
+                    // Server address and port for "Counterparty" service
+                    'counterpartyd' => array(
+                        'address' => 'login:password@node.address:4000',
+                    ),
+                    // Server address and access data for "Bitcoind" service
+                    'bitcoind'      => array(
+                        'address' => 'login:password@node.address:4332',
+                    )
+                ),
+                // May contain several nodes
+            )
         )
     ),
     // Chainy transaction markers
