@@ -153,7 +153,7 @@ class Chainy_TXTest extends PHPUnit_Framework_TestCase{
     public function testDecodeChainyTransaction(){
         // Valid Chainy (redirect, production marker)
         $aInfo = TX::decodeChainyTransaction('4844e5edc2bb05bc2dbb416048da09288f4fb31b62ab489f2788e262ea8a42c5');
-        $this->assertEquals(TRUE, is_array($aInfo));
+        $this->assertEquals(TRUE, is_array($aInfo) && isset($aInfo['type']) && isset($aInfo['link']));
         $this->assertEquals(TX::TX_TYPE_REDIRECT, $aInfo['type']);
         $this->assertEquals('http://chainy.info/', $aInfo['link']);
         $aInfo = TX::decodeChainyTransaction('cc68babc421b926a1e717a6aaadc88b0b61dce7c4227a5c25a3054d97568b910');
@@ -165,7 +165,7 @@ class Chainy_TXTest extends PHPUnit_Framework_TestCase{
         $this->assertEquals('ea18db53c498f72f21eb7122c75435133b9f5002c8a19aec7e787287dc1bec83', $aInfo['hash']);
         $this->assertEquals('archive', $aInfo['file_type']);
         $aInfo = TX::decodeChainyTransaction('9409ab2b2fcc200e13496efed876101a76d84a50f528bcf7ed3b22e51ac8ac41');
-        $this->assertEquals(TRUE, is_array($aInfo));
+        $this->assertEquals(TRUE, is_array($aInfo) && isset($aInfo['type']) && isset($aInfo['link']));
         $this->assertEquals(TX::TX_TYPE_REDIRECT, $aInfo['type']);
         $this->assertEquals('http://www.google.com', $aInfo['link']);
         $aInfo = TX::decodeChainyTransaction('f9b6342b21f354a679f4761572c117fd807a52164fb6297c4d5a0f1b9d0224a3');
