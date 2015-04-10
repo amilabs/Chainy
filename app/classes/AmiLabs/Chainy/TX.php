@@ -128,7 +128,7 @@ class TX extends \AmiLabs\CryptoKit\TX {
         $result = FALSE;
         $raw = '';
         try{
-            $raw = BlockchainIO::getInstance()->getRawTransaction($tx, TRUE, FALSE, TRUE);
+            $raw = BlockchainIO::getInstance()->getRawTransaction($tx);
             $result = self::isChainyTransactionRaw($raw);
         }catch(\Exception $e){ /* todo */ }
         return $result;
@@ -161,7 +161,7 @@ class TX extends \AmiLabs\CryptoKit\TX {
     public static function getTransactionType($tx){
         $result = self::TX_TYPE_INVALID;
         try{
-            $data = BlockchainIO::getInstance()->getRawTransaction($tx, TRUE, FALSE, TRUE);
+            $data = BlockchainIO::getInstance()->getRawTransaction($tx);
             if(self::isChainyTransactionRaw($data)){
                 $opData = TX::getDecodedOpReturn($data, true);
                 if($opData){
@@ -189,7 +189,7 @@ class TX extends \AmiLabs\CryptoKit\TX {
     public static function decodeChainyTransaction($tx){
         $aTX = array();
         try{
-            $data = BlockchainIO::getInstance()->getRawTransaction($tx, TRUE, FALSE, TRUE);
+            $data = BlockchainIO::getInstance()->getRawTransaction($tx);
             if(self::isChainyTransactionRaw($data)){
                 $opData = TX::getDecodedOpReturn($data, true);
                 $txType = self::getTransactionTypeByOpReturn($opData);
