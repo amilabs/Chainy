@@ -3,6 +3,7 @@
 namespace AmiLabs\Chainy;
 
 use \AmiLabs\CryptoKit\RPC;
+use \AmiLabs\CryptoKit\BlockchainIO;
 use \AmiLabs\DevKit\Registry;
 use Moontoast\Math\BigNumber;
 
@@ -52,10 +53,9 @@ class TX extends \AmiLabs\CryptoKit\TX {
         if(!$block){
             return false;
         }
-        $oRPC = new RPC();
         $aResult = FALSE;
         try{
-            $aResult = $oRPC->execCounterpartyd('get_block_info', array('block_index' => $block), false, true);
+            $aResult = BlockchainIO::getInstance()->getBlockInfo($block);
         }catch(\Exception $e){ /* todo */ }
         $time = is_array($aResult) && isset($aResult['block_time']) ? $aResult['block_time'] : FALSE;
         return ($time !== FALSE) ? ($dateFormat ? date($dateFormat, (int)$time) : $time) : $time;
@@ -72,12 +72,11 @@ class TX extends \AmiLabs\CryptoKit\TX {
         }
         $block = null;
         $txPosition = null;
-        $oRPC = new RPC();
         try{
-            $aResult = $oRPC->execBitcoind('getrawtransaction', array($txHash, 1), false, false);
+            $aResult = BlockchainIO::getInstance()->getRawTransaction($txHash, TRUE, FALSE, FALSE);
             if(is_array($aResult)){
                 $blockHash = $aResult['blockhash'];
-                $aResult = $oRPC->execBitcoind('getblock', array($blockHash), false, true);
+                $aResult = BlockchainIO::getInstance()->getBlock($blockHash);
                 if(is_array($aResult)){
                     $block = $aResult['height'];
                     $aTx = $aResult['tx'];
@@ -103,12 +102,11 @@ class TX extends \AmiLabs\CryptoKit\TX {
             return null;
         }
         $txHash = null;
-        $oRPC = new RPC();
         try{
-            $aResult = $oRPC->execCounterpartyd('get_block_info', array('block_index' => $block), false, true);
+            $aResult = BlockchainIO::getInstance()->getBlockInfo($block);
             if(is_array($aResult)){
                 $blockHash = $aResult['block_hash'];
-                $aResult = $oRPC->execBitcoind('getblock', array($blockHash), false, true);
+                $aResult = BlockchainIO::getInstance()->getBlock($blockHash);
                 if(is_array($aResult)){
                     $aTx = $aResult['tx'];
                     sort($aTx);
@@ -128,10 +126,9 @@ class TX extends \AmiLabs\CryptoKit\TX {
      */
     public static function isChainyTransaction($tx){
         $result = FALSE;
-        $oRPC = new RPC();
         $raw = '';
         try{
-            $raw = $oRPC->execBitcoind('getrawtransaction', array($tx), false, true);
+            $raw = BlockchainIO::getInstance()->getRawTransaction($tx, TRUE, FALSE, TRUE);
             $result = self::isChainyTransactionRaw($raw);
         }catch(\Exception $e){ /* todo */ }
         return $result;
@@ -162,10 +159,9 @@ class TX extends \AmiLabs\CryptoKit\TX {
      * @return int
      */
     public static function getTransactionType($tx){
-        $oRPC = new RPC();
         $result = self::TX_TYPE_INVALID;
         try{
-            $data = $oRPC->execBitcoind('getrawtransaction', array($tx), false, true);
+            $data = BlockchainIO::getInstance()->getRawTransaction($tx, TRUE, FALSE, TRUE);
             if(self::isChainyTransactionRaw($data)){
                 $opData = TX::getDecodedOpReturn($data, true);
                 if($opData){
@@ -192,9 +188,8 @@ class TX extends \AmiLabs\CryptoKit\TX {
      */
     public static function decodeChainyTransaction($tx){
         $aTX = array();
-        $oRPC = new RPC();
         try{
-            $data = $oRPC->execBitcoind('getrawtransaction', array($tx), false, true);
+            $data = BlockchainIO::getInstance()->getRawTransaction($tx, TRUE, FALSE, TRUE);
             if(self::isChainyTransactionRaw($data)){
                 $opData = TX::getDecodedOpReturn($data, true);
                 $txType = self::getTransactionTypeByOpReturn($opData);
