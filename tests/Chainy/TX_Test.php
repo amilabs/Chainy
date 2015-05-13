@@ -1,6 +1,6 @@
 <?php
 
-namespace \AmiLabs\Chainy\UnitTests;
+namespace AmiLabs\Chainy\UnitTests;
 
 use PHPUnit_Framework_TestCase;
 use \AmiLabs\Chainy\TX;
