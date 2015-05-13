@@ -2,10 +2,11 @@
 
 namespace \AmiLabs\Chainy\UnitTests;
 
+use PHPUnit_Framework_TestCase;
+use \AmiLabs\Chainy\TX;
+
 chdir(realpath(dirname(__FILE__) . '/../../web'));
 require_once 'config.php';
-
-use \AmiLabs\Chainy\TX;
 
 /**
  * Unit tests.
