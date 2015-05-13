@@ -1,6 +1,6 @@
 <?php
 
-chdir(realpath(dirname(__FILE__) . '/../web'));
+chdir(realpath(dirname(__FILE__) . '/../../web'));
 require_once 'config.php';
 
 use \AmiLabs\Chainy\TX;
