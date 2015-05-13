@@ -5,7 +5,7 @@ require_once 'config.php';
 
 use \AmiLabs\Chainy\TX;
 
-class Chainy_TXTest extends PHPUnit_Framework_TestCase{
+class TX_Test extends PHPUnit_Framework_TestCase{
     /**
      * @covers \AmiLabs\Chainy\TX::testGetBlockDate
      */
