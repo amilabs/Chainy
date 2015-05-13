@@ -1,16 +1,17 @@
 <?php
 
-namespace \AmiLabs\Chainy;
+namespace \AmiLabs\Chainy\UnitTests;
 
 chdir(realpath(dirname(__FILE__) . '/../../web'));
 require_once 'config.php';
 
-/**
- *
- * @package AmiLabs\SigningService\Server
- */
 use \AmiLabs\Chainy\TX;
 
+/**
+ * Unit tests.
+ *
+ * @package \AmiLabs\Chainy\UnitTests
+ */
 class TX_Test extends PHPUnit_Framework_TestCase{
     /**
      * @covers \AmiLabs\Chainy\TX::testGetBlockDate()
@@ -36,8 +37,9 @@ class TX_Test extends PHPUnit_Framework_TestCase{
         $blockDate = TX::getBlockDate('test');
         $this->assertEquals(FALSE, $blockDate);
     }
+
     /**
-     * @covers \AmiLabs\Chainy\TX::getPositionInBlockByTransaction
+     * @covers \AmiLabs\Chainy\TX::getPositionInBlockByTransaction()
      */
     public function testGetPositionInBlockByTransaction(){
         // Valid transaction
@@ -66,8 +68,9 @@ class TX_Test extends PHPUnit_Framework_TestCase{
         $this->assertEquals(NULL, $aPosition['block']);
         $this->assertEquals(NULL, $aPosition['position']);
     }
+
     /**
-     * @covers \AmiLabs\Chainy\TX::getTransactionByPositionInBlock
+     * @covers \AmiLabs\Chainy\TX::getTransactionByPositionInBlock()
      */
     public function testGetTransactionByPositionInBlock(){
         // Valid transaction
@@ -95,8 +98,9 @@ class TX_Test extends PHPUnit_Framework_TestCase{
         $txn = TX::getTransactionByPositionInBlock(100000000, 1);
         $this->assertEquals(NULL, $txn);
     }
+
     /**
-     * @covers \AmiLabs\Chainy\TX::isChainyTransaction
+     * @covers \AmiLabs\Chainy\TX::isChainyTransaction()
      */
     public function testIsChainyTransaction(){
         // Valid Chainy (redirect, production marker)
@@ -124,8 +128,9 @@ class TX_Test extends PHPUnit_Framework_TestCase{
         $isChainy = TX::isChainyTransaction(false);
         $this->assertEquals(FALSE, $isChainy);
     }
+
     /**
-     * @covers \AmiLabs\Chainy\TX::getTransactionType
+     * @covers \AmiLabs\Chainy\TX::getTransactionType()
      */
     public function testGetTransactionType(){
         // Valid Chainy (redirect, production marker)
@@ -153,8 +158,9 @@ class TX_Test extends PHPUnit_Framework_TestCase{
         $type = TX::getTransactionType(false);
         $this->assertEquals(TX::TX_TYPE_INVALID, $type);
     }
+
     /**
-     * @covers \AmiLabs\Chainy\TX::decodeChainyTransaction
+     * @covers \AmiLabs\Chainy\TX::decodeChainyTransaction()
      */
     public function testDecodeChainyTransaction(){
         // Valid Chainy (redirect, production marker)
@@ -195,8 +201,9 @@ class TX_Test extends PHPUnit_Framework_TestCase{
         $this->assertEquals(TRUE, is_array($aInfo));
         $this->assertEquals(0, count($aInfo));
     }
+
     /**
-     * @covers \AmiLabs\Chainy\TX::testEncodeBase58
+     * @covers \AmiLabs\Chainy\TX::testEncodeBase58()
      */
     public function testEncodeBase58(){
         $res = TX::encodeBase58(3500000001);
@@ -208,8 +215,9 @@ class TX_Test extends PHPUnit_Framework_TestCase{
         $res = TX::encodeBase58(0);
         $this->assertEquals("1", $res);
     }
+
     /**
-     * @covers \AmiLabs\Chainy\TX::decodeBase58
+     * @covers \AmiLabs\Chainy\TX::decodeBase58()
      */
     public function testDecodeBase58(){
         $res = TX::decodeBase58("6khq4B");
@@ -223,8 +231,9 @@ class TX_Test extends PHPUnit_Framework_TestCase{
         $res = TX::decodeBase58("");
         $this->assertEquals(0, $res);
     }
+
     /**
-     * @covers \AmiLabs\Chainy\TX::decodeMultisigOutput
+     * @covers \AmiLabs\Chainy\TX::decodeMultisigOutput()
      */
     public function testDecodeMultisigOutput(){
         // Valid Multisig output
