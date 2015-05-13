@@ -1,13 +1,19 @@
 <?php
 
+namespace \AmiLabs\Chainy;
+
 chdir(realpath(dirname(__FILE__) . '/../../web'));
 require_once 'config.php';
 
+/**
+ *
+ * @package AmiLabs\SigningService\Server
+ */
 use \AmiLabs\Chainy\TX;
 
 class TX_Test extends PHPUnit_Framework_TestCase{
     /**
-     * @covers \AmiLabs\Chainy\TX::testGetBlockDate
+     * @covers \AmiLabs\Chainy\TX::testGetBlockDate()
      */
     public function testGetBlockDate(){
         // Ordinary block timestamp
