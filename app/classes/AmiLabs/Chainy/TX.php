@@ -2,9 +2,10 @@
 
 namespace AmiLabs\Chainy;
 
-use \AmiLabs\CryptoKit\RPC;
-use \AmiLabs\CryptoKit\BlockchainIO;
-use \AmiLabs\DevKit\Registry;
+use AmiLabs\CryptoKit\RPC;
+use AmiLabs\CryptoKit\BlockchainIO;
+use AmiLabs\DevKit\Registry;
+use AmiLabs\DevKit\Cache;
 use Moontoast\Math\BigNumber;
 
 /**
@@ -74,7 +75,7 @@ class TX extends \AmiLabs\CryptoKit\TX {
         $txPosition = null;
         try{
             $aResult = BlockchainIO::getInstance()->getRawTransaction($txHash, TRUE, FALSE, FALSE);
-            if(is_array($aResult)){
+            if(is_array($aResult) && isset($aResult['blockhash'])){
                 $blockHash = $aResult['blockhash'];
                 $aResult = BlockchainIO::getInstance()->getBlock($blockHash);
                 if(is_array($aResult)){
@@ -394,8 +395,9 @@ class TX extends \AmiLabs\CryptoKit\TX {
     public static function createHashLinkTransaction($url){
         set_time_limit(0);
         $tx = 'not created';
+        $oCache = Cache::get(md5($url));
         $destination = PATH_TMP . "/" . md5($url) . '.tmp';
-        if(!file_exists($destination)){
+        if(!$oCache->exists()){
             // Download file from web
             // Todo: partial downloads of big files
             $ch = curl_init();
@@ -406,15 +408,14 @@ class TX extends \AmiLabs\CryptoKit\TX {
             curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
             $data = curl_exec($ch);
             curl_close ($ch);
-            file_put_contents($destination, $data);
-            chmod($destination, 0777);
+            $oCache->save($data);
         }
-        if(!file_exists($destination)){
+        if(!$oCache->exists()){
             die('Error downloading file ' . $url);
         }
         // Todo: calculate hash by reading parts of the file
-        $hash = hash_file('sha256', $destination);
-        $fileSize = filesize($destination);
+        $hash = hash_file('sha256', $oCache->getFilename());
+        $fileSize = filesize($oCache->getFilename());
 
         $protocol = (strpos($url, 'https://') === 0) ? self::URL_TYPE_HTTPS : self::URL_TYPE_HTTP;
         $url = substr($url, $protocol ? 8 : 7);
@@ -429,7 +430,7 @@ class TX extends \AmiLabs\CryptoKit\TX {
         $msigStr = $url . pack('H*', str_pad(dechex($fileSize), 8, '0', STR_PAD_LEFT));
         $sizeBytes = str_pad(pack('H*', dechex($fileSize)), 4, chr(0), STR_PAD_LEFT);
 
-        unlink($destination);
+        $oCache->clear();
 
         return self::sendChainyTransaction($opretStr, $msigStr);
     }
