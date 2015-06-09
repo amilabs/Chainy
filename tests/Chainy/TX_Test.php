@@ -5,8 +5,8 @@ namespace AmiLabs\Chainy\UnitTests;
 use PHPUnit_Framework_TestCase;
 use \AmiLabs\Chainy\TX;
 
-chdir(realpath(dirname(__FILE__) . '/../../web'));
-require_once 'config.php';
+$appName = 'ut.chainy';
+require_once dirname(__FILE__) . '/../../app/init.php';
 
 /**
  * Unit tests.
