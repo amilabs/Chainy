@@ -2,9 +2,7 @@
 /**
  * Frontend
  */
+$appName = 'chainy';
+require_once '../app/init.php';
 
-use \AmiLabs\DevKit\Application;
-
-require_once 'config.php';
-
-Application::getInstance()->run();
+\AmiLabs\DevKit\Application::getInstance()->run();

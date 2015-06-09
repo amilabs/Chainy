@@ -28,6 +28,10 @@
             "AmiLabs\\Chainy": "app/classes"
         }
     },
-	"minimum-stability": "dev",
-	"prefer-stable" : true
+    "minimum-stability": "dev",
+    "prefer-stable" : true,
+    "scripts": {
+        "post-update-cmd":  "AmiLabs\\DevKit\\Utility\\Composer::postUpdate",
+        "post-install-cmd": "AmiLabs\\DevKit\\Utility\\Composer::postInstall"
+    }
 }

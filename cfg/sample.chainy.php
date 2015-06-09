@@ -5,8 +5,6 @@
  * Copy this file to config.local.php before making any changes.
  */
 
-if(!defined('AMILABS')) die;
-
 $aConfig += array(
     'request' => array(
         'type' => '\\AmiLabs\\Chainy\\RequestCHAINY'
