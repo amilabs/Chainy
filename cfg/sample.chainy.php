@@ -5,14 +5,22 @@
  * Copy this file to config.local.php before making any changes.
  */
 
+$aConfig['path']['app'] = rtrim(realpath(dirname(__FILE__) . '/../app'), '/');
+
 $aConfig += array(
-    'request' => array(
-        'type' => '\\AmiLabs\\Chainy\\RequestCHAINY'
+    'Router' => array(
+        'aRoutes' => array(
+            ''               => array(),
+            ':code'          => array('default' => array('byHash' => FALSE)),
+            'add'            => array('default' => array('action' => 'add')),
+            'tx/:hash'       => array('default' => array('code' => FALSE, 'byHash' => TRUE)),
+            'getShort/:hash' => array('default' => array('action' => 'short'))
+        )
     ),
     // CryptoKit configuration
     'CryptoKit' => array(
         'layer' => 'Counterparty',
-        'testnet' => false,
+        'testnet' => FALSE,
         'RPC' => array(
             'services' => array(
                 array(
