@@ -1,0 +1,6 @@
+composer.phar
+composer.lock
+web/*.local.php
+tmp
+log
+vendor

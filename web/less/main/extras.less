@@ -1,0 +1,225 @@
+/*
+ *  Document   : extras.less
+ *  Author     : pixelcave
+ *
+ *  EXTRAS
+ *  Helper, themes, responsive and retina related styles
+ *
+ */
+
+/*
+=================================================================
+(#m05ths) THEME
+=================================================================
+*/
+
+/* Default Color Theme specific colors */
+.themed-color {
+    color: @color_highlight;
+}
+
+.themed-border {
+    border-color: @color_highlight;
+}
+
+.themed-background {
+    background-color: @color_highlight;
+}
+
+.themed-color-dark {
+    color: @color_dark;
+}
+
+.themed-border-dark {
+    border-color: @color_dark;
+}
+
+.themed-background-dark {
+    background-color: @color_dark;
+}
+
+/*
+=================================================================
+(#m06hes) HELPERS
+=================================================================
+*/
+
+.push-bit {
+    margin-bottom: 30px;
+}
+
+.push {
+    margin-bottom: 49px;
+}
+
+.push-top-bottom {
+    margin-top: 49px;
+    margin-bottom: 49px;
+}
+
+.remove-margin {
+    margin-bottom: 0;
+}
+
+.lt-ie9 .hidden-lt-ie9 {
+    display: none !important;
+}
+
+.display-none {
+    display: none;
+}
+
+.visibility-none {
+    visibility: hidden;
+}
+
+:focus {
+    outline: 0 !important;
+}
+
+/*
+=================================================================
+(#m07res) RESPONSIVE
+=================================================================
+*/
+
+/* Small devices, Tablets (>767px) */
+@media screen and (min-width: 768px) {
+
+    /* General */
+    .site-heading-promo {
+        margin-top: 60px;
+    }
+}
+
+/* Medium devices, Desktops (>991px) */
+@media screen and (min-width: 992px) {
+
+    /* Menu */
+    .site-nav {
+        position: static;
+        top: auto;
+        right: auto;
+        bottom: auto;
+        overflow-y: visible;
+        width: auto;
+        background: transparent;
+        z-index: auto;
+        -webkit-transition: none;
+        transition: none;
+    }
+
+    .site-nav li {
+        float: left;
+        padding: 0;
+        margin-left: 10px;
+        position: relative;
+    }
+
+    .site-nav a {
+        margin: 0;
+    }
+
+    .site-nav li:hover > ul {
+        display: block;
+    }
+
+    .site-nav li.active > a {
+        border-radius: 3px;
+    }
+
+    .site-nav a.site-nav-sub,
+    .site-nav li.active:hover > a.site-nav-sub {
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+    }
+
+    .site-nav > li:hover > a,
+    .site-nav > li.active:hover > a {
+        color: #333333;
+        background: #ffffff;
+        text-decoration: none;
+    }
+
+    .site-nav a.site-nav-sub {
+        padding-right: 30px;
+    }
+
+    .site-nav i.site-nav-arrow {
+        margin: 0 -20px 0 0;
+    }
+
+    /* Submenu */
+    .site-nav ul {
+        display: none;
+        position: absolute;
+        left: 0;
+        top: 34px;
+        padding: 2px 0;
+        width: 160px;
+        background-color: #ffffff;
+        border-radius: 3px;
+        border-top-left-radius: 0;
+        -webkit-box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
+        box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
+    }
+
+    .site-nav li:last-child ul {
+        left: auto;
+        right: 0;
+        border-radius: 3px;
+        border-top-right-radius: 0;
+    }
+
+    .site-nav ul li {
+        float: none;
+        margin: 0;
+        padding: 1px 3px;
+    }
+
+    .site-nav ul a {
+        color: #333333;
+    }
+
+    .site-nav ul a:hover {
+        background-color: #eeeeee;
+    }
+
+    .site-nav ul a.active,
+    .site-nav ul a.active:hover {
+        background-color: #454545;
+    }
+}
+
+/* Large devices, Desktops (>1199px) */
+@media screen and (min-width: 1200px) {
+
+    /* General */
+    article p {
+        font-size: 19px;
+        line-height: 1.9;
+    }
+
+    .site-heading-promo {
+        margin-top: 120px;
+    }
+
+    .promo-content {
+        font-size: 24px;
+        font-weight: 300;
+    }
+}
+
+/*
+=================================================================
+(#m08rts) RETINA
+=================================================================
+*/
+
+@media only screen and (-webkit-min-device-pixel-ratio: 1.5),
+only screen and (-moz-min-device-pixel-ratio: 1.5),
+only screen and (-o-min-device-pixel-ratio: 3/2),
+only screen and (min-device-pixel-ratio: 1.5) {
+    /* If you did use a CSS image background, you can put your high resolution image here */
+
+}

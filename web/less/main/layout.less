@@ -1,0 +1,26 @@
+/*
+ *  Document   : layout.less
+ *  Author     : pixelcave
+ *
+ *  MAIN LAYOUT
+ *  Template’s main layout styles
+ *
+ */
+
+/* Include Open Sans font from Google Web Fonts */
+@import url('http://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic,700,700italic');
+
+body {
+    font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    color: #353535;
+    background-color: @background_color_body;
+}
+
+#page-container {
+    margin: 0 auto;
+    width: 100%;
+}
+
+#page-container.boxed {
+    max-width: @max_width_boxed_layout;
+}
