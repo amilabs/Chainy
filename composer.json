@@ -2,11 +2,11 @@
     "repositories": [
         {
             "type": "vcs",
-            "url": "https://github.com/amilabs/devkit"
+            "url": "https://github.com/everexio/devkit"
         },
         {
             "type": "vcs",
-            "url": "https://github.com/amilabs/CryptoKit"
+            "url": "https://github.com/everexio/CryptoKit"
         },
         {
             "type": "vcs",
@@ -18,8 +18,8 @@
         }
     ],
     "require": {
-        "amilabs/devkit": "dev-develop",
-        "amilabs/CryptoKit": "dev-develop",
+        "everexio/devkit": "dev-develop",
+        "everexio/CryptoKit": "dev-develop",
         "Deepelopment/Net": "dev-develop",
         "artemko7v/php-op_return": "dev-master"
     },
