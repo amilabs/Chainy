@@ -23,7 +23,7 @@ class indexController extends Controller {
                 $referer = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : 'Unknown';
                 $oLogger->log('Code:' . $code . ', IP:' . $ipAddress . ', Referer:' . $referer);
             }
-            $strPos = TX::decodeBase58($code);
+            $strPos = sprintf("%0.0f", TX::decodeBase58(substr($code, 0, 6)));
             if($strPos < 3000000000){
                 $oLogger->log('ERROR: Code ' . $code . ' not found (404), cannot decode Base58.');
                 $this->notFound();
