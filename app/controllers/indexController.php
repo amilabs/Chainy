@@ -1,5 +1,21 @@
 <?php
 
+/**
+ * Copyright 2016 Everex https://everex.io
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 use \AmiLabs\DevKit\Controller;
 use \AmiLabs\DevKit\Logger;
 use \AmiLabs\Chainy\TX;
@@ -23,7 +39,7 @@ class indexController extends Controller {
                 $referer = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : 'Unknown';
                 $oLogger->log('Code:' . $code . ', IP:' . $ipAddress . ', Referer:' . $referer);
             }
-            $strPos = TX::decodeBase58($code);
+            $strPos = sprintf("%0.0f", TX::decodeBase58(substr($code, 0, 6)));
             if($strPos < 3000000000){
                 $oLogger->log('ERROR: Code ' . $code . ' not found (404), cannot decode Base58.');
                 $this->notFound();
