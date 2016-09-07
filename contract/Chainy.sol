@@ -75,6 +75,7 @@ library strUtils {
         } else {
             uint len = 0;
             for (uint i = 0; i < json.length; i++) {
+                if (i > 1) return false;
                 if (json[i] == id[0]) {
                     len = 1;
                     while (len < id.length && (i + len) < json.length && json[i + len] == id[len]) {
@@ -142,6 +143,7 @@ contract Chainy is owned, mortal {
     // Constructor
     function Chainy(){
         setConfig("fee", 0);
+        setConfig("blockoffset", 1000000);
     }
 
     // Sets configuration option
@@ -216,7 +218,7 @@ contract Chainy is owned, mortal {
     }
 
     function generateShortLink() internal returns (string) {
-        var s1 = strUtils.toBase58(block.number - 1000000, 10);
+        var s1 = strUtils.toBase58(block.number - getConfig("blockoffset"), 10);
         var s2 = strUtils.toBase58(uint256(tx.origin), 2);
 
         var s = strUtils.concat(s1, s2);
