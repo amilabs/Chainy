@@ -17,7 +17,7 @@
 
 /* String utility library */
 library strUtils {
-    string constant CHAINY_JSON_ID = 'id:"CHAINY"';
+    string constant CHAINY_JSON_ID = '"id":"CHAINY"';
     uint8 constant CHAINY_JSON_MIN_LEN = 32;
 
     /* Converts given number to base58, limited by _maxLength symbols */
@@ -74,16 +74,13 @@ library strUtils {
             return false;
         } else {
             uint len = 0;
-            for (uint i = 0; i < json.length; i++) {
-                if (i > 1) return false;
-                if (json[i] == id[0]) {
-                    len = 1;
-                    while (len < id.length && (i + len) < json.length && json[i + len] == id[len]) {
-                        len++;
-                    }
-                    if (len == id.length) {
-                        return true;
-                    }
+            if (json[1] == id[0]) {
+                len = 1;
+                while (len < id.length && (1 + len) < json.length && json[1 + len] == id[len]) {
+                    len++;
+                }
+                if (len == id.length) {
+                    return true;
                 }
             }
         }
