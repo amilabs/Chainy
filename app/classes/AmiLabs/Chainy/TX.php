@@ -22,12 +22,17 @@ use AmiLabs\CryptoKit\RPC;
 use AmiLabs\CryptoKit\BlockchainIO;
 use AmiLabs\DevKit\Registry;
 use AmiLabs\DevKit\Cache;
+use AmiLabs\DevKit\Application;
 use Moontoast\Math\BigNumber;
 
 /**
  * Chainy transaction class.
  */
 class TX extends \AmiLabs\CryptoKit\TX {
+    /**
+     * Maximum allowed file size
+     */
+    const MAX_FILE_SIZE = 50000000;
     /**
      * Transaction types
      */
@@ -39,11 +44,11 @@ class TX extends \AmiLabs\CryptoKit\TX {
     /**
      * Supported file types
      */
-    const FILE_TYPE_UNKNOWN = 0;
-    const FILE_TYPE_PDF     = 1;
-    const FILE_TYPE_ARCHIVE = 2;
-    const FILE_TYPE_TEXT    = 3;
-    const FILE_TYPE_IMAGE   = 4;
+    const FILE_TYPE_UNKNOWN = 'raw';
+    const FILE_TYPE_PDF     = 'pdf';
+    const FILE_TYPE_ARCHIVE = 'arc';
+    const FILE_TYPE_TEXT    = 'txt';
+    const FILE_TYPE_IMAGE   = 'img';
     /**
      * URL types
      */
@@ -59,24 +64,6 @@ class TX extends \AmiLabs\CryptoKit\TX {
      * @var string
      */
     protected static $alphabet = "123456789abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ";
-    /**
-     * Returns the date block was generated.
-     *
-     * @param int $block         Block index
-     * @param bool $dateFormat   PHP date format, or return result as unix timestamp if false
-     * @return boolean|string
-     */
-    public static function getBlockDate($block, $dateFormat = 'Y-m-d H:i:s'){
-        if(!$block){
-            return false;
-        }
-        $aResult = FALSE;
-        try{
-            $aResult = BlockchainIO::getInstance()->getBlockInfo($block);
-        }catch(\Exception $e){ /* todo */ }
-        $time = is_array($aResult) && isset($aResult['block_time']) ? $aResult['block_time'] : FALSE;
-        return ($time !== FALSE) ? ($dateFormat ? date($dateFormat, (int)$time) : $time) : $time;
-    }
     /**
      * Returns block and position inside a block by hash of the transaction.
      *
@@ -410,46 +397,93 @@ class TX extends \AmiLabs\CryptoKit\TX {
      */
     public static function createHashLinkTransaction($url){
         set_time_limit(0);
-        $tx = 'not created';
         $oCache = Cache::get(md5($url));
-        $destination = PATH_TMP . "/" . md5($url) . '.tmp';
+        $oCfg = Application::getInstance()->getConfig();
+        $error = FALSE;
         if(!$oCache->exists()){
             // Download file from web
-            // Todo: partial downloads of big files
+            // @todo: partial downloads of big files
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_URL, $url);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-            curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-            $data = curl_exec($ch);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+            curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
+            curl_setopt($ch, CURLOPT_HEADER, TRUE);
+            curl_setopt($ch, CURLOPT_NOBODY, TRUE);
+            $size = curl_getinfo($ch, CURLINFO_CONTENT_LENGTH_DOWNLOAD);
+            if($size < 0){
+                $data = curl_exec($ch);
+                $aMatches = array();
+                if(preg_match("/Content\-Length.*(\d+)\s/U", $data, $aMatches)){
+                    $size = (int)$aMatches[1];
+                }
+            }
+            $data = FALSE;
+            if(($size > 0) && ($size < self::MAX_FILE_SIZE)){
+                curl_setopt($ch, CURLOPT_HEADER, FALSE);
+                curl_setopt($ch, CURLOPT_NOBODY, FALSE);
+                $data = curl_exec($ch);
+                if(FALSE !== $data){
+                    $oCache->save($data);
+                }else{
+                    $error = 'Unable to download file';
+                }
+            }else{
+                $error = 'File size ' . self::getFileSize($size) . ' exeeds maximum allowed ' . self::getFileSize(self::MAX_FILE_SIZE);
+            }
             curl_close ($ch);
-            $oCache->save($data);
         }
-        if(!$oCache->exists()){
-            die('Error downloading file ' . $url);
+        $result = FALSE;
+        if(!$error && $oCache->exists()){
+            $data = array(
+                'id'        => 'CHAINY',
+                'version'   => 1,
+                'type'      => 'L',
+                'url'       => $url,
+                'hash'      => hash_file('sha256', $oCache->getFilename()),
+                'filetype'  => self::getFileType($url),
+                'filesize'  => filesize($oCache->getFilename()),
+                // 'description' => "" // @todo: later
+            );
+            $tx = self::_callRPC(
+                "createChainyTX",
+                array(
+                    // @todo: move to configuration
+                    // '0x3d6f8823ad21cd299814b62d198d9001e67e20b3', // CHAINY service address
+                    '0x0000000000000000000000000000000000000000',
+                    '0xd8a9b776cfa93218c6ef6b051540aaa6c251b473', // CHAINY contract address
+                    json_encode($data)
+                )
+            );
+            // Transaction hash length is 66 bytes
+            if((FALSE === $tx) || (66 > strlen($tx))){
+                $error = 'Unable to create transaction at this time';
+            }else if(strlen($tx) > 66){
+                $result = array(
+                    'data'        => $data,
+                    'transaction' => $tx
+                );
+            }else{
+                $result = array('hash' => $tx);
+            }
         }
-        // Todo: calculate hash by reading parts of the file
-        $hash = hash_file('sha256', $oCache->getFilename());
-        $fileSize = filesize($oCache->getFilename());
+        if($error){
+            $result = array('error' => $error);
+        }
 
-        $protocol = (strpos($url, 'https://') === 0) ? self::URL_TYPE_HTTPS : self::URL_TYPE_HTTP;
-        $url = substr($url, $protocol ? 8 : 7);
-
-        $fileType = self::getFileType($url);
-
-        $markerHex = pack('H*', self::getMarker());
-        $sByte = str_pad(decbin(self::TX_TYPE_HASHLINK), 4, '0', STR_PAD_LEFT) . $protocol . self::PROTOCOL_VERSION;
-
-        $opretStr = chr(bindec($sByte)) . $markerHex . chr($fileType) . pack('H*', $hash);
-
-        $msigStr = $url . pack('H*', str_pad(dechex($fileSize), 8, '0', STR_PAD_LEFT));
-        $sizeBytes = str_pad(pack('H*', dechex($fileSize)), 4, chr(0), STR_PAD_LEFT);
-
-        $oCache->clear();
-
-        return self::sendChainyTransaction($opretStr, $msigStr);
+        return $result;
     }
+
+    public static function getTransactionCode($txHash){
+        $result = FALSE;
+        if(is_string($txHash) && (66 === strlen($txHash))){
+            $tx = self::_callRPC("getTransactionDetails", array($txHash));
+            var_dump($tx);
+        }
+        return $result;
+    }
+
     /**
      * Returns file type by filename or url.
      *
@@ -509,28 +543,6 @@ class TX extends \AmiLabs\CryptoKit\TX {
         return $int_val;
     }
     /**
-     * Decodes multisig output.
-     *
-     * @param string $outHex
-     * @param bool $withFileSize
-     * @return string
-     */
-    public static function decodeMultisigOutput($outHex){
-        $data = '';
-        if((strlen($outHex) == 210) && (strpos($outHex, '5121') === 0)){
-            $dataLength  = hexdec(substr($outHex, 4, 2));
-            $outHex = substr($outHex, 6);
-            $hex1 = substr($outHex, 0, 64);
-            $hex2 = substr($outHex, 66, 66);
-            $hex3 = substr($outHex, 134, 66);
-
-            $data = ltrim($hex1 . $hex2 . $hex3, '0');
-            $data = substr($data, 0, $dataLength);
-            $data = pack('H*', $data);
-        }
-        return $data;
-    }
-    /**
      * Returns filesize with size dimension units.
      *
      * @param int $size
@@ -548,4 +560,41 @@ class TX extends \AmiLabs\CryptoKit\TX {
         }
         return round($size / (1024 * 1024 * 1024)) . 'GB';
     }
+
+    /**
+     * JSON RPC request implementation.
+     *
+     * @param string $method  Method name
+     * @param array $params   Parameters
+     * @return array
+     */
+    protected static function _callRPC($method, $params = array()){
+        $data = array(
+            'jsonrpc' => "2.0",
+            'id'      => time(),
+            'method'  => $method,
+            'params'  => $params
+        );
+        $result = false;
+        $json = json_encode($data);
+        $ch = curl_init("http://mr-service-eth.amilabs.work:8502");
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+            'Content-Type: application/json',
+            'Content-Length: ' . strlen($json))
+        );
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $json );
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+        $rjson = curl_exec($ch);
+        if($rjson && (is_string($rjson)) && ('{' === $rjson[0])){
+            $json = json_decode($rjson, JSON_OBJECT_AS_ARRAY);
+            if(isset($json["result"])){
+                $result = $json["result"];
+            }
+        }
+        return $result;
+    }
+
 }

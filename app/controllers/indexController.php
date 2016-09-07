@@ -83,9 +83,8 @@ class indexController extends Controller {
         set_time_limit(0);
         $oRequest = $this->getRequest();
         if($oRequest->getMethod() === 'POST'){
-            $url = $oRequest->get('url', FALSE, INPUT_POST);
             $type = $oRequest->get('addType', FALSE, INPUT_POST);
-            $tx = FALSE;
+            $url = $oRequest->get('url', FALSE, INPUT_POST);
             switch($type){
                 case 'filehash':
                     $tx = TX::createHashLinkTransaction($url);
@@ -93,13 +92,29 @@ class indexController extends Controller {
                 case 'redirect':
                     $tx = TX::createRedirectTransaction($url);
                     break;
+                default:
+                    $tx = array();
             }
-            if($tx){
-                echo 'Transaction Hash: ' . $tx;
-                die();
+            $success = $tx && is_array($tx) && !isset($tx['error']);
+            $this->getView()->set('success', $success);
+            if($success){
+                $message =  ucfirst($type) . ' added';
+                if(isset($tx['hash'])){
+                    $this->getView()->set('hash', $tx['hash']);
+                }
+                if(isset($tx['data'])){
+                    $this->getView()->set('chainyJSON', json_encode($tx['data']));
+                }
+                if(isset($tx['transaction'])){
+                    $this->getView()->set('chainyTransaction', json_encode($tx['transaction']));
+                }
+            }else{
+                $message = 'ERROR: Unable to add ' . $type . ($tx && is_array($tx) && isset($tx['error']) ? ' (' . $tx['error'] . ')' : '');
             }
+            $this->getView()->set('message', $message);
         }
     }
+
     /**
      * getShort action.
      *
@@ -109,20 +124,15 @@ class indexController extends Controller {
     public function actionShort(array $aParameters){
         set_time_limit(0);
         $txNo = $aParameters['hash'];
-        $pos = TX::getPositionInBlockByTransaction($txNo);
-        if(!is_null($pos['block'])){
-            $short = TX::encodeBase58($pos['block'] . str_pad($pos['position'], 4, '0', STR_PAD_LEFT));
-            echo '<a href="http://txn.me/' . $short . '">' .  $short . '</a>';
-        }else{
-            echo "Transaction was not included in a block yet.";
-        }
+        $result = TX::getTransactionCode($aParameters['hash']);
+        echo $result ? $result : '';
         die();
     }
     /**
      * Not found.
      */
     protected function notFound(){
-        header('Location: http://chainy.info/err/404', TRUE, 301);
-        die();
+        // header('Location: http://chainy.info/err/404', TRUE, 301);
+        die(404);
     }
 }

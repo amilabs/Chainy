@@ -1,26 +1,26 @@
 {
     "repositories": [
         {
+            "type": "git",
+            "url": "https://github.com/everexio/cryptokit.git"
+        },
+        {
             "type": "vcs",
             "url": "https://github.com/everexio/devkit"
         },
         {
             "type": "vcs",
-            "url": "https://github.com/everexio/CryptoKit"
+            "url": "https://github.com/everexio/JSON-RPC"
         },
         {
             "type": "vcs",
-            "url": "https://github.com/Deepelopment/Net"
-        },
-        {
-            "type": "vcs",
-            "url": "https://github.com/ArtemKo7v/php-OP_RETURN"
+            "url": "https://github.com/artemko7v/php-op_return"
         }
     ],
     "require": {
+        "everexio/cryptokit": "dev-develop",
         "everexio/devkit": "dev-develop",
-        "everexio/CryptoKit": "dev-develop",
-        "Deepelopment/Net": "dev-develop",
+        "everexio/JSON-RPC": "dev-develop",
         "artemko7v/php-op_return": "dev-master"
     },
     "autoload": {
@@ -29,7 +29,7 @@
         }
     },
     "minimum-stability": "dev",
-    "prefer-stable" : true,
+    "prefer-stable" : false,
     "scripts": {
         "post-update-cmd":  "AmiLabs\\DevKit\\Utility\\Composer::postUpdate",
         "post-install-cmd": "AmiLabs\\DevKit\\Utility\\Composer::postInstall"
