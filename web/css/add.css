@@ -8,3 +8,15 @@
     height: 150px;
     margin-bottom: 20px;
 }
+
+.has-error {
+    border: 2px solid red;
+}
+
+.row {
+    margin-bottom: 8px;
+}
+
+.form-errors {
+    display: none;
+}

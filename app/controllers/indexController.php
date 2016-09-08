@@ -82,37 +82,44 @@ class indexController extends Controller {
     public function actionAdd(array $aParameters){
         set_time_limit(0);
         $oRequest = $this->getRequest();
+        session_start();
+        if(isset($_SESSION['add_result'])){
+            $result = $_SESSION['add_result'];
+            session_unset();
+            $this->getView()->set('success', $result['success']);
+            $this->getView()->set('message', $result['message']);
+            if(isset($result['hash'])){
+                $this->getView()->set('hash', $result['hash']);
+            }
+            if(isset($result['data'])){
+                $this->getView()->set('chainyJSON', json_encode($result['data'], JSON_UNESCAPED_SLASHES));
+            }
+            if(isset($result['transaction'])){
+                $this->getView()->set('chainyTransaction', json_encode($result['transaction']));
+            }
+        }
         if($oRequest->getMethod() === 'POST'){
             $type = $oRequest->get('addType', FALSE, INPUT_POST);
             $url = $oRequest->get('url', FALSE, INPUT_POST);
             switch($type){
                 case 'filehash':
-                    $tx = TX::createHashLinkTransaction($url);
+                    $result = TX::createHashLinkTransaction($url);
                     break;
                 case 'redirect':
-                    $tx = TX::createRedirectTransaction($url);
+                    $result = TX::createRedirectTransaction($url);
                     break;
                 default:
-                    $tx = array();
+                    $result = array('error' => 'Invalid operation');
             }
-            $success = $tx && is_array($tx) && !isset($tx['error']);
-            $this->getView()->set('success', $success);
-            if($success){
-                $message =  ucfirst($type) . ' added';
-                if(isset($tx['hash'])){
-                    $this->getView()->set('hash', $tx['hash']);
-                }
-                if(isset($tx['data'])){
-                    $this->getView()->set('chainyJSON', json_encode($tx['data']));
-                }
-                if(isset($tx['transaction'])){
-                    $this->getView()->set('chainyTransaction', json_encode($tx['transaction']));
-                }
-            }else{
-                $message = 'ERROR: Unable to add ' . $type . ($tx && is_array($tx) && isset($tx['error']) ? ' (' . $tx['error'] . ')' : '');
-            }
-            $this->getView()->set('message', $message);
+            $success = $result && is_array($result) && !isset($result['error']);
+            $message = ($success) ? (ucfirst($type) . ' JSON:') : ('ERROR: Unable to add ' . $type . ($tx && is_array($tx) && isset($tx['error']) ? ' (' . $tx['error'] . ')' : ''));
+            $result['success'] = $success;
+            $result['message'] = $message;
+            $_SESSION['add_result'] = $result;
+            header('Location: /add');
+            die();
         }
+        session_write_close();
     }
 
     /**

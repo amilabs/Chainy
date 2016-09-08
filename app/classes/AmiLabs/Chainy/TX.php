@@ -36,11 +36,13 @@ class TX extends \AmiLabs\CryptoKit\TX {
     /**
      * Transaction types
      */
-    const TX_TYPE_INVALID   = 0;
-    const TX_TYPE_REDIRECT  = 1;
-    const TX_TYPE_HASH      = 2;
-    const TX_TYPE_TEXT      = 3;
-    const TX_TYPE_HASHLINK  = 4;
+    const TX_TYPE_INVALID   = '';
+    const TX_TYPE_REDIRECT  = 'R';
+    const TX_TYPE_HASH      = 'H';
+    const TX_TYPE_TEXT      = 'T';
+    const TX_TYPE_HASHLINK  = 'L';
+    const TX_TYPE_ENCRYPTED = 'E';
+
     /**
      * Supported file types
      */
@@ -368,34 +370,17 @@ class TX extends \AmiLabs\CryptoKit\TX {
      * @return string
      */
     public static function createRedirectTransaction($url){
-        $tx = 'not created';
-
-        $protocol = (strpos($url, 'https://') === 0) ? self::URL_TYPE_HTTPS : self::URL_TYPE_HTTP;
-        $url = substr($url, $protocol ? 8 : 7);
-
-        $fileType = self::getFileType($url);
-
-        $markerHex = pack('H*', self::getMarker());
-        $sByte = str_pad(decbin(self::TX_TYPE_REDIRECT), 4, '0', STR_PAD_LEFT) . $protocol . self::PROTOCOL_VERSION;
-
-        $msigStr = false;
-        $opRetData = '';
-        if(strlen($url) <= 33){
-            $opRetData = $url;
-        }else{
-            $msigStr = $url;
-        }
-        $opretStr = chr(bindec($sByte)) . $markerHex . $opRetData;
-
-        return self::sendChainyTransaction($opretStr, $msigStr);
+        $data = self::_getTxData(self::TX_TYPE_REDIRECT, array('url' => $url));
+        return array('data' => $data);
     }
+
     /**
      * Create Chainy transaction of "Hash and Link" type.
      *
      * @param string $url  URL of file
      * @return string
      */
-    public static function createHashLinkTransaction($url){
+    public static function createHashLinkTransaction($url, $description = FALSE){
         set_time_limit(0);
         $oCache = Cache::get(md5($url));
         $oCfg = Application::getInstance()->getConfig();
@@ -429,6 +414,8 @@ class TX extends \AmiLabs\CryptoKit\TX {
                 }else{
                     $error = 'Unable to download file';
                 }
+            }else if($size < 0){
+                $error = 'File not found';
             }else{
                 $error = 'File size ' . self::getFileSize($size) . ' exeeds maximum allowed ' . self::getFileSize(self::MAX_FILE_SIZE);
             }
@@ -436,23 +423,22 @@ class TX extends \AmiLabs\CryptoKit\TX {
         }
         $result = FALSE;
         if(!$error && $oCache->exists()){
-            $data = array(
-                'id'        => 'CHAINY',
-                'version'   => 1,
-                'type'      => 'L',
+            $data = self::_getTxData(self::TX_TYPE_HASHLINK, array(
                 'url'       => $url,
                 'hash'      => hash_file('sha256', $oCache->getFilename()),
                 'filetype'  => self::getFileType($url),
                 'filesize'  => filesize($oCache->getFilename()),
-                // 'description' => "" // @todo: later
-            );
+            ));
+            if(FALSE !== $description){
+                $data['description'] = $description;
+            }
+            $result = array('data' => $data);
+            /*
             $tx = self::_callRPC(
                 "createChainyTX",
                 array(
-                    // @todo: move to configuration
-                    // '0x3d6f8823ad21cd299814b62d198d9001e67e20b3', // CHAINY service address
-                    '0x0000000000000000000000000000000000000000',
-                    '0xd8a9b776cfa93218c6ef6b051540aaa6c251b473', // CHAINY contract address
+                    $oCfg->get('addresses/source/address'),
+                    $oCfg->get('addresses/destination/address'),
                     json_encode($data)
                 )
             );
@@ -467,11 +453,15 @@ class TX extends \AmiLabs\CryptoKit\TX {
             }else{
                 $result = array('hash' => $tx);
             }
+            */
+        }elseif(!$error){
+            // File found but was not downloaded
+            $error = "File reading error";
         }
         if($error){
             $result = array('error' => $error);
         }
-
+        $oCache->clear();
         return $result;
     }
 
@@ -482,6 +472,15 @@ class TX extends \AmiLabs\CryptoKit\TX {
             var_dump($tx);
         }
         return $result;
+    }
+
+    protected static function _getTxData($type, array $data){
+        // @todo: check type
+        return array(
+            'id'        => 'CHAINY',
+            'version'   => 1,
+            'type'      => $type,
+        ) + $data;
     }
 
     /**
