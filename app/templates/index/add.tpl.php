@@ -11,7 +11,7 @@
                     <textarea id="chainy-tx" readonly><?php echo $chainyTransaction ?></textarea>
                 <?php endif ?>
                 <?php if(isset($hash)): ?>
-                    <a href="https://testnet.etherscan.io/tx/<?php echo $hash ?>" target="_blank"><?php echo $hash ?></a>
+                   Transaction: <a href="https://testnet.etherscan.io/tx/<?php echo $hash ?>" target="_blank"><?php echo $hash ?></a>
                 <?php endif ?>
             <?php endif ?>
             <div class="text-right">

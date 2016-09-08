@@ -51,113 +51,11 @@ class TX extends \AmiLabs\CryptoKit\TX {
     const FILE_TYPE_ARCHIVE = 'arc';
     const FILE_TYPE_TEXT    = 'txt';
     const FILE_TYPE_IMAGE   = 'img';
-    /**
-     * URL types
-     */
-    const URL_TYPE_HTTP     = 0;
-    const URL_TYPE_HTTPS    = 1;
+
     /**
      * Chainy protocol version
      */
-    const PROTOCOL_VERSION = '000';
-    /**
-     * Base58 alphabet
-     *
-     * @var string
-     */
-    protected static $alphabet = "123456789abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ";
-    /**
-     * Returns block and position inside a block by hash of the transaction.
-     *
-     * @param string $txHash  Transaction hash
-     * @return boolean|array
-     */
-    public static function getPositionInBlockByTransaction($txHash){
-        if(!$txHash){
-            return array('block' => null, 'position' => null);;
-        }
-        $block = null;
-        $txPosition = null;
-        try{
-            $aResult = BlockchainIO::getInstance()->getRawTransaction($txHash, TRUE, FALSE, FALSE);
-            if(is_array($aResult) && isset($aResult['blockhash'])){
-                $blockHash = $aResult['blockhash'];
-                $aResult = BlockchainIO::getInstance()->getBlock($blockHash);
-                if(is_array($aResult)){
-                    $block = $aResult['height'];
-                    $aTx = $aResult['tx'];
-                    sort($aTx);
-                    $key = array_search($txHash, $aTx);
-                    if($key !== false){
-                        $txPosition = $key;
-                    }
-                }
-            }
-        }catch(\Exception $e){ /* todo */ }
-        return array('block' => $block, 'position' => $txPosition);
-    }
-    /**
-     * Returns transaction hash by block and position inside block.
-     *
-     * @param int $block     Block index
-     * @param int $position  Position in block
-     * @return boolean|string
-     */
-    public static function getTransactionByPositionInBlock($block, $position){
-        if(!$block || !$position){
-            return null;
-        }
-        $txHash = null;
-        try{
-            $aResult = BlockchainIO::getInstance()->getBlockInfo($block);
-            if(is_array($aResult)){
-                $blockHash = $aResult['block_hash'];
-                $aResult = BlockchainIO::getInstance()->getBlock($blockHash);
-                if(is_array($aResult)){
-                    $aTx = $aResult['tx'];
-                    sort($aTx);
-                    if(isset($aTx[$position])){
-                        $txHash = $aTx[$position];
-                    }
-                }
-            }
-        }catch(\Exception $e){ /* todo */ }
-        return $txHash;
-    }
-    /**
-     * Checks if specified transaction hash belongs to correct Chainy transaction.
-     *
-     * @param string $tx  Transaction hash
-     * @return boolean
-     */
-    public static function isChainyTransaction($tx){
-        $result = FALSE;
-        $raw = '';
-        try{
-            $raw = BlockchainIO::getInstance()->getRawTransaction($tx);
-            $result = self::isChainyTransactionRaw($raw);
-        }catch(\Exception $e){ /* todo */ }
-        return $result;
-    }
-    /**
-    * Detects Chainy transaction by special marker in raw hex.
-    *
-    * @param string $raw  Transaction raw hex
-    * @return boolean
-    */
-    protected static function isChainyTransactionRaw($raw){
-        $result = FALSE;
-        if(strlen($raw)){
-            $aMarkers = Registry::useStorage('CFG')->get('markers', array());
-            foreach($aMarkers as $marker){
-                if(strpos(strtolower($raw), $marker) !== false){
-                    $result = true;
-                    break;
-                }
-            }
-        }
-        return $result;
-    }
+    const PROTOCOL_VERSION = '1';
     /**
      * Returns Chainy transaction type.
      *
@@ -166,25 +64,7 @@ class TX extends \AmiLabs\CryptoKit\TX {
      */
     public static function getTransactionType($tx){
         $result = self::TX_TYPE_INVALID;
-        try{
-            $data = BlockchainIO::getInstance()->getRawTransaction($tx);
-            if(self::isChainyTransactionRaw($data)){
-                $opData = TX::getDecodedOpReturn($data, true);
-                if($opData){
-                    $result = self::getTransactionTypeByOpReturn($opData);
-                }
-            }
-        }catch(\Exception $e){ /* todo */ }
         return $result;
-    }
-    /**
-     * Returns Chainy transaction type by OP_RETURN output raw data.
-     *
-     * @param string $opData  OP_RETURN output raw data
-     * @return int
-     */
-    protected static function getTransactionTypeByOpReturn($opData){
-        return hexdec(substr($opData, 0, 1));
     }
     /**
      * Decode Chainy transaction.
@@ -192,8 +72,21 @@ class TX extends \AmiLabs\CryptoKit\TX {
      * @param string $tx  Transaction hash
      * @return array
      */
-    public static function decodeChainyTransaction($tx){
-        $aTX = array();
+    public static function decodeChainyTransaction($code){
+        $result = array();
+        if(is_string($code)){
+            $oCache = Cache::get('code-' . $code);
+            if(!$oCache->exists()){
+                $oCfg = Application::getInstance()->getConfig();
+                $contract = $oCfg->get('addresses/destination/address');
+                $result = self::_callRPC("getChainyData", array($contract, $code));
+                $oCache->save($result);
+            }else{
+                $result = $oCache->load();
+            }
+        }
+        return json_decode($result, JSON_OBJECT_AS_ARRAY);
+
         try{
             $data = BlockchainIO::getInstance()->getRawTransaction($tx);
             if(self::isChainyTransactionRaw($data)){
@@ -244,68 +137,7 @@ class TX extends \AmiLabs\CryptoKit\TX {
         }
         return $aTX;
     }
-    /**
-     * Decodes transacton of "Hash and Link" type.
-     *
-     * @param string $opReturnData
-     * @param string $data
-     * @return array
-     */
-    protected static function decodeHashLinkTransaction($opReturnData, $data){
-        $aTX = array(
-            'file_name' => 'unknown',
-            'file_size' => 0,
-            'link'      => ''
-        );
-        // Sha256
-        $aTX['hash'] = substr($opReturnData, 16);
-        // Url protocol
-        $isHttps = (int)substr(decbin(hexdec(substr($opReturnData, 1, 1))), 0, 1);
 
-        $aTrans = self::decodeTransaction($data);
-        foreach($aTrans['vout'] as $aOut){
-            if(strpos($aOut['scriptPubKey'], '5121') === 0){
-                $data = self::decodeMultisigOutput($aOut['scriptPubKey']);
-            }
-        }
-        if(substr($data, strlen($data) - 4, 1) === '.'){
-            $link = $data;
-            $size = 22000;
-        }else{
-            $link = substr($data, 0, strlen($data) - 4);
-            $size = hexdec(bin2hex(substr($data, strlen($data) - 4, 4)));
-        }
-        $filename = basename($link);
-        if(strpos($filename, '?') !== false){
-            $filename = substr($filename, 0, strpos($filename, '?'));
-        }
-        $aTX['file_name'] = $filename;
-        $aTX['link'] = 'http' . ($isHttps ? 's' : '') . '://' . $link;
-        $aTX['file_size'] = self::getFileSize($size);
-
-        // Filetype
-        $fileType = (int)substr($opReturnData, 15, 1);
-        if(!$fileType){
-            $fileType = self::getFileType($link);
-        }
-        switch($fileType){
-            case self::FILE_TYPE_PDF:
-                $aTX['file_type'] = 'pdf';
-                break;
-            case self::FILE_TYPE_ARCHIVE:
-                $aTX['file_type'] = 'archive';
-                break;
-            case self::FILE_TYPE_TEXT:
-                $aTX['file_type'] = 'text';
-                break;
-            case self::FILE_TYPE_IMAGE:
-                $aTX['file_type'] = 'image';
-                break;
-            default:
-                $aTX['file_type'] = '';
-        }
-        return $aTX;
-    }
     /**
      * Creates, compiles, signs and sends Chainy transaction.
      *
@@ -491,27 +323,6 @@ class TX extends \AmiLabs\CryptoKit\TX {
                 $data['description'] = $description;
             }
             $result = array('data' => $data);
-            /*
-            $tx = self::_callRPC(
-                "createChainyTX",
-                array(
-                    $oCfg->get('addresses/source/address'),
-                    $oCfg->get('addresses/destination/address'),
-                    json_encode($data)
-                )
-            );
-            // Transaction hash length is 66 bytes
-            if((FALSE === $tx) || (66 > strlen($tx))){
-                $error = 'Unable to create transaction at this time';
-            }else if(strlen($tx) > 66){
-                $result = array(
-                    'data'        => $data,
-                    'transaction' => $tx
-                );
-            }else{
-                $result = array('hash' => $tx);
-            }
-            */
         }elseif(!$error){
             // File found but was not downloaded
             $error = "File reading error";
@@ -526,8 +337,39 @@ class TX extends \AmiLabs\CryptoKit\TX {
     public static function getTransactionCode($txHash){
         $result = FALSE;
         if(is_string($txHash) && (66 === strlen($txHash))){
-            $tx = self::_callRPC("getTransactionDetails", array($txHash));
-            var_dump($tx);
+            $tx = self::_callRPC("getReceipt", array($txHash));
+            if(is_array($tx) && isset($tx['logs']) && count($tx['logs'])){
+                $log = $tx['logs'][0];
+                if("0xdad5c3eecfdb62dd69e6e72053b88029e1d6277d4bc773c00fef243982adcb7d" === $log['topics'][0]){
+                    $data = $log['data'];
+                    $data = substr($data, 192);
+                    $data = preg_replace("/0+$/", "", $data);
+                    $result = '';
+                    for($i=0; $i < strlen($data)-1; $i+=2){
+                        $result .= chr(hexdec($data[$i] . $data[$i+1]));
+                    }
+                }
+            }
+        }
+        return $result;
+    }
+
+    public static function publishData(array $data){
+        $result = array();
+        $oCfg = Application::getInstance()->getConfig();
+        if($oCfg->get('autopublish', FALSE)){
+            $tx = self::_callRPC(
+                "createChainyTX",
+                array(
+                    $oCfg->get('addresses/source/address'),
+                    $oCfg->get('addresses/destination/address'),
+                    json_encode($data, JSON_UNESCAPED_SLASHES)
+                )
+            );
+            // Transaction hash length is 66 bytes
+            if(strlen($tx) == 66){
+                $result = array('hash' => $tx);
+            }
         }
         return $result;
     }
@@ -605,7 +447,7 @@ class TX extends \AmiLabs\CryptoKit\TX {
      * @param int $size
      * @return string
      */
-    protected static function getFileSize($size){
+    public static function getFileSize($size){
         if($size < 1024){
             return $size . 'B';
         }
@@ -626,6 +468,7 @@ class TX extends \AmiLabs\CryptoKit\TX {
      * @return array
      */
     protected static function _callRPC($method, $params = array()){
+        $oCfg = Application::getInstance()->getConfig();
         $data = array(
             'jsonrpc' => "2.0",
             'id'      => time(),
@@ -634,7 +477,7 @@ class TX extends \AmiLabs\CryptoKit\TX {
         );
         $result = false;
         $json = json_encode($data);
-        $ch = curl_init("http://mr-service-eth.amilabs.work:8502");
+        $ch = curl_init($oCfg->get('service'));
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_HTTPHEADER, array(
             'Content-Type: application/json',

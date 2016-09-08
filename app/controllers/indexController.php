@@ -39,20 +39,45 @@ class indexController extends Controller {
                 $referer = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : 'Unknown';
                 $oLogger->log('Code:' . $code . ', IP:' . $ipAddress . ', Referer:' . $referer);
             }
-            $strPos = sprintf("%0.0f", TX::decodeBase58(substr($code, 0, 6)));
-            if($strPos < 3000000000){
-                $oLogger->log('ERROR: Code ' . $code . ' not found (404), cannot decode Base58.');
-                $this->notFound();
-            }
-            $block = (int)substr($strPos, 0, 6);
-            $position = (int)substr($strPos, 6);
-            $txNo = TX::getTransactionByPositionInBlock($block, $position);
+            $result = TX::decodeChainyTransaction($code);
         }else{
             // by TX Hash
-            $txNo = $aParameters['hash'];
-            $aBlockData = TX::getPositionInBlockByTransaction($txNo);
-            $block = $aBlockData['block'];
         }
+        if(isset($result) && is_array($result)){
+            if($result['type'] == TX::TX_TYPE_HASHLINK){
+                $result['filesize'] = TX::getFileSize($result['filesize']);
+                switch($result['filetype']){
+                    case TX::FILE_TYPE_PDF:
+                        $result['filetype'] = 'pdf';
+                        break;
+                    case TX::FILE_TYPE_ARCHIVE:
+                        $result['filetype'] = 'archive';
+                        break;
+                    case TX::FILE_TYPE_TEXT:
+                        $result['filetype'] = 'text';
+                        break;
+                    case TX::FILE_TYPE_IMAGE:
+                        $result['filetype'] = 'image';
+                        break;
+                    default:
+                        $result['filetype'] = '';
+                }
+                $result['block']    = 'Unknown';
+                $result['tx']       = 'Unknown';
+                $result['date']     = 'Unknown';
+
+                $this->oView->set('aTX', $result);
+            }
+            if($result['type'] == TX::TX_TYPE_REDIRECT){
+                header('Location:' . $result['url']);
+                die();
+            }
+        }else{
+            $oLogger->log('ERROR: Code ' . $code . ' not found (404), no corresponding transaction.');
+            $this->notFound();
+        }
+
+        /*
         $blockDate = TX::getBlockDate($block);
         $aTransaction = array(
             'tx'    => $txNo,
@@ -72,6 +97,7 @@ class indexController extends Controller {
             $oLogger->log('ERROR: Code ' . $code . ' not found (404), no corresponding transaction.');
             $this->notFound();
         }
+         */
     }
     /**
      * Add action.
@@ -130,6 +156,12 @@ class indexController extends Controller {
                     $result = array('error' => 'Invalid operation');
             }
             $success = $result && is_array($result) && !isset($result['error']);
+            if($success){
+                $tx = TX::publishData($result['data']);
+                if(is_array($tx)){
+                    $result += $tx;
+                }
+            }
             $message = ($success) ? (ucfirst($type) . ' JSON:') : ('ERROR: Unable to add ' . $type . ($result && is_array($result) && isset($result['error']) ? ' (' . $result['error'] . ')' : ''));
             $result['success'] = $success;
             $result['message'] = $message;

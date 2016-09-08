@@ -175,6 +175,9 @@ var App = function() {
 
     window.fileReader = new FileReader();
     function readFile(file){
+        if('undefined' === typeof(addForm)){
+            var addForm = false;
+        }
         if(!file){
             return;
         }
