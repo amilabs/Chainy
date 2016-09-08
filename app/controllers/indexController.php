@@ -113,7 +113,7 @@ class indexController extends Controller {
                     $result = array('error' => 'Invalid operation');
             }
             $success = $result && is_array($result) && !isset($result['error']);
-            $message = ($success) ? (ucfirst($type) . ' JSON:') : ('ERROR: Unable to add ' . $type . ($tx && is_array($tx) && isset($tx['error']) ? ' (' . $tx['error'] . ')' : ''));
+            $message = ($success) ? (ucfirst($type) . ' JSON:') : ('ERROR: Unable to add ' . $type . ($result && is_array($result) && isset($result['error']) ? ' (' . $result['error'] . ')' : ''));
             $result['success'] = $success;
             $result['message'] = $message;
             $_SESSION['add_result'] = $result;
