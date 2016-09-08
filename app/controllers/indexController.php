@@ -118,6 +118,14 @@ class indexController extends Controller {
                 case 'Text':
                     $result = TX::createTextTransaction($description);
                     break;
+                case 'Hash':
+                    $result = TX::createHashTransaction($description);
+                    break;
+                case 'Encrypted Text':
+                    $encrypted  = $oRequest->get('encrypted', FALSE, INPUT_POST);
+                    $hash       = $oRequest->get('hash', FALSE, INPUT_POST);
+                    $result     = TX::createEncryptedTextTransaction($encrypted, $hash);
+                    break;
                 default:
                     $result = array('error' => 'Invalid operation');
             }

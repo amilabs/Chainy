@@ -25,6 +25,7 @@
                 <li><a data-toggle="tab" href="#remote-filehash">Remote File Hash</a></li>
                 <li><a data-toggle="tab" href="#redirect">Redirect</a></li>
                 <li><a data-toggle="tab" href="#text">Text</a></li>
+                <li><a data-toggle="tab" href="#data-hash">Hash</a></li>
                 <li><a data-toggle="tab" href="#encrypted-text">Encrypted Text</a></li>
             </ul>
             <div class="tab-content">
@@ -133,37 +134,53 @@
                         </div>
                     </form>
                 </div>
-                <div id="encrypted-text" class="tab-pane fade">
+                <div id="data-hash" class="tab-pane fade">
                     <form class="add-chainy" action="/add" method="POST">
-                        <input type="hidden" name="addType" value="Encrypted Text">
+                        <input type="hidden" name="addType" value="Hash">
                         <div class="row">
                             <div class="col-xs-2 text-right">
-                                Text:
+                                Data:
                             </div>
                             <div class="col-xs-10">
-                                <textarea name="description" class="check-description"></textarea>
+                                <textarea name="description" class="check-empty check-description"></textarea>
                                 <div class="form-errors text-danger"></div>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-xs-2 text-right">
-                                Password:
-                            </div>
-                            <div class="col-xs-10">
-                                <input type="password" name="password1">
-                                <div class="form-errors text-danger">Empty password</div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-xs-2 text-right">
-                                Repeat Password:
-                            </div>
-                            <div class="col-xs-10">
-                                <input type="password" name="password2">
-                                <div class="form-errors text-danger">Passwords don't match</div>
-                            </div>
-                        </div>
                     </form>
+                </div>
+                <div id="encrypted-text" class="tab-pane fade">
+                    <form class="add-chainy" action="/add" method="POST">
+                        <input type="hidden" name="addType" value="Encrypted Text">
+                        <input type="hidden" name="encrypted">
+                        <input type="hidden" name="hash">
+                    </form>
+                    <div class="row">
+                        <div class="col-xs-2 text-right">
+                            Text:
+                        </div>
+                        <div class="col-xs-10">
+                            <textarea id="enc-text" class="check-empty check-description"></textarea>
+                            <div class="form-errors text-danger"></div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-2 text-right">
+                            Password:
+                        </div>
+                        <div class="col-xs-10">
+                            <input type="password" id="password1">
+                            <div class="form-errors text-danger"></div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-2 text-right">
+                            Repeat Password:
+                        </div>
+                        <div class="col-xs-10">
+                            <input type="password" id="password2">
+                            <div class="form-errors text-danger"></div>
+                        </div>
+                    </div>
                 </div>
                 <div class="text-right">
                     <a class="btn btn-success btn-lg" id="add-btn" onclick="submitAdd(); return false;">ADD</a>
@@ -210,6 +227,29 @@ function submitAdd(){
             checked = false;
         }
     }
+    if(checked && $('#password1:visible').length){
+        $('#encrypted-text input, #encrypted-text textarea').removeClass('has-error');
+        $('#encrypted-text .form-errors').text('');
+        var password1 = $('#password1:visible').val();
+        var password2 = $('#password2:visible').val();
+        if(!password1){
+            $('#password1').addClass('has-error');
+            $('#password1').next('.form-errors').text('Required').show();
+            checked = false;
+        }else if(password1 !== password2){
+            $('#password1').removeClass('has-error');
+            $('#password2').addClass('has-error');
+            $('#password2').next('.form-errors').text("Passwords don't match").show();
+            checked = false;
+        }else{
+            var enc = $('#enc-text').val();
+            var hash = CryptoJS.SHA256(enc).toString();
+            var encrypted = CryptoJS.AES.encrypt(enc, password1).toString();
+            $('[name=encrypted]').val(encrypted);
+            $('[name=encrypted]').next().val(hash);
+        }
+    }
+
     if(checked){
         $('.form-errors').hide();
         $('.add-chainy:visible').submit();

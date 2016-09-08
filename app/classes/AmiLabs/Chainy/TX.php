@@ -355,6 +355,7 @@ class TX extends \AmiLabs\CryptoKit\TX {
         }
         return $tx;
     }
+
     /**
      * Returns current Chainy marker from config.
      *
@@ -363,6 +364,7 @@ class TX extends \AmiLabs\CryptoKit\TX {
     public static function getMarker(){
         return Registry::useStorage('CFG')->get('marker');
     }
+
     /**
      * Create Chainy transaction of "Redirect" type.
      *
@@ -373,6 +375,7 @@ class TX extends \AmiLabs\CryptoKit\TX {
         $data = self::_getTxData(self::TX_TYPE_REDIRECT, array('url' => $url));
         return array('data' => $data);
     }
+
     /**
      * Create Chainy transaction of "Text" type.
      *
@@ -382,6 +385,28 @@ class TX extends \AmiLabs\CryptoKit\TX {
     public static function createTextTransaction($text){
         $text = str_replace("\r", "" , $text);
         $data = self::_getTxData(self::TX_TYPE_TEXT, array('description' => $text, 'hash' => hash("sha256", $text)));
+        return array('data' => $data);
+    }
+
+    /**
+     * Create Chainy transaction of "Hash" type.
+     *
+     * @param string $text  URL of redirect
+     * @return string
+     */
+    public static function createHashTransaction($text){
+        $data = self::_getTxData(self::TX_TYPE_HASH, array('hash' => hash("sha256", $text)));
+        return array('data' => $data);
+    }
+
+    /**
+     * Create Chainy transaction of "Encrypted" type.
+     *
+     * @param string $text  URL of redirect
+     * @return string
+     */
+    public static function createEncryptedTextTransaction($encrypted, $hash){
+        $data = self::_getTxData(self::TX_TYPE_ENCRYPTED, array('encrypted' => $encrypted, 'hash' => $hash));
         return array('data' => $data);
     }
 
