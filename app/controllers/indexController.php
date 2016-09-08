@@ -101,9 +101,10 @@ class indexController extends Controller {
         if($oRequest->getMethod() === 'POST'){
             $type = $oRequest->get('addType', FALSE, INPUT_POST);
             $url = $oRequest->get('url', FALSE, INPUT_POST);
+            $description = $oRequest->get('description', "", INPUT_POST);
             switch($type){
                 case 'filehash':
-                    $result = TX::createHashLinkTransaction($url);
+                    $result = TX::createHashLinkTransaction($url, $description ? $description : FALSE);
                     break;
                 case 'redirect':
                     $result = TX::createRedirectTransaction($url);

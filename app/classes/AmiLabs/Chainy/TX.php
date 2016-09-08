@@ -430,6 +430,7 @@ class TX extends \AmiLabs\CryptoKit\TX {
                 'filesize'  => filesize($oCache->getFilename()),
             ));
             if(FALSE !== $description){
+                $description = str_replace("\r", "" , $description);
                 $data['description'] = $description;
             }
             $result = array('data' => $data);
