@@ -414,7 +414,7 @@ class TX extends \AmiLabs\CryptoKit\TX {
                 }else{
                     $error = 'Unable to download file';
                 }
-            }else if($size < 0){
+            }elseif($size < 0){
                 $error = 'File not found';
             }else{
                 $error = 'File size ' . self::getFileSize($size) . ' exeeds maximum allowed ' . self::getFileSize(self::MAX_FILE_SIZE);
