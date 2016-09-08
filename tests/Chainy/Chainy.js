@@ -100,10 +100,58 @@ contract('Chainy', function(accounts){
                     'result': 'fail'
                 },
                 {
-                    'params': ['accounts[1]'],
+                    'params': ['accounts[4]'],
                     'from'  : 'owner',
                     'result': 'success'
                 },
+            ],
+        },
+        // set fee to 5000000000000001
+        {
+            'contract': 'Chainy',
+            'method'  : 'setConfig',
+            'tests'   : [
+                {
+                    'params': ['ne|fee', '5000000000000001'],
+                    'from'  : 'owner',
+                    'result': 'success'
+                }
+            ],
+        },
+        // add Chainy data
+        {
+            'contract': 'Chainy',
+            'method'  : 'addChainyData',
+            'tests'   : [
+                {
+                    'params': ['ne|{"id":"CHAINY", version: 1, type: "L", url: "http:\/\/site.com\/file.zip", hash: "24356450ab5de1cf7b07a85cda0ff91c0b44a347b731402c4fa6729ec7c98", filetype: "arc", filesize: 1024, description: "reports.everex.one"}'],
+                    'from'  : 'accounts[8]',
+                    'value' : '5000000000000000',
+                    'result': 'fail'
+                }
+            ],
+        },
+        {
+            'contract': 'Chainy',
+            'method'  : 'addChainyData',
+            'tests'   : [
+                {
+                    'params': ['ne|{"id":"CHAINY", version: 1, type: "L", url: "http:\/\/site.com\/file.zip", hash: "24356450ab5de1cf7b07a85cda0ff91c0b44a347b731402c4fa6729ec7c98", filetype: "arc", filesize: 1024, description: "reports.everex.one"}'],
+                    'from'  : 'accounts[8]',
+                    'value' : '5000000000000001',
+                    'result': 'success'
+                }
+            ],
+        },
+        {
+            'contract': 'Chainy',
+            'method'  : 'setConfig',
+            'tests'   : [
+                {
+                    'params': ['ne|fee', '0'],
+                    'from'  : 'owner',
+                    'result': 'success'
+                }
             ],
         },
     ];
@@ -147,7 +195,7 @@ contract('Chainy', function(accounts){
                     }
                     callMethod += 'aParams[' + i + ']';
                 }
-                callMethod += ',{from: from})';
+                callMethod += ',{from: from' + (curTest.value ? (',value: ' + curTest.value) : '') + '})';
                 clog('Contract method = ' + callMethod);
 
                 return eval(callMethod)
@@ -224,7 +272,7 @@ contract('Chainy', function(accounts){
                 });
             }
 
-            chainy.addChainyData(aData.json, {from: accounts[1]})
+            chainy.addChainyData(aData.json, {from: accounts[3]})
             .then(function(res){
                 result = 'success';
                 clog("Tx: " + res);
@@ -278,7 +326,7 @@ contract('Chainy', function(accounts){
 
         return chainy.getChainySender.call(chainyCode, {from: accounts[2]})
         .then(function(res){
-            assert.equal(res.valueOf(), accounts[1], '');
+            assert.equal(res.valueOf(), accounts[3], '');
         });
     });
 
