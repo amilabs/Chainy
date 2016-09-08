@@ -384,6 +384,28 @@ class TX extends \AmiLabs\CryptoKit\TX {
         $data = self::_getTxData(self::TX_TYPE_TEXT, array('description' => $text, 'hash' => hash("sha256", $text)));
         return array('data' => $data);
     }
+
+    /**
+     * Create Chainy transaction of "Hash and Link" type.
+     *
+     * @param string $url  URL of file
+     * @return string
+     */
+    public static function createLocalFileHashLinkTransaction($filename, $filesize, $hash, $description = FALSE){
+        $data = self::_getTxData(self::TX_TYPE_HASHLINK, array(
+            'filename'  => $filename,
+            'hash'      => $hash,
+            'filetype'  => self::getFileType($filename),
+            'filesize'  => $filesize,
+        ));
+        if(FALSE !== $description){
+            $description = str_replace("\r", "" , $description);
+            $data['description'] = $description;
+        }
+        $result = array('data' => $data);
+        return $result;
+    }
+
     /**
      * Create Chainy transaction of "Hash and Link" type.
      *

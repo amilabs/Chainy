@@ -173,22 +173,112 @@ var App = function() {
         }
     };
 
+    window.fileReader = new FileReader();
+    function readFile(file){
+        if(!file){
+            return;
+        }
+        // In progress
+        if(1 === fileReader.readyState){
+            if(!confirm('Abort current hash calculation?')){
+                return;
+            }else{
+                fileReader.abort();
+                setTimeout(function(_f){
+                    return function(){
+                        readFile(_f);
+                    }
+                }(file), 500);
+                return;
+            }
+        }
+
+        var blobSlice = File.prototype.slice || File.prototype.mozSlice || File.prototype.webkitSlice;
+        var chunkSize = 100000;
+        var startTime = +new Date(), elapsed;
+        var chunks = Math.ceil(file.size / chunkSize);
+        var currentChunk = 0;
+        var sha256 = CryptoJS.algo.SHA256.create();
+
+        if(addForm){
+            $('#local-fileinfo [name=filename]').val(file.name);
+            $('#local-fileinfo [name=filesize]').val(file.size);
+            $('#local-fileinfo [name=hash]').val('');           
+            $('#local-filename').text(file.name);
+            $('#local-filesize').text(file.size) + ' bytes';
+            $('#local-hash').hide();
+            $('#local-hash-progress').show();
+            $('#local-fileinfo').show();
+        }
+
+        var readNextChunk = function() {
+            var start = currentChunk * chunkSize;
+            var end = Math.min(start + chunkSize, file.size);
+            fileReader.readAsBinaryString(blobSlice.call(file, start, end));
+        };
+
+        fileReader.onload = function(e){
+            if(addForm){
+                var percent = Math.round(100 * (currentChunk + 1) / chunks);
+                $('#local-hash-progress .progress-bar').css('width', percent + '%');
+                $('#local-hash-progress .progress-bar').attr('aria-valuenow', percent);
+                $('#local-hash-progress .progress-bar').text(percent + '%');
+            }
+            var text = e.target.result;
+            text = CryptoJS.enc.Latin1.parse(text);
+
+            sha256.update(text);
+            ++currentChunk;
+
+            if (currentChunk < chunks) {
+                readNextChunk();
+            } else {
+                var hash = sha256.finalize().toString();
+                elapsed = +new Date() - startTime;
+
+                if(!addForm){
+                    var storedHash = $('#file-hash').val();
+                    if(hash === storedHash){
+                        alert('Verification successed!');
+                        console.log(hash + ' == ' + storedHash);
+                    }else{
+                        alert('Verification failed!');
+                        console.log(hash + ' != ' + storedHash);
+                    }
+                }else{
+                    $('#local-hash').text(hash);
+                    $('#local-hash').show();
+                    $('#local-hash-progress').hide();
+                    $('#local-hash-progress .progress-bar').css('width', '0%');
+                    $('#local-hash-progress .progress-bar').attr('aria-valuenow', 0);
+                    $('#local-hash-progress .progress-bar').text('');
+                    $('#local-fileinfo [name=hash]').val(hash);
+                    console.info("computed hash", hash, 'for file', file.name, 'in', elapsed, 'ms');
+                }
+            }
+        };
+
+        fileReader.onerror = function(){
+            if(addForm){
+                clearLocalFileData();
+            }
+        };
+
+        readNextChunk();            
+    }
+
     var handleFileSelect = function(evt){
         evt.stopPropagation();
         evt.preventDefault();
         var files = evt.target.files;
-        var reader = new FileReader();
-        reader.onloadend = checkFile;
-        reader.readAsBinaryString(files[0]);
+        readFile(files[0]);
     }
 
     var handleFileSelectDnd = function(evt){
         evt.stopPropagation();
         evt.preventDefault();
         var files = evt.dataTransfer.files;
-        var reader = new FileReader();
-        reader.onloadend = checkFile;
-        reader.readAsBinaryString(files[0]);
+        readFile(files[0]);
     }
 
     var handleDragOver = function(evt) {

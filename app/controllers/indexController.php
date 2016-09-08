@@ -103,7 +103,13 @@ class indexController extends Controller {
             $url = $oRequest->get('url', FALSE, INPUT_POST);
             $description = $oRequest->get('description', "", INPUT_POST);
             switch($type){
-                case 'Filehash':
+                case 'Local file hash':
+                    $filename = $oRequest->get('filename', FALSE, INPUT_POST);
+                    $filesize = $oRequest->get('filesize', FALSE, INPUT_POST);
+                    $hash     = $oRequest->get('hash', FALSE, INPUT_POST);
+                    $result = TX::createLocalFileHashLinkTransaction($filename, $filesize, $hash, $description ? $description : FALSE);
+                    break;
+                case 'File hash':
                     $result = TX::createHashLinkTransaction($url, $description ? $description : FALSE);
                     break;
                 case 'Redirect':

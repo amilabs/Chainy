@@ -29,18 +29,66 @@
             </ul>
             <div class="tab-content">
                 <div id="local-filehash" class="tab-pane fade in active">
-                    <h2>Comming Soon...</h2>
+                    <form class="add-chainy" action="/add" method="POST">
+                        <input type="hidden" name="addType" value="Local file hash">
+                        <div class="row">
+                            <div id="verifier" class="col-xs-4">
+                                <a href="javascript:void(0)" class="store-item">
+                                    <div class="store-item-icon"><input type="file" id="select-file" style="display: none;">
+                                        <i class="fa fa-cloud-upload themed-color"></i>
+                                            <div style="font-size:16px;">Click or drag and drop file here</div>
+                                    </div>
+                                </a>
+                                <div class="form-errors text-danger"></div>
+                            </div>
+                            <div class="col-xs-8" style="display:none;" id="local-fileinfo">
+                                <div class="row">
+                                    <div class="col-xs-2 text-right">Filename:</div>
+                                    <div class="col-xs-10">
+                                        <span id="local-filename"></span>
+                                        <input type="hidden" name="filename">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-2 text-right">Filesize:</div>
+                                    <div class="col-xs-10">
+                                        <span id="local-filesize"></span>
+                                        <input type="hidden" name="filesize">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-2 text-right">Hash:</div>
+                                    <div class="col-xs-10">
+                                        <div class="progress" id="local-hash-progress">
+                                          <div class="progress-bar" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width:0%"></div>
+                                        </div>
+                                        <span id="local-hash"></span>
+                                        <input type="hidden" name="hash">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-2 text-right">
+                                        Descrtiption:
+                                    </div>
+                                    <div class="col-xs-10">
+                                        <textarea name="description" class="check-description"></textarea>
+                                        <div class="form-errors text-danger">Description is too big</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
                 </div>
                 <div id="remote-filehash" class="tab-pane fade">
                     <form class="add-chainy" action="/add" method="POST">
-                        <input type="hidden" name="addType" value="Filehash">
+                        <input type="hidden" name="addType" value="File hash">
                         <div class="row">
                             <div class="col-xs-2 text-right">
                                 URL:
                             </div>
                             <div class="col-xs-10">
                                 <input type="text" name="url" class="trim-on-submit check-url" size="64">
-                                <div class="form-errors text-danger">Invalid URL</div>
+                                <div class="form-errors text-danger"></div>
                             </div>
                         </div>
                         <div class="row">
@@ -66,11 +114,10 @@
                             </div>
                             <div class="col-xs-10">
                                 <input type="text" name="url" class="trim-on-submit check-url" size="64">
-                                <div class="form-errors text-danger">Invalid URL</div>
+                                <div class="form-errors text-danger"></div>
                             </div>
                         </div>
                     </form>
-                    <div class="form-errors text-right text-danger">Invalid URL!</div>
                 </div>
                 <div id="text" class="tab-pane fade">
                     <form class="add-chainy" action="/add" method="POST">
@@ -80,8 +127,8 @@
                                 Text:
                             </div>
                             <div class="col-xs-10">
-                                <textarea name="description" class="check-description"></textarea>
-                                <div class="form-errors text-danger">Text is too big</div>
+                                <textarea name="description" class="check-empty check-description"></textarea>
+                                <div class="form-errors text-danger"></div>
                             </div>
                         </div>
                     </form>
@@ -95,7 +142,7 @@
                             </div>
                             <div class="col-xs-10">
                                 <textarea name="description" class="check-description"></textarea>
-                                <div class="form-errors text-danger">Text is too big</div>
+                                <div class="form-errors text-danger"></div>
                             </div>
                         </div>
                         <div class="row">
@@ -126,6 +173,7 @@
     </div>
 </div>
 <script>
+var addForm = true;
 function submitAdd(){
     $('.trim-on-submit:visible').each(function(){
         this.value = this.value.replace(/^\s+/, '').replace(/\s+$/, '');
@@ -135,20 +183,48 @@ function submitAdd(){
         var regexp = /^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)$/;
         if(!regexp.test(this.value)){
             $(this).addClass('has-error');
-            $(this).next('.form-errors').show();
+            $(this).next('.form-errors').text('Invalid URL').show();
             checked = false;
         }
     });
     $('.check-description:visible').each(function(){
         if(this.value && this.value.length > 4500){
             $(this).addClass('has-error');
-            $(this).next('.form-errors').show();
+            $(this).next('.form-errors').text('Text is too long').show();
             checked = false;
         }
     });
+    $('.check-empty:visible').each(function(){
+        if(!this.value){
+            $(this).addClass('has-error');
+            $(this).next('.form-errors').text('Required').show();
+            checked = false;
+        }
+    });
+    if($('#verifier:visible').length){
+        var hash = $('#local-fileinfo input[name=hash]').val();
+        if(!hash){
+            var fileSelected = $('#local-fileinfo [name=filename]').val();
+            $('#verifier a').addClass('has-error');
+            $('#verifier .form-errors').text(fileSelected ? 'Hash calculation is not complete, please wait' : 'File is not selected').show();
+            checked = false;
+        }
+    }
     if(checked){
         $('.form-errors').hide();
         $('.add-chainy:visible').submit();
     }
+}
+function clearLocalFileData(){
+    $('#local-hash-progress').hide();
+    $('#local-hash-progress .progress-bar').css('width', '0%');
+    $('#local-hash-progress .progress-bar').attr('aria-valuenow', 0);
+    $('#local-hash-progress .progress-bar').text('');
+    $('#local-fileinfo [name=filename]').val('');
+    $('#local-fileinfo [name=filesize]').val('');
+    $('#local-fileinfo [name=hash]').val('');
+    $('#local-filename').text('');
+    $('#local-filesize').text('');
+    $('#local-fileinfo').hide();
 }
 </script>
