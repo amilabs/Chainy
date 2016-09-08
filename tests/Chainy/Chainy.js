@@ -156,6 +156,11 @@ contract('Chainy', function(accounts){
         },
     ];
 
+    it("/Should check initial balance of receiver address/", function(){
+        clog(web3.eth.getBalance(accounts[4]));
+        assert.equal(web3.eth.getBalance(accounts[4]), 100000000000000000000, '');
+    });
+
     aTests.forEach(function(oTest){
         oTest.tests.forEach(function(curTest){
 
@@ -328,6 +333,11 @@ contract('Chainy', function(accounts){
         .then(function(res){
             assert.equal(res.valueOf(), accounts[3], '');
         });
+    });
+
+    it("/Should check final balance of receiver address/", function(){
+        clog(web3.eth.getBalance(accounts[4]));
+        assert.equal(web3.eth.getBalance(accounts[4]), 100005000000000000001, '');
     });
 
 });
