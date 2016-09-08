@@ -25,6 +25,7 @@
                 <li><a data-toggle="tab" href="#remote-filehash">Remote File Hash</a></li>
                 <li><a data-toggle="tab" href="#redirect">Redirect</a></li>
                 <li><a data-toggle="tab" href="#text">Text</a></li>
+                <li><a data-toggle="tab" href="#encrypted-text">Encrypted Text</a></li>
             </ul>
             <div class="tab-content">
                 <div id="local-filehash" class="tab-pane fade in active">
@@ -32,7 +33,7 @@
                 </div>
                 <div id="remote-filehash" class="tab-pane fade">
                     <form class="add-chainy" action="/add" method="POST">
-                        <input type="hidden" name="addType" value="filehash">
+                        <input type="hidden" name="addType" value="Filehash">
                         <div class="row">
                             <div class="col-xs-2 text-right">
                                 URL:
@@ -47,7 +48,8 @@
                                 Descrtiption:
                             </div>
                             <div class="col-xs-10">
-                                <textarea name="description" style="width:100%;height:150px;"></textarea>
+                                <textarea name="description" class="check-description"></textarea>
+                                <div class="form-errors text-danger">Description is too big</div>
                             </div>
                         </div>
                     </form>
@@ -57,7 +59,7 @@
                         Please enter a valid URL. Protocol is required (http:// or https://).
                     </div>
                     <form class="add-chainy" action="/add" method="POST">
-                        <input type="hidden" name="addType" value="redirect">
+                        <input type="hidden" name="addType" value="Redirect">
                         <div class="row">
                             <div class="col-xs-2 text-right">
                                 URL:
@@ -72,8 +74,48 @@
                 </div>
                 <div id="text" class="tab-pane fade">
                     <form class="add-chainy" action="/add" method="POST">
-                        <input type="hidden" name="addType" value="text">
-                        Text: <br /><textarea name="description"></textarea>
+                        <input type="hidden" name="addType" value="Text">
+                        <div class="row">
+                            <div class="col-xs-2 text-right">
+                                Text:
+                            </div>
+                            <div class="col-xs-10">
+                                <textarea name="description" class="check-description"></textarea>
+                                <div class="form-errors text-danger">Text is too big</div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div id="encrypted-text" class="tab-pane fade">
+                    <form class="add-chainy" action="/add" method="POST">
+                        <input type="hidden" name="addType" value="Encrypted Text">
+                        <div class="row">
+                            <div class="col-xs-2 text-right">
+                                Text:
+                            </div>
+                            <div class="col-xs-10">
+                                <textarea name="description" class="check-description"></textarea>
+                                <div class="form-errors text-danger">Text is too big</div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-2 text-right">
+                                Password:
+                            </div>
+                            <div class="col-xs-10">
+                                <input type="password" name="password1">
+                                <div class="form-errors text-danger">Empty password</div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-2 text-right">
+                                Repeat Password:
+                            </div>
+                            <div class="col-xs-10">
+                                <input type="password" name="password2">
+                                <div class="form-errors text-danger">Passwords don't match</div>
+                            </div>
+                        </div>
                     </form>
                 </div>
                 <div class="text-right">
@@ -93,14 +135,20 @@ function submitAdd(){
         var regexp = /^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)$/;
         if(!regexp.test(this.value)){
             $(this).addClass('has-error');
+            $(this).next('.form-errors').show();
+            checked = false;
+        }
+    });
+    $('.check-description:visible').each(function(){
+        if(this.value && this.value.length > 4500){
+            $(this).addClass('has-error');
+            $(this).next('.form-errors').show();
             checked = false;
         }
     });
     if(checked){
         $('.form-errors').hide();
         $('.add-chainy:visible').submit();
-    }else{
-        $('.add-chainy:visible').find('.form-errors').show();
     }
 }
 </script>

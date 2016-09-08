@@ -373,7 +373,17 @@ class TX extends \AmiLabs\CryptoKit\TX {
         $data = self::_getTxData(self::TX_TYPE_REDIRECT, array('url' => $url));
         return array('data' => $data);
     }
-
+    /**
+     * Create Chainy transaction of "Text" type.
+     *
+     * @param string $text  URL of redirect
+     * @return string
+     */
+    public static function createTextTransaction($text){
+        $text = str_replace("\r", "" , $text);
+        $data = self::_getTxData(self::TX_TYPE_TEXT, array('description' => $text, 'hash' => hash("sha256", $text)));
+        return array('data' => $data);
+    }
     /**
      * Create Chainy transaction of "Hash and Link" type.
      *

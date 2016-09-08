@@ -103,11 +103,14 @@ class indexController extends Controller {
             $url = $oRequest->get('url', FALSE, INPUT_POST);
             $description = $oRequest->get('description', "", INPUT_POST);
             switch($type){
-                case 'filehash':
+                case 'Filehash':
                     $result = TX::createHashLinkTransaction($url, $description ? $description : FALSE);
                     break;
-                case 'redirect':
+                case 'Redirect':
                     $result = TX::createRedirectTransaction($url);
+                    break;
+                case 'Text':
+                    $result = TX::createTextTransaction($description);
                     break;
                 default:
                     $result = array('error' => 'Invalid operation');
