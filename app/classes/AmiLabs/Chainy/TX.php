@@ -79,15 +79,16 @@ class TX extends \AmiLabs\CryptoKit\TX {
             $oCache = Cache::get('code-' . $code);
             if(!$oCache->exists()){
                 $oCfg = Application::getInstance()->getConfig();
-                $contract = $oCfg->get('addresses/destination/address');
-                $result = self::_callRPC("get", array($contract, $code));
+                $result = self::_callRPC("get", array($code));
                 $oCache->save($result);
             }else{
                 $result = $oCache->load();
             }
         }
-        $result = json_decode($result, JSON_OBJECT_AS_ARRAY);
-        if(is_array($result)){
+        if(is_array($result) && isset($result['data'])){
+            $result['data'] = json_decode($result['data'], JSON_OBJECT_AS_ARRAY);
+            $result['data']['date'] = date("d.m.Y H:i:s", $result['timestamp']);
+            $result = $result['data'];
             switch($result['type']){
                 case self::TX_TYPE_HASHLINK:
                     $result['filesize'] = self::getFileSize($result['filesize']);
@@ -107,13 +108,12 @@ class TX extends \AmiLabs\CryptoKit\TX {
                         default:
                             $result['filetype'] = '';
                     }
-                    $result['block']    = 'Unknown';
-                    $result['tx']       = 'Unknown';
-                    $result['date']     = 'Unknown';
+                    $result['block'] = 'Unknown';
+                    $result['tx'] = 'Unknown';
                     break;
             }
         }
-        return json_decode($result, JSON_OBJECT_AS_ARRAY);
+        return $result;
     }
 
     /**

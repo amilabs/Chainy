@@ -148,6 +148,7 @@ class indexController extends Controller {
      */
     protected function notFound(){
         $link404 = $this->getConfig()->get('link404');
+        die($link404);
         header('Location: ' . $link404, TRUE, 301);
     }
 }
