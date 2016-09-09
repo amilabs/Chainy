@@ -27,14 +27,18 @@ library strUtils {
         uint8 base = 58;
         uint8 len = 0;
         uint256 remainder = 0;
+        bool needBreak = false;
         bytes memory bytesReversed = bytes(new string(_maxLength));
 
         for (uint8 i = 0; i < _maxLength; i++) {
+            if(_value < base){
+                needBreak = true;
+            }
             remainder = _value % base;
             _value = uint256(_value / base);
             bytesReversed[i] = alphabet[remainder];
             len++;
-            if(_value < base){
+            if(needBreak){
                 break;
             }
         }
