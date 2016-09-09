@@ -56,6 +56,7 @@ class TX extends \AmiLabs\CryptoKit\TX {
      * Chainy protocol version
      */
     const PROTOCOL_VERSION = '1';
+
     /**
      * Returns Chainy transaction type.
      *
@@ -79,34 +80,40 @@ class TX extends \AmiLabs\CryptoKit\TX {
             if(!$oCache->exists()){
                 $oCfg = Application::getInstance()->getConfig();
                 $contract = $oCfg->get('addresses/destination/address');
-                $result = self::_callRPC("getChainyData", array($contract, $code));
+                $result = self::_callRPC("get", array($contract, $code));
                 $oCache->save($result);
             }else{
                 $result = $oCache->load();
             }
         }
-        return json_decode($result, JSON_OBJECT_AS_ARRAY);
-
-        try{
-            $data = BlockchainIO::getInstance()->getRawTransaction($tx);
-            if(self::isChainyTransactionRaw($data)){
-                $opData = TX::getDecodedOpReturn($data, true);
-                $txType = self::getTransactionTypeByOpReturn($opData);
-                $aTX['type'] = $txType;
-                switch($txType){
-                    case self::TX_TYPE_REDIRECT:
-                        $aTX += self::decodeRedirectTransaction($opData, $data);
-                        break;
-                    case self::TX_TYPE_HASHLINK:
-                        $aTX += self::decodeHashLinkTransaction($opData, $data);
-                        break;
-                    case self::TX_TYPE_INVALID:
-                    default:
-                        // todo
-                }
+        $result = json_decode($result, JSON_OBJECT_AS_ARRAY);
+        if(is_array($result)){
+            switch($result['type']){
+                case self::TX_TYPE_HASHLINK:
+                    $result['filesize'] = self::getFileSize($result['filesize']);
+                    switch($result['filetype']){
+                        case TX::FILE_TYPE_PDF:
+                            $result['filetype'] = 'pdf';
+                            break;
+                        case TX::FILE_TYPE_ARCHIVE:
+                            $result['filetype'] = 'archive';
+                            break;
+                        case TX::FILE_TYPE_TEXT:
+                            $result['filetype'] = 'text';
+                            break;
+                        case TX::FILE_TYPE_IMAGE:
+                            $result['filetype'] = 'image';
+                            break;
+                        default:
+                            $result['filetype'] = '';
+                    }
+                    $result['block']    = 'Unknown';
+                    $result['tx']       = 'Unknown';
+                    $result['date']     = 'Unknown';
+                    break;
             }
-        }catch(\Exception $e){ /* todo */ }
-        return $aTX;
+        }
+        return json_decode($result, JSON_OBJECT_AS_ARRAY);
     }
 
     /**
@@ -246,39 +253,32 @@ class TX extends \AmiLabs\CryptoKit\TX {
         return $result;
     }
 
-    public static function getTransactionCode($txHash){
+    /**
+     * Returns Chainy link by transaction code.
+     *
+     * @param string $txHash
+     * @return string
+     */
+    public static function getChainyLink($txHash){
         $result = FALSE;
         if(is_string($txHash) && (66 === strlen($txHash))){
-            $tx = self::_callRPC("getReceipt", array($txHash));
-            if(is_array($tx) && isset($tx['logs']) && count($tx['logs'])){
-                $log = $tx['logs'][0];
-                if("0xdad5c3eecfdb62dd69e6e72053b88029e1d6277d4bc773c00fef243982adcb7d" === $log['topics'][0]){
-                    $data = $log['data'];
-                    $data = substr($data, 192);
-                    $data = preg_replace("/0+$/", "", $data);
-                    $result = '';
-                    for($i=0; $i < strlen($data)-1; $i+=2){
-                        $result .= chr(hexdec($data[$i] . $data[$i+1]));
-                    }
-                }
-            }
+            $result = self::_callRPC("getLink", array($txHash));
         }
         return $result;
     }
 
+    /**
+     * Publishes chainy TX on blockchain.
+     *
+     * @param array $data
+     * @return array
+     */
     public static function publishData(array $data){
-        $result = array();
+        $result = FALSE;
         $oCfg = Application::getInstance()->getConfig();
         if($oCfg->get('autopublish', FALSE)){
-            $tx = self::_callRPC(
-                "createChainyTX",
-                array(
-                    $oCfg->get('addresses/source/address'),
-                    $oCfg->get('addresses/destination/address'),
-                    json_encode($data, JSON_UNESCAPED_SLASHES)
-                )
-            );
-            // Transaction hash length is 66 bytes
+            $tx = self::_callRPC("add", array($oCfg->get('sender'), json_encode($data, JSON_UNESCAPED_SLASHES)));
+            // Transaction hash length should be 66 bytes
             if(strlen($tx) == 66){
                 $result = array('hash' => $tx);
             }
@@ -286,42 +286,6 @@ class TX extends \AmiLabs\CryptoKit\TX {
         return $result;
     }
 
-    protected static function _getTxData($type, array $data){
-        // @todo: check type
-        return array(
-            'id'        => 'CHAINY',
-            'version'   => 1,
-            'type'      => $type,
-        ) + $data;
-    }
-
-    /**
-     * Returns file type by filename or url.
-     *
-     * @param string $url  URL of file
-     * @return int
-     */
-    protected static function getFileType($url){
-        $urlNoParams = $url;
-        if(strpos($url, '?') !== false){
-            $urlNoParams = substr($url, 0, strpos($url, '?'));
-        }
-        $ext = strtolower(substr($urlNoParams, strrpos($urlNoParams, '.') + 1));
-        $fileType = self::FILE_TYPE_UNKNOWN;
-        $aFileTypes = array(
-            self::FILE_TYPE_PDF     => array('pdf'),
-            self::FILE_TYPE_ARCHIVE => array('zip', 'rar', 'gz', 'arj', '7z', 'tgz', 'lzh'),
-            self::FILE_TYPE_TEXT    => array('txt', 'doc', 'dox', 'rtf'),
-            self::FILE_TYPE_IMAGE   => array('jpg', 'jpeg', 'gif', 'png', 'bmp', 'psd', 'tiff', 'ico', 'pic', 'pcx')
-        );
-        foreach($aFileTypes as $type => $aExtensions){
-            if(in_array($ext, $aExtensions)){
-                $fileType = $type;
-                break;
-            }
-        }
-        return $fileType;
-    }
     /**
      * Encodes int to base58 string.
      *
@@ -353,13 +317,30 @@ class TX extends \AmiLabs\CryptoKit\TX {
         }
         return $int_val;
     }
+
+    /**
+     * Returns formatted Chainy data.
+     *
+     * @param string $type
+     * @param array $data
+     * @return array
+     */
+    protected static function _getTxData($type, array $data){
+        // @todo: check type
+        return array(
+            'id'        => 'CHAINY',
+            'version'   => 1,
+            'type'      => $type,
+        ) + $data;
+    }
+
     /**
      * Returns filesize with size dimension units.
      *
      * @param int $size
      * @return string
      */
-    public static function getFileSize($size){
+    protected static function getFileSize($size){
         if($size < 1024){
             return $size . 'B';
         }
@@ -370,6 +351,34 @@ class TX extends \AmiLabs\CryptoKit\TX {
             return round($size / (1024 * 1024)) . 'MB';
         }
         return round($size / (1024 * 1024 * 1024)) . 'GB';
+    }
+
+    /**
+     * Returns file type by filename or url.
+     *
+     * @param string $url  URL of file
+     * @return int
+     */
+    protected static function getFileType($url){
+        $urlNoParams = $url;
+        if(strpos($url, '?') !== false){
+            $urlNoParams = substr($url, 0, strpos($url, '?'));
+        }
+        $ext = strtolower(substr($urlNoParams, strrpos($urlNoParams, '.') + 1));
+        $fileType = self::FILE_TYPE_UNKNOWN;
+        $aFileTypes = array(
+            self::FILE_TYPE_PDF     => array('pdf'),
+            self::FILE_TYPE_ARCHIVE => array('zip', 'rar', 'gz', 'arj', '7z', 'tgz', 'lzh'),
+            self::FILE_TYPE_TEXT    => array('txt', 'doc', 'dox', 'rtf'),
+            self::FILE_TYPE_IMAGE   => array('jpg', 'jpeg', 'gif', 'png', 'bmp', 'psd', 'tiff', 'ico', 'pic', 'pcx')
+        );
+        foreach($aFileTypes as $type => $aExtensions){
+            if(in_array($ext, $aExtensions)){
+                $fileType = $type;
+                break;
+            }
+        }
+        return $fileType;
     }
 
     /**

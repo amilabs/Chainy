@@ -33,7 +33,7 @@ class indexController extends Controller {
         $byHash = $aParameters['byHash'];
         if($byHash){
             $txNo = $aParameters['hash'];
-            $link = TX::getTransactionCode($aParameters['hash']);
+            $link = TX::getChainyLink($aParameters['hash']);
             $code = substr($link, strrpos($link, '/') + 1);
         }else{
             $code = $aParameters['code'];
@@ -45,34 +45,14 @@ class indexController extends Controller {
             $oLogger->log('Code:' . $code . ', IP:' . $ipAddress . ', Referer:' . $referer);
             $result = TX::decodeChainyTransaction($code);
         }
-        if(isset($result) && is_array($result)){
-            if($result['type'] == TX::TX_TYPE_HASHLINK){
-                $result['filesize'] = TX::getFileSize($result['filesize']);
-                switch($result['filetype']){
-                    case TX::FILE_TYPE_PDF:
-                        $result['filetype'] = 'pdf';
-                        break;
-                    case TX::FILE_TYPE_ARCHIVE:
-                        $result['filetype'] = 'archive';
-                        break;
-                    case TX::FILE_TYPE_TEXT:
-                        $result['filetype'] = 'text';
-                        break;
-                    case TX::FILE_TYPE_IMAGE:
-                        $result['filetype'] = 'image';
-                        break;
-                    default:
-                        $result['filetype'] = '';
-                }
-                $result['block']    = 'Unknown';
-                $result['tx']       = 'Unknown';
-                $result['date']     = 'Unknown';
-
-                $this->oView->set('aTX', $result);
-            }
-            if($result['type'] == TX::TX_TYPE_REDIRECT){
-                header('Location:' . $result['url']);
-                die();
+        if(is_array($result)){
+            switch($result['type']){
+                case TX::TX_TYPE_HASHLINK:
+                    $this->oView->set('aTX', $result);
+                    break;
+                case TX::TX_TYPE_HASHLINK:
+                    header('Location:' . $result['url']);
+                    die();
             }
         }else{
             $oLogger->log('ERROR: Code ' . $code . ' not found (404), no corresponding transaction.');
@@ -159,7 +139,7 @@ class indexController extends Controller {
      * @return \AmiLabs\DevKit\Controller
      */
     public function actionShort(array $aParameters){
-        $result = TX::getTransactionCode($aParameters['hash']);
+        $result = TX::getChainyLink($aParameters['hash']);
         echo $result ? $result : '';
         die();
     }
@@ -167,7 +147,7 @@ class indexController extends Controller {
      * Not found.
      */
     protected function notFound(){
-        // header('Location: http://chainy.info/err/404', TRUE, 301);
-        die(404);
+        $link404 = $this->getConfig()->get('link404');
+        header('Location: ' . $link404, TRUE, 301);
     }
 }
