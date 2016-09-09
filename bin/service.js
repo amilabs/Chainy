@@ -30,7 +30,7 @@ String.prototype.crop0x = function(){
 
 var rpc = require('json-rpc2');
 var Web3 = require('web3');
-var web3 = new Web3(new Web3.providers.HttpProvider(esConfig.ethereum.url));
+var web3 = new Web3(new Web3.providers.HttpProvider(chainyConfig.ethereum.url));
 var server = rpc.Server.$create();
 
 server.on('error', function(err){
