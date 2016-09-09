@@ -38,7 +38,7 @@
                                 <a href="">Eon link</a>
                             </li>
                             <li>
-                                <a href="https://github.com/amilabs/chainy">Source code</a>
+                                <a href="https://github.com/everexio/chainy">Source code</a>
                             </li>
                             <li>
                                 <a href="">API</a>
@@ -52,11 +52,12 @@
             </header>
             <!-- END Site Header -->
 
+        <?php if($aTX["type"] == 'L'): ?>
             <!-- Intro -->
             <section class="site-section site-section-light site-section-top themed-background">
                 <div class="container">
                     <h1 class="text-center animation-slideDown"><i class="fa fa-check-square"></i> <strong>This file has blockchain signature</strong></h1>
-                    <h2 class="h3 text-center animation-slideUp">Date of transaction: <?php if($aTX['block']): ?><?=$aTX['date']?><?php else: ?>Unknown yet<?php endif; ?></h2>
+                    <h2 class="h3 text-center animation-slideUp">Date of transaction: <?php if(isset($aTX['date'])): ?><?=$aTX['date']?><?php else: ?>Unknown yet<?php endif; ?></h2>
                 </div>
             </section>
             <!-- END Intro -->
@@ -67,19 +68,30 @@
                     <hr>
                     <div class="row visibility-none" data-toggle="animation-appear" data-animation-class="animation-fadeInQuick" data-element-offset="-100">
                         <div class="col-sm-10 col-md-9 site-block">
-                            <p class="promo-content">This page contains information about digitally signed file embedded in the Bitcoin blockchain. Since transaction is confirmed this file is permanently certified and proven to exist.
-                            <br /><strong>Hash amount  SHA256</strong>
-                            <br /><?=$aTX['hash']?> <input type="hidden" id="file-hash" value="<?=$aTX['hash']?>">
-                            <?php if(isset($aTX['url'])): ?>
-                            <br /><strong>Link to the original file is</strong>
-                            <br /><a href="<?=$aTX['url']?>" target="_blank"><?=$aTX['url']?></a>
-                            <?php endif; ?>
-                            <br /><strong>Transaction date</strong>
-                            <br /> <?php if($aTX['block']): ?><?=$aTX['date']?><?php else: ?>Unknown yet<?php endif; ?>
-                            <br /><strong>Transaction id</strong>
-                            <br /> <?=$aTX['tx']?>
+                            <p class="promo-content">
+                                This page contains information about digitally signed file embedded in the Ethereum blockchain. Since transaction is confirmed this file is permanently certified and proven to exist.
+                                <br /><strong>Hash amount  SHA256</strong>
+                                <br /><?=$aTX['hash']?> <input type="hidden" id="file-hash" value="<?=$aTX['hash']?>">
+                                <?php if(isset($aTX['url'])): ?>
+                                <br /><strong>Link to the original file is</strong>
+                                <br /><a href="<?=$aTX['url']?>" target="_blank"><?=$aTX['url']?></a>
+                                <?php endif; ?>
+                                <br /><strong>Transaction date</strong>
+                                <br /> <?php if(isset($aTX['date'])): ?><?=$aTX['date']?><?php else: ?>Unknown yet<?php endif; ?>
+                                <?php if(isset($aTX['tx']) && $aTX['tx']): ?>
+                                <br /><strong>Transaction id</strong>
+                                <br /> <?=$aTX['tx']?>
+                                <?php endif; ?>
+                                <?php if(isset($aTX['description'])): ?>
+                                <br /><strong>Description:</strong>
+                                <br /><?=$aTX['description']?>
+                                <?php endif; ?>
                             </p>
-                            <p class="promo-content">Look up this transaction on 3rd party services: <a href="http://coinsecrets.org/<?php if($aTX['block']): ?>?to=<?=($aTX['block'] + 1)?>.000000<?php endif; ?>">CoinSecrets</a> and <a href="http://blockchain.info/tx/<?=$aTX['tx']?>">Blockchain.info</a>
+                            <?php
+                            /*
+                                <p class="promo-content">Look up this transaction on 3rd party services: <a href="http://coinsecrets.org/<?php if($aTX['block']): ?>?to=<?=($aTX['block'] + 1)?>.000000<?php endif; ?>">CoinSecrets</a> and <a href="http://blockchain.info/tx/<?=$aTX['tx']?>">Blockchain.info</a>
+                             */
+                            ?>
                             </p>
 
                         </div>
@@ -152,9 +164,10 @@
                     <div class="row">
                         <div class="col-sm-12 col-md-10 site-block">
                             <h3 class="site-heading"><strong>What does it mean</strong></h3>
-                            <p class="remove-margin">It means that this confirmed bitcoin transaction contains a file (a document), hash amount of which has been permanently stored inside transaction. It is now impossible to modify or backdate this file based on bitcoin principle (link). If at later date you want to verify this document, and you have a copy of it, you can upload it using form above, calculate its hash amount and compare with the hash amount stored in the blockchain. Matching hash amounts is a 100% probability that the document is authentic.
-							<br>Hash function algorithm of SHA256 has been developed by NSA. More info <a href='http://en.wikipedia.org/wiki/SHA-2' target=_blank>http://en.wikipedia.org/wiki/SHA-2</a>
-							</p>
+                            <p class="remove-margin">
+                                It means that this confirmed bitcoin transaction contains a file (a document), hash amount of which has been permanently stored inside transaction. It is now impossible to modify or backdate this file based on bitcoin principle (link). If at later date you want to verify this document, and you have a copy of it, you can upload it using form above, calculate its hash amount and compare with the hash amount stored in the blockchain. Matching hash amounts is a 100% probability that the document is authentic.<br>
+                                Hash function algorithm of SHA256 has been developed by NSA. More info <a href='http://en.wikipedia.org/wiki/SHA-2' target=_blank>http://en.wikipedia.org/wiki/SHA-2</a>
+                            </p>
                         </div>
                     </div>
                     <hr>
@@ -171,16 +184,73 @@
                         <div class="col-sm-12 col-md-10 site-block">
                             <h3 class="site-heading"><strong>How to calculate SHA256 hash amount</strong></h3>
                             <p class="remove-margin">
-                            <ol>
-                            <li>Upload file into the form on this page. Hash will be calculated inside the browser and never send over internet. Calculated result will be compared with the file previously saved and result will be shown to you. </li>
-                            <li>If you don't trust our page, feel free to calculate hash amount of your file using independent tools. Just google “calculate sha256 hash”.</li>
-                            <li>You can also calculate hash by yourself, using open source code. </li>
-							</ol>
-							</p>
+                                <ol>
+                                    <li>Upload file into the form on this page. Hash will be calculated inside the browser and never send over internet. Calculated result will be compared with the file previously saved and result will be shown to you. </li>
+                                    <li>If you don't trust our page, feel free to calculate hash amount of your file using independent tools. Just google “calculate sha256 hash”.</li>
+                                    <li>You can also calculate hash by yourself, using open source code. </li>
+                                </ol>
+                            </p>
                         </div>
                     </div>
                 </div>
             </section>
+        <?php endif; ?>
+
+        <?php if(($aTX["type"] == 'T') || ($aTX["type"] == 'H')): ?>
+            <!-- Intro -->
+            <section class="site-section site-section-light site-section-top themed-background">
+                <div class="container">
+                    <h1 class="text-center animation-slideDown"><i class="fa fa-check-square"></i> <strong>This text has blockchain signature</strong></h1>
+                    <h2 class="h3 text-center animation-slideUp">Date of transaction: <?php if(isset($aTX['date'])): ?><?=$aTX['date']?><?php else: ?>Unknown yet<?php endif; ?></h2>
+                </div>
+            </section>
+            <!-- END Intro -->
+
+            <section class="site-content site-section site-slide-content">
+                <div class="container">
+                    <h2 class="site-heading"><strong>Signed text details</strong></h2>
+                    <hr>
+                    <div class="row visibility-none" data-toggle="animation-appear" data-animation-class="animation-fadeInQuick" data-element-offset="-100">
+                        <div class="col-sm-10 col-md-9 site-block">
+                            <p class="promo-content">
+                                <?php if(isset($aTX['description'])): ?>
+                                <br /><strong>Text:</strong>
+                                <br /><?=$aTX['description']?>
+                                <?php endif; ?>
+                                <br /><strong>Hash amount  SHA256</strong>
+                                <br /><?=$aTX['hash']?> <input type="hidden" id="file-hash" value="<?=$aTX['hash']?>">
+                                <?php if(isset($aTX['url'])): ?>
+                                <br /><strong>Link to the original file is</strong>
+                                <br /><a href="<?=$aTX['url']?>" target="_blank"><?=$aTX['url']?></a>
+                                <?php endif; ?>
+                                <br /><strong>Transaction date</strong>
+                                <br /> <?php if(isset($aTX['date'])): ?><?=$aTX['date']?><?php else: ?>Unknown yet<?php endif; ?>
+                                <?php if(isset($aTX['tx']) && $aTX['tx']): ?>
+                                <br /><strong>Transaction id</strong>
+                                <br /> <?=$aTX['tx']?>
+                                <?php endif; ?>
+                            </p>
+                            <?php
+                            /*
+                                <p class="promo-content">Look up this transaction on 3rd party services: <a href="http://coinsecrets.org/<?php if($aTX['block']): ?>?to=<?=($aTX['block'] + 1)?>.000000<?php endif; ?>">CoinSecrets</a> and <a href="http://blockchain.info/tx/<?=$aTX['tx']?>">Blockchain.info</a>
+                             */
+                            ?>
+                            </p>
+
+                        </div>
+                    </div>
+                    <?php if(1 || $aTX["type"] == 'H'): ?>
+                    <div class="row visibility-none" data-toggle="animation-appear" data-animation-class="animation-fadeInQuick" data-element-offset="-100">
+                        <div class="col-sm-10 col-md-9 site-block">
+                            Text:<br />
+                            <textarea id="checkhash-text" style="width: 100%; height: 100px;"></textarea><Br />
+                            <a id="checkhash" class="btn btn-lg btn-success">Verify</a>
+                        </div>
+                    </div>
+                    <?php endif; ?>
+                </div>
+            </section>
+        <?php endif; ?>
 
 
             <!-- Footer -->
@@ -189,9 +259,9 @@
                     <!-- Footer Links -->
                     <div class="row">
                         <div class="col-sm-12 col-md-12">
-                            <h4 class="footer-heading"><span id="year-copy">2015</span> &copy; <a href="http://amilabs.co/">AmiLabs</a></h4>
+                            <h4 class="footer-heading"><span id="year-copy">2015</span> &copy; <a href="http://everex.io/">Everex</a></h4>
                             <ul class="footer-nav list-inline">
-                                <li>Crafted with <a href="https://github.com/amilabs/CryptoKit">AmiLabs/CryptoKit</a></li>
+                                <li>Crafted with <a href="https://github.com/everexio/CryptoKit">EverexIO/CryptoKit</a></li>
                             </ul>
                         </div>
                     </div>

@@ -16,9 +16,9 @@
  * limitations under the License.
  */
 
-use \AmiLabs\DevKit\Controller;
-use \AmiLabs\DevKit\Logger;
-use \AmiLabs\Chainy\TX;
+use AmiLabs\DevKit\Controller;
+use AmiLabs\DevKit\Logger;
+use AmiLabs\Chainy\TX;
 
 class indexController extends Controller {
     /**
@@ -30,13 +30,13 @@ class indexController extends Controller {
     public function actionIndex(array $aParameters){
         set_time_limit(0);
         $oLogger = Logger::get('access-chainy');
-        $byHash = $aParameters['byHash'];
+        $byHash = isset($aParameters['byHash']) ? $aParameters['byHash'] : FALSE;
         if($byHash){
             $txNo = $aParameters['hash'];
             $link = TX::getChainyLink($aParameters['hash']);
             $code = substr($link, strrpos($link, '/') + 1);
         }else{
-            $code = $aParameters['code'];
+            $code = isset($aParameters['code']) ? $aParameters['code'] : "";
         }
         $result = FALSE;
         if(strlen($code)){
@@ -48,6 +48,8 @@ class indexController extends Controller {
         if(is_array($result)){
             switch($result['type']){
                 case TX::TX_TYPE_HASHLINK:
+                case TX::TX_TYPE_TEXT:
+                case TX::TX_TYPE_HASH:
                     $this->oView->set('aTX', $result);
                     break;
                 case TX::TX_TYPE_HASHLINK:

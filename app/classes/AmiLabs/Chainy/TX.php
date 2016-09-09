@@ -24,6 +24,7 @@ use AmiLabs\DevKit\Registry;
 use AmiLabs\DevKit\Cache;
 use AmiLabs\DevKit\Application;
 use Moontoast\Math\BigNumber;
+use AmiLabs\CryptoKit\Blockchain\EthereumDB;
 
 /**
  * Chainy transaction class.
@@ -57,6 +58,9 @@ class TX extends \AmiLabs\CryptoKit\TX {
      */
     const PROTOCOL_VERSION = '1';
 
+    protected static $alphabet = "123456789abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ";
+
+
     /**
      * Returns Chainy transaction type.
      *
@@ -80,37 +84,37 @@ class TX extends \AmiLabs\CryptoKit\TX {
             if(!$oCache->exists()){
                 $oCfg = Application::getInstance()->getConfig();
                 $result = self::_callRPC("get", array($code));
-                $oCache->save($result);
+                if(is_array($result) && isset($result['data'])){
+                    $result['data'] = json_decode($result['data'], JSON_OBJECT_AS_ARRAY);
+                    $result['data']['date'] = date("d.m.Y H:i:s", $result['timestamp']);
+                    $result = $result['data'];
+                    switch($result['type']){
+                        case self::TX_TYPE_HASHLINK:
+                            $result['filesize'] = self::getFileSize($result['filesize']);
+                            switch($result['filetype']){
+                                case TX::FILE_TYPE_PDF:
+                                    $result['filetype'] = 'pdf';
+                                    break;
+                                case TX::FILE_TYPE_ARCHIVE:
+                                    $result['filetype'] = 'archive';
+                                    break;
+                                case TX::FILE_TYPE_TEXT:
+                                    $result['filetype'] = 'text';
+                                    break;
+                                case TX::FILE_TYPE_IMAGE:
+                                    $result['filetype'] = 'image';
+                                    break;
+                                default:
+                                    $result['filetype'] = '';
+                            }
+                            $result['block'] = FALSE;
+                            $result['tx'] = FALSE;
+                            break;
+                    }
+                    $oCache->save($result);
+                }
             }else{
                 $result = $oCache->load();
-            }
-        }
-        if(is_array($result) && isset($result['data'])){
-            $result['data'] = json_decode($result['data'], JSON_OBJECT_AS_ARRAY);
-            $result['data']['date'] = date("d.m.Y H:i:s", $result['timestamp']);
-            $result = $result['data'];
-            switch($result['type']){
-                case self::TX_TYPE_HASHLINK:
-                    $result['filesize'] = self::getFileSize($result['filesize']);
-                    switch($result['filetype']){
-                        case TX::FILE_TYPE_PDF:
-                            $result['filetype'] = 'pdf';
-                            break;
-                        case TX::FILE_TYPE_ARCHIVE:
-                            $result['filetype'] = 'archive';
-                            break;
-                        case TX::FILE_TYPE_TEXT:
-                            $result['filetype'] = 'text';
-                            break;
-                        case TX::FILE_TYPE_IMAGE:
-                            $result['filetype'] = 'image';
-                            break;
-                        default:
-                            $result['filetype'] = '';
-                    }
-                    $result['block'] = 'Unknown';
-                    $result['tx'] = 'Unknown';
-                    break;
             }
         }
         return $result;
@@ -281,6 +285,8 @@ class TX extends \AmiLabs\CryptoKit\TX {
             // Transaction hash length should be 66 bytes
             if(strlen($tx) == 66){
                 $result = array('hash' => $tx);
+            }elseif(strlen($tx) > 66){
+                $result = array('transaction' => $tx);
             }
         }
         return $result;
@@ -418,4 +424,15 @@ class TX extends \AmiLabs\CryptoKit\TX {
         return $result;
     }
 
+    public static function getTxByCode($code){
+        $oCfg = Application::getInstance()->getConfig();
+        $blockPart = substr($code, 0, -2);
+        var_dump($blockPart);
+        $block = self::decodeBase58($blockPart); // + $oCfg->get("blockOffset", 1000000);
+        return $block;
+        try {
+            $oDB = EthereumDB::db($oCfg->get('EthereumDB'));
+            $oDB->getBlockTransactions($block);
+        }catch(\Exception $e){}
+    }
 }

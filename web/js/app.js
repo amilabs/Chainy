@@ -173,6 +173,12 @@ var App = function() {
         }
     };
 
+    $(document).on("click", "#checkhash", function(){
+        var text = $('#checkhash-text').val();
+        var hash = CryptoJS.SHA256(text).toString();
+        verifyHash(hash);
+    });
+
     window.fileReader = new FileReader();
     function readFile(file){
         if('undefined' === typeof(addForm)){
@@ -240,14 +246,7 @@ var App = function() {
                 elapsed = +new Date() - startTime;
 
                 if(!addForm){
-                    var storedHash = $('#file-hash').val();
-                    if(hash === storedHash){
-                        alert('Verification successed!');
-                        console.log(hash + ' == ' + storedHash);
-                    }else{
-                        alert('Verification failed!');
-                        console.log(hash + ' != ' + storedHash);
-                    }
+                    verifyHash(hash);
                 }else{
                     $('#local-hash').text(hash);
                     $('#local-hash').show();
@@ -309,6 +308,17 @@ var App = function() {
         }
     };
 }();
+
+function verifyHash(hash){
+    var storedHash = $('#file-hash').val();
+    if(hash === storedHash){
+        alert('Verification successed!');
+        console.log(hash + ' == ' + storedHash);
+    }else{
+        alert('Verification failed!');
+        console.log(hash + ' != ' + storedHash);
+    }
+}
 
 /* Initialize app when page loads */
 $(function(){ App.init(); });
