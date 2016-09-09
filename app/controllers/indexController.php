@@ -52,7 +52,7 @@ class indexController extends Controller {
                 case TX::TX_TYPE_HASH:
                     $this->oView->set('aTX', $result);
                     break;
-                case TX::TX_TYPE_HASHLINK:
+                case TX::TX_TYPE_REDIRECT:
                     header('Location:' . $result['url']);
                     die();
             }
