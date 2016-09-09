@@ -31,17 +31,19 @@ class indexController extends Controller {
         set_time_limit(0);
         $oLogger = Logger::get('access-chainy');
         $byHash = $aParameters['byHash'];
-        if(!$byHash){
-            // By Code
-            $code = $aParameters['code'];
-            if(strlen($code) >= 5){
-                $ipAddress = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : 'Unknown';
-                $referer = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : 'Unknown';
-                $oLogger->log('Code:' . $code . ', IP:' . $ipAddress . ', Referer:' . $referer);
-            }
-            $result = TX::decodeChainyTransaction($code);
+        if($byHash){
+            $txNo = $aParameters['hash'];
+            $link = TX::getTransactionCode($aParameters['hash']);
+            $code = substr($link, strrpos($link, '/') + 1);
         }else{
-            // by TX Hash
+            $code = $aParameters['code'];
+        }
+        $result = FALSE;
+        if(strlen($code)){
+            $ipAddress = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : 'Unknown';
+            $referer = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : 'Unknown';
+            $oLogger->log('Code:' . $code . ', IP:' . $ipAddress . ', Referer:' . $referer);
+            $result = TX::decodeChainyTransaction($code);
         }
         if(isset($result) && is_array($result)){
             if($result['type'] == TX::TX_TYPE_HASHLINK){
@@ -76,28 +78,6 @@ class indexController extends Controller {
             $oLogger->log('ERROR: Code ' . $code . ' not found (404), no corresponding transaction.');
             $this->notFound();
         }
-
-        /*
-        $blockDate = TX::getBlockDate($block);
-        $aTransaction = array(
-            'tx'    => $txNo,
-            'block' => $block,
-            'date'  => $blockDate
-        );
-        if($txNo && TX::isChainyTransaction($txNo)){
-            $aTransaction += TX::decodeChainyTransaction($txNo);
-            if($aTransaction['type'] == TX::TX_TYPE_HASHLINK){
-                $this->oView->set('aTX', $aTransaction);
-            }
-            if($aTransaction['type'] == TX::TX_TYPE_REDIRECT){
-                header('Location:' . $aTransaction['link']);
-                die();
-            }
-        }else{
-            $oLogger->log('ERROR: Code ' . $code . ' not found (404), no corresponding transaction.');
-            $this->notFound();
-        }
-         */
     }
     /**
      * Add action.
@@ -179,8 +159,6 @@ class indexController extends Controller {
      * @return \AmiLabs\DevKit\Controller
      */
     public function actionShort(array $aParameters){
-        set_time_limit(0);
-        $txNo = $aParameters['hash'];
         $result = TX::getTransactionCode($aParameters['hash']);
         echo $result ? $result : '';
         die();
