@@ -450,12 +450,7 @@ class TX extends \AmiLabs\CryptoKit\TX {
         $oCfg = Application::getInstance()->getConfig();
         $blockPart = substr($code, 0, -2);
         var_dump($blockPart);
-        $block = self::decodeBase58($blockPart); // + $oCfg->get("blockOffset", 1000000);
+        $block = self::decodeBase58($blockPart) + $oCfg->get("blockOffset", 0);
         return $block;
-        try {
-            $oDB = EthereumDB::db($oCfg->get('EthereumDB'));
-            $aTransactions = $oDB->getBlockTransactions($block);
-            var_dump($aTransactions);
-        }catch(\Exception $e){}
     }
 }

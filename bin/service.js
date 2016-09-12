@@ -92,6 +92,7 @@ Chainy = {
         }catch(e){}
         callback(null, result);
     },
+    // Get shortlink by tx hash
     getLink: function(args, opt, callback){
         var txHash = args[0];
         var result = {};
@@ -114,6 +115,39 @@ Chainy = {
         }catch(e){}
         callback(null, result);
     },
+    // Get tx hash by shortlink code
+    getTx: function(args, opt, callback){
+        var code = args[0];
+        if(!code || code.length <= 2){
+            callback('Invalid code format', null);
+            return;
+        }
+        var block = Chainy.base58int(code.slice(0, -2));
+        try {
+            var oBlock = web3.eth.getBlock(block, true);
+            if(oBlock && oBlock.transactions.length){
+                var tx = oBlock.transactions[i];
+                if(chainyConfig.contract === tx.to){
+                    var receipt = web3.eth.getTransactionReceipt('0x' + txHash.crop0x());
+                    if(receipt && receipt.logs && receipt.logs.length){
+                        var log = receipt.logs[0];
+                        if(chainyConfig.topic === log.topics[0]){
+                            var data = log.data.slice(192).replace(/0+$/, '');
+                            var link = new Buffer(data, 'hex').toString();
+                            if(link && link.length && (link.length > code.length) && (code === link.slice(-code.length))){
+                                callback(null, tx.hash);
+                                return;
+                            }
+                        }
+                    }
+                }
+            }
+        }catch(e){
+            callback(e.message, null);
+            return;
+        }
+        callback('Transaction not found', null);
+    },
     // Get current nonce for address
     _getNonce: function(address){
         var nonce = 0;
@@ -122,9 +156,23 @@ Chainy = {
         }catch(e){}
         return nonce;
     },
+    base58int: function(value){
+        var alphabet = '123456789abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ',
+            base = alphabet.length;
+        var decoded = 0;
+        while(value) {
+            var alphabetPosition = alphabet.indexOf(value[0]);
+            if (alphabetPosition < 0) return false;
+            var powerOf = value.length - 1;
+            decoded += alphabetPosition * (Math.pow(base, powerOf));
+            value = value.substring(1);
+        }
+        return decoded;    
+    }
 }
 
 server.expose('add', Chainy.add);
 server.expose('get', Chainy.get);
+server.expose('getTx', Chainy.getTx);
 server.expose('getLink', Chainy.getLink);
 var httpServer = server.listen(chainyConfig.server.port, chainyConfig.server.address);
