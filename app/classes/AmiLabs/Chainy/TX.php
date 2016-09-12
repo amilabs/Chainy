@@ -98,6 +98,7 @@ class TX extends \AmiLabs\CryptoKit\TX {
                 if(is_array($result) && isset($result['data'])){
                     $result['data'] = json_decode($result['data'], JSON_OBJECT_AS_ARRAY);
                     $result['data']['date'] = date("d.m.Y H:i:s", $result['timestamp']);
+                    $result['data']['tx'] = TX::_getTxByCode($code);
                     $result = $result['data'];
                     switch($result['type']){
                         case self::TX_TYPE_HASHLINK:
@@ -446,11 +447,8 @@ class TX extends \AmiLabs\CryptoKit\TX {
         return $result;
     }
 
-    public static function getTxByCode($code){
-        $oCfg = Application::getInstance()->getConfig();
-        $blockPart = substr($code, 0, -2);
-        var_dump($blockPart);
-        $block = self::decodeBase58($blockPart) + $oCfg->get("blockOffset", 0);
-        return $block;
+    protected static function _getTxByCode($code){
+        $result = self::_callRPC("getTx", array($code));
+        return $result;
     }
 }
