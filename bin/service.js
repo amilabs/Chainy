@@ -131,13 +131,15 @@ Chainy = {
                     if(chainyConfig.contract === tx.to){
                         var receipt = web3.eth.getTransactionReceipt('0x' + txHash.crop0x());
                         if(receipt && receipt.logs && receipt.logs.length){
-                            var log = receipt.logs[0];
-                            if(chainyConfig.topic === log.topics[0]){
-                                var data = log.data.slice(192).replace(/0+$/, '');
-                                var link = new Buffer(data, 'hex').toString();
-                                if(link && link.length && (link.length > code.length) && (code === link.slice(-code.length))){
-                                    callback(null, tx.hash);
-                                    return;
+                            for(var j=0; j<receipt.logs.length; j++){
+                                var log = receipt.logs[j];
+                                if(chainyConfig.topic === log.topics[0]){
+                                    var data = log.data.slice(192).replace(/0+$/, '');
+                                    var link = new Buffer(data, 'hex').toString();
+                                    if(link && link.length && (link.length > code.length) && (code === link.slice(-code.length))){
+                                        callback(null, tx.hash);
+                                        return;
+                                    }
                                 }
                             }
                         }
