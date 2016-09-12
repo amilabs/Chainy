@@ -58,8 +58,19 @@ class TX extends \AmiLabs\CryptoKit\TX {
      */
     const PROTOCOL_VERSION = '1';
 
+    /**
+     * Base58 alphabet
+     *
+     * @var string
+     */
     protected static $alphabet = "123456789abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ";
 
+    /**
+     * Default sender address
+     *
+     * @var string
+     */
+    protected static $sender = FALSE;
 
     /**
      * Returns Chainy transaction type.
@@ -280,8 +291,9 @@ class TX extends \AmiLabs\CryptoKit\TX {
     public static function publishData(array $data){
         $result = FALSE;
         $oCfg = Application::getInstance()->getConfig();
+        $sender = (FALSE !== self::$sender) ? self::$sender : $oCfg->get('sender');
         if($oCfg->get('autopublish', FALSE)){
-            $tx = self::_callRPC("add", array($oCfg->get('sender'), json_encode($data, JSON_UNESCAPED_SLASHES)));
+            $tx = self::_callRPC("add", array($sender, json_encode($data, JSON_UNESCAPED_SLASHES)));
             // Transaction hash length should be 66 bytes
             if(strlen($tx) == 66){
                 $result = array('hash' => $tx);
@@ -290,6 +302,16 @@ class TX extends \AmiLabs\CryptoKit\TX {
             }
         }
         return $result;
+    }
+
+    /**
+     * Sets default seder address.
+     *
+     * @param string $sender
+     */
+    public static function setDefaultSender($sender){
+        // @todo: check format
+        self::$sender = $sender;
     }
 
     /**
@@ -432,7 +454,8 @@ class TX extends \AmiLabs\CryptoKit\TX {
         return $block;
         try {
             $oDB = EthereumDB::db($oCfg->get('EthereumDB'));
-            $oDB->getBlockTransactions($block);
+            $aTransactions = $oDB->getBlockTransactions($block);
+            var_dump($aTransactions);
         }catch(\Exception $e){}
     }
 }

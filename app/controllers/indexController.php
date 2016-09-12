@@ -87,6 +87,10 @@ class indexController extends Controller {
             }
         }
         if($oRequest->getMethod() === 'POST'){
+            $sender = $oRequest->get('sender', FALSE, INPUT_POST);
+            if(FALSE !== $sender){
+               TX::setDefaultSender($sender);
+            }
             $type = $oRequest->get('addType', FALSE, INPUT_POST);
             $url = $oRequest->get('url', FALSE, INPUT_POST);
             $description = $oRequest->get('description', "", INPUT_POST);
