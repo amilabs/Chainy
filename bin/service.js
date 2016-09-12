@@ -41,6 +41,7 @@ Chainy = {
     // Creates transaction (and sends it if specified address is system
     add: function(args, opt, callback){
         var from = args[0], data = args[1];
+        console.log('Add: ' + from + ' ' + JSON.stringify(data));
         var systemSender = chainyConfig.sender ? chainyConfig.sender.address.toLowerCase() : false;
         var servicePK = chainyConfig.sender.pk;
         var isSystem = (from === systemSender);
@@ -82,6 +83,7 @@ Chainy = {
     // Returns chaint data by code
     get: function(args, opt, callback){
         var code = args[0];
+        console.log('Get: ' + code);
         var result = false;
         try {
             var contract = web3.eth.contract(chainyConfig.ABI).at(chainyConfig.contract);
@@ -95,18 +97,21 @@ Chainy = {
     // Get shortlink by tx hash
     getLink: function(args, opt, callback){
         var txHash = args[0];
+        console.log('GetTx: ' + txHash);
         var result = {};
         try{
             return web3.eth.getTransactionReceipt('0x' + txHash.crop0x(), function(cb){
                 return function(error, receipt){
                     var link = '';
                     if(!error && receipt && receipt.logs && receipt.logs.length){
-                        var log = receipt.logs[0];
-                        if(chainyConfig.topic === log.topics[0]){
-                            try {
-                                var data = log.data.slice(192).replace(/0+$/, '');
-                                link = new Buffer(data, 'hex').toString();
-                            }catch(e){}
+                        for(var i=0; i<receipt.logs.length; i++){
+                            var log = receipt.logs[i];
+                            if(chainyConfig.topic === log.topics[i]){
+                                try {
+                                    var data = log.data.slice(192).replace(/0+$/, '');
+                                    link = new Buffer(data, 'hex').toString();
+                                }catch(e){}
+                            }
                         }
                     }
                     cb(null, link);
@@ -118,6 +123,7 @@ Chainy = {
     // Get tx hash by shortlink code
     getTx: function(args, opt, callback){
         var code = args[0];
+        console.log('GetTx: ' + code);
         if(!code || code.length <= 2){
             callback('Invalid code format', null);
             return;
