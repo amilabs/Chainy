@@ -129,7 +129,7 @@ Chainy = {
                 for(var i = 0; i<oBlock.transactions.length; i++){
                     var tx = oBlock.transactions[i];
                     if(chainyConfig.contract === tx.to){
-                        var receipt = web3.eth.getTransactionReceipt('0x' + txHash.crop0x());
+                        var receipt = web3.eth.getTransactionReceipt('0x' + tx.hash.crop0x());
                         if(receipt && receipt.logs && receipt.logs.length){
                             for(var j=0; j<receipt.logs.length; j++){
                                 var log = receipt.logs[j];
