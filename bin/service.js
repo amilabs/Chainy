@@ -97,7 +97,7 @@ Chainy = {
     // Get shortlink by tx hash
     getLink: function(args, opt, callback){
         var txHash = args[0];
-        console.log('GetTx: ' + txHash);
+        console.log('GetLink: ' + txHash);
         var result = {};
         try{
             return web3.eth.getTransactionReceipt('0x' + txHash.crop0x(), function(cb){
@@ -106,7 +106,7 @@ Chainy = {
                     if(!error && receipt && receipt.logs && receipt.logs.length){
                         for(var i=0; i<receipt.logs.length; i++){
                             var log = receipt.logs[i];
-                            if(chainyConfig.topic === log.topics[i]){
+                            if(chainyConfig.topic === log.topics[0]){
                                 try {
                                     var data = log.data.slice(192).replace(/0+$/, '');
                                     link = new Buffer(data, 'hex').toString();
