@@ -16,6 +16,22 @@ contract('Chainy', function(accounts){
         }
     }
 
+    var int2base58 = function(value){
+        var alphabet = '123456789abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ',
+            base = alphabet.length;
+        if(typeof(value) !== 'number' || value !== parseInt(value)){
+            clog('"int2base58" only accepts integers');
+            return null;
+        }
+        var encoded = '';
+        while(value){
+            var remainder = value % base;
+            value = Math.floor(value / base);
+            encoded = alphabet[remainder].toString() + encoded;        
+        }
+        return encoded;
+    }
+
     var aTests = [
         // config
         {
@@ -229,8 +245,9 @@ contract('Chainy', function(accounts){
         });
     });
 
-    var aEventsData = [];
-    var aChainyJson = [
+    var aEventsData = [],
+        aTxData = [],
+        aChainyJson = [
         {
             'json': '{"id":"CHAINY", version: 1, type: "L", url: "http:\/\/site.com\/file.zip", hash: "24356450ab5de1cf7b07a85cda0ff91c0b44a347b731402c4fa6729ec7c98", filetype: "arc", filesize: 1024, description: "reports.everex.one"}',
             'result': 'success',
@@ -258,6 +275,8 @@ contract('Chainy', function(accounts){
         },
     ];
 
+    var chainyCode = 'zzz';
+
     aChainyJson.forEach(function(aData){
         it("/Add Chainy data '" + aData.json + '\' should ' + aData.result + '/', function(done){
             var chainy = Chainy.deployed();
@@ -281,8 +300,9 @@ contract('Chainy', function(accounts){
             .then(function(res){
                 result = 'success';
                 clog("Tx: " + res);
-                //var txReceipt = web3.eth.getTransactionReceipt(res);
+                var txReceipt = web3.eth.getTransactionReceipt(res);
                 //clog(txReceipt);
+                aTxData.push(txReceipt);
             })
             .catch(function(e){
                 if(e.toString().indexOf('invalid JUMP') >= 0){
@@ -297,7 +317,12 @@ contract('Chainy', function(accounts){
         });
     });
 
-    var chainyCode = 'zzz';
+    it("/Should check Chainy short link/", function(){
+        var chainyLink = aEventsData[0].code.slice(0, -2),
+            correctLink = 'https://txn.me/' + int2base58(parseInt(aTxData[0].blockNumber));
+
+        assert.equal(chainyLink, correctLink, '');
+    });
 
     it("/Should check Chainy data timestamp/", function(){
         var chainy = Chainy.deployed();
