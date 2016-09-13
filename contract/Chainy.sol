@@ -219,7 +219,7 @@ contract Chainy is owned, mortal {
     }
 
     function generateShortLink() internal returns (string) {
-        var s1 = strUtils.toBase58(block.number - getConfig("blockoffset"), 10);
+        var s1 = strUtils.toBase58(block.number - getConfig("blockoffset"), 11);
         var s2 = strUtils.toBase58(uint256(tx.origin), 2);
 
         var s = strUtils.concat(s1, s2);
