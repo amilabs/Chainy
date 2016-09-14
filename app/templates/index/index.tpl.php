@@ -89,11 +89,9 @@
                             </p>
                             <?php
                             /*
-                                <p class="promo-content">Look up this transaction on 3rd party services: <a href="http://coinsecrets.org/<?php if($aTX['block']): ?>?to=<?=($aTX['block'] + 1)?>.000000<?php endif; ?>">CoinSecrets</a> and <a href="http://blockchain.info/tx/<?=$aTX['tx']?>">Blockchain.info</a>
+                                <p class="promo-content">Look up this transaction on 3rd party services: <a href="http://coinsecrets.org/<?php if($aTX['block']): ?>?to=<?=($aTX['block'] + 1)?>.000000<?php endif; ?>">CoinSecrets</a> and <a href="http://blockchain.info/tx/<?=$aTX['tx']?>">Blockchain.info</a></p>
                              */
                             ?>
-                            </p>
-
                         </div>
                         <div class="col-sm-2 col-md-offset-1 site-block">
                             <a name="verify"></a>
@@ -232,11 +230,9 @@
                             </p>
                             <?php
                             /*
-                                <p class="promo-content">Look up this transaction on 3rd party services: <a href="http://coinsecrets.org/<?php if($aTX['block']): ?>?to=<?=($aTX['block'] + 1)?>.000000<?php endif; ?>">CoinSecrets</a> and <a href="http://blockchain.info/tx/<?=$aTX['tx']?>">Blockchain.info</a>
+                                <p class="promo-content">Look up this transaction on 3rd party services: <a href="http://coinsecrets.org/<?php if($aTX['block']): ?>?to=<?=($aTX['block'] + 1)?>.000000<?php endif; ?>">CoinSecrets</a> and <a href="http://blockchain.info/tx/<?=$aTX['tx']?>">Blockchain.info</a></p>
                              */
                             ?>
-                            </p>
-
                         </div>
                     </div>
                     <?php if(1 || $aTX["type"] == 'H'): ?>
@@ -248,6 +244,40 @@
                         </div>
                     </div>
                     <?php endif; ?>
+                </div>
+            </section>
+        <?php endif; ?>
+
+        <?php if($aTX["type"] == 'R'): ?>
+            <!-- Intro -->
+            <section class="site-section site-section-light site-section-top themed-background">
+                <div class="container">
+                    <h1 class="text-center animation-slideDown"><i class="fa fa-check-square"></i> <strong>Redirect</strong></h1>
+                    <h2 class="h3 text-center animation-slideUp">Date of transaction: <?php if(isset($aTX['date'])): ?><?=$aTX['date']?><?php else: ?>Unknown yet<?php endif; ?></h2>
+                </div>
+            </section>
+            <!-- END Intro -->
+
+            <section class="site-content site-section site-slide-content">
+                <div class="container">
+                    <h2 class="site-heading"><strong>Redirect details</strong></h2>
+                    <hr>
+                    <div class="row visibility-none" data-toggle="animation-appear" data-animation-class="animation-fadeInQuick" data-element-offset="-100">
+                        <div class="col-sm-10 col-md-9 site-block">
+                            <p class="promo-content">
+                                <?php if(isset($aTX['url'])): ?>
+                                <br /><strong>Redirects to</strong>
+                                <br /><a href="<?=$aTX['url']?>" target="_blank"><?=$aTX['url']?></a>
+                                <?php endif; ?>
+                                <br /><strong>Transaction date</strong>
+                                <br /> <?php if(isset($aTX['date'])): ?><?=$aTX['date']?><?php else: ?>Unknown yet<?php endif; ?>
+                                <?php if(isset($aTX['tx']) && $aTX['tx']): ?>
+                                <br /><strong>Transaction id</strong>
+                                <br /> <?=$aTX['tx']?>
+                                <?php endif; ?>
+                            </p>
+                        </div>
+                    </div>
                 </div>
             </section>
         <?php endif; ?>

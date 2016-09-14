@@ -28,6 +28,7 @@ $aConfig += array(
     'Router' => array(
         'aRoutes' => array(
             ''               => array(),
+            'i/:code'        => array('default' => array('byHash' => FALSE, 'noRedirect' => TRUE)),
             ':code'          => array('default' => array('byHash' => FALSE)),
             'add'            => array('default' => array('action' => 'add')),
             'tx/:hash'       => array('default' => array('code' => FALSE, 'byHash' => TRUE)),

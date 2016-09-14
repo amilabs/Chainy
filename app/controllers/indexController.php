@@ -47,14 +47,16 @@ class indexController extends Controller {
         }
         if(is_array($result)){
             switch($result['type']){
+                case TX::TX_TYPE_REDIRECT:
+                    if(!isset($aParameters['noRedirect'])){
+                        header('Location:' . $result['url']);
+                        die();
+                    }
                 case TX::TX_TYPE_HASHLINK:
                 case TX::TX_TYPE_TEXT:
                 case TX::TX_TYPE_HASH:
                     $this->oView->set('aTX', $result);
                     break;
-                case TX::TX_TYPE_REDIRECT:
-                    header('Location:' . $result['url']);
-                    die();
             }
         }else{
             $oLogger->log('ERROR: Code ' . $code . ' not found (404), no corresponding transaction.');
