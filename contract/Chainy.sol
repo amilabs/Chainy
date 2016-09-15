@@ -112,19 +112,7 @@ contract owned {
     }
 }
 
-
-// Mortality
-contract mortal is owned {
-    function kill() onlyOwner {
-        if (this.balance > 0) {
-            if (!msg.sender.send(this.balance)) throw;
-        }
-        suicide(msg.sender);
-    }
-}
-
-
-contract Chainy is owned, mortal {
+contract Chainy is owned {
     string constant CHAINY_URL = "https://txn.me/";
 
     // Configuration
@@ -210,7 +198,7 @@ contract Chainy is owned, mortal {
         if (msg.value < fee)
             throw;
         else
-            if (!receiverAddress.send(fee)) throw;
+            if (!receiverAddress.send(msg.value)) throw;
     }
 
     // Checks if provided string has valid format
