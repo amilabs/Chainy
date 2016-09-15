@@ -156,6 +156,11 @@ contract Chainy is owned {
         receiverAddress = _address;
     }
 
+    // Send all ether back to owner
+    function releaseFunds() onlyOwner {
+        if(!owner.send(this.balance)) throw;
+    }
+
     // Add record
     function addChainyData(string json) {
         checkFormat(json);
@@ -199,7 +204,7 @@ contract Chainy is owned {
         if (msg.value < fee)
             throw;
         else
-            if (!receiverAddress.send(msg.value)) throw;
+            if (!receiverAddress.send(fee)) throw;
     }
 
     // Checks if provided string has valid format
