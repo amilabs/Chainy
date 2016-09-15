@@ -35,8 +35,9 @@ $aConfig += array(
             'getShort/:hash' => array('default' => array('action' => 'short'))
         )
     ),
-    'link404'       => '/404',
-    'service'       => "http://localhost:8344", // Where bin/service.js is up
-    'autopublish'   => FALSE,
-    'sender'        => '0x...'
+    'link404'         => '/404',
+    'service'         => "http://localhost:8344", // Where bin/service.js is up
+    'autopublish'     => FALSE,
+    'sender'          => '0x...',
+    'contractAddress' => '0x...'
 );
