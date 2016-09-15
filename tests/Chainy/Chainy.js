@@ -158,6 +158,18 @@ contract('Chainy', function(accounts){
                 }
             ],
         },
+        // addChainyData from service account
+        {
+            'contract': 'Chainy',
+            'method'  : 'addChainyData',
+            'tests'   : [
+                {
+                    'params': ['ne|{"id":"CHAINY", version: 1, type: "L", url: "http:\/\/site.com\/file.zip", hash: "24356450ab5de1cf7b07a85cda0ff91c0b44a347b731402c4fa6729ec7c98", filetype: "arc", filesize: 1024, description: "reports.everex.one"}'],
+                    'from'  : 'accounts[2]',
+                    'result': 'success'
+                }
+            ],
+        },
         // change owner
         {
             'contract': 'Chainy',
@@ -453,6 +465,12 @@ contract('Chainy', function(accounts){
         .then(function(res){
             assert.equal(res.valueOf(), accounts[3], '');
         });
+    });
+
+    it("/Should check final balance of service account (accounts[2])/", function(){
+        clog(web3.eth.getBalance(accounts[2]));
+        // 99974233800000000000 = 100000000000000000000 - 25766200000000000 (only gas used, fee = 0)
+        assert.equal(web3.eth.getBalance(accounts[2]), 99974233800000000000, '');
     });
 
     it("/Should check final balance of receiver address/", function(){
