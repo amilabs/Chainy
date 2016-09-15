@@ -71,6 +71,7 @@ class indexController extends Controller {
      */
     public function actionAdd(array $aParameters){
         set_time_limit(0);
+        $this->layoutName = 'add';
         $oRequest = $this->getRequest();
         session_start();
         if(isset($_SESSION['add_result'])){
@@ -134,7 +135,7 @@ class indexController extends Controller {
             $result['success'] = $success;
             $result['message'] = $message;
             $_SESSION['add_result'] = $result;
-            header('Location: /add');
+            header('Location: ?');
             die();
         }
         session_write_close();

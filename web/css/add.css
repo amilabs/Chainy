@@ -25,3 +25,7 @@
     width:100%;
     height:150px;
 }
+
+a.btn {
+    color: white !important;
+}

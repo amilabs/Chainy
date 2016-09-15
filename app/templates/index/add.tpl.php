@@ -1,10 +1,27 @@
+<div class="t408__textwrapper t-width t-width_8">
+    <div class="t408__uptitle t-uptitle t-uptitle_md" field="subtitle">
+        <br /><br />AEON links + Proof of Existence + Files + Messages
+    </div>
+    <div class="t408__descr t-descr t-descr_md" field="descr">
+        <?php if(isset($success)): ?>
+            <?php if($success): ?>
+                Succesfully generated!
+            <?php else: ?>
+                Error occured!
+            <?php endif ?>
+        <?php else: ?>
+            Choose type of data to engrave in Ethereum blockchain
+        <?php endif ?>
+    </div>
+</div>
+<div class="t408__blockswrapper">
 <link rel="stylesheet" href="css/add.css">
 <div class="container">
-    <div style="background:white;margin-top:20px;padding:20px;">
+    <div style="background:#fff;padding:20px;border-radius:16px;opacity:0.9;margin-top:-50px;">
         <?php if(isset($success)): ?>
-            <h4 class="text-<?php echo $success ? 'success' : 'danger' ?>"><?php echo $message ?></h4>
             <?php if($success): ?>
                 <?php if(isset($chainyJSON)): ?>
+                    <?php echo $message ?>:
                     <textarea id="chainy-data" readonly><?php echo $chainyJSON ?></textarea>
                 <?php endif ?>
                 <?php if(isset($chainyTransaction)): ?>
@@ -15,11 +32,9 @@
                 <?php endif ?>
             <?php endif ?>
             <div class="text-right">
-                <a href="/add" class="btn btn-success btn-lg" onclick="">Back</a>
+                <a href="#" class="btn btn-success btn-lg" onclick="document.location.reload(); return false;">Back</a>
             </div>
         <?php else: ?>
-            <h3>Add new Chainy record</h3>
-            <hr>
             <ul class="nav nav-tabs">
                 <li class="active"><a data-toggle="tab" href="#local-filehash" id="firstTab">Local File Hash</a></li>
                 <li><a data-toggle="tab" href="#remote-filehash">Remote File Hash</a></li>
@@ -30,7 +45,7 @@
             </ul>
             <div class="tab-content">
                 <div id="local-filehash" class="tab-pane fade in active">
-                    <form class="add-chainy" action="/add" method="POST">
+                    <form class="add-chainy" action="" method="POST">
                         <input type="hidden" name="addType" value="Local file hash">
                         <div class="row">
                             <div id="verifier" class="col-xs-4">
@@ -45,21 +60,21 @@
                             <div class="col-xs-8" style="display:none;" id="local-fileinfo">
                                 <div class="row">
                                     <div class="col-xs-2 text-right">Filename:</div>
-                                    <div class="col-xs-10">
+                                    <div class="col-xs-10 text-left">
                                         <span id="local-filename"></span>
                                         <input type="hidden" name="filename">
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-xs-2 text-right">Filesize:</div>
-                                    <div class="col-xs-10">
+                                    <div class="col-xs-10 text-left">
                                         <span id="local-filesize"></span>
                                         <input type="hidden" name="filesize">
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-xs-2 text-right">Hash:</div>
-                                    <div class="col-xs-10">
+                                    <div class="col-xs-10 text-left">
                                         <div class="progress" id="local-hash-progress">
                                           <div class="progress-bar" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width:0%"></div>
                                         </div>
@@ -71,7 +86,7 @@
                                     <div class="col-xs-2 text-right">
                                         Descrtiption:
                                     </div>
-                                    <div class="col-xs-10">
+                                    <div class="col-xs-10 text-left">
                                         <textarea name="description" class="check-description"></textarea>
                                         <div class="form-errors text-danger">Description is too big</div>
                                     </div>
@@ -81,13 +96,13 @@
                     </form>
                 </div>
                 <div id="remote-filehash" class="tab-pane fade">
-                    <form class="add-chainy" action="/add" method="POST">
+                    <form class="add-chainy" action="" method="POST">
                         <input type="hidden" name="addType" value="File hash">
                         <div class="row">
                             <div class="col-xs-2 text-right">
                                 URL:
                             </div>
-                            <div class="col-xs-10">
+                            <div class="col-xs-10 text-left">
                                 <input type="text" name="url" class="trim-on-submit check-url" size="64">
                                 <div class="form-errors text-danger"></div>
                             </div>
@@ -96,7 +111,7 @@
                             <div class="col-xs-2 text-right">
                                 Descrtiption:
                             </div>
-                            <div class="col-xs-10">
+                            <div class="col-xs-10 text-left">
                                 <textarea name="description" class="check-description"></textarea>
                                 <div class="form-errors text-danger">Description is too big</div>
                             </div>
@@ -104,16 +119,16 @@
                     </form>
                 </div>
                 <div id="redirect" class="tab-pane fade">
-                    <div class="alert alert-info">
+                    <div class="alert alert-info text-left">
                         Please enter a valid URL. Protocol is required (http:// or https://).
                     </div>
-                    <form class="add-chainy" action="/add" method="POST">
+                    <form class="add-chainy" action="" method="POST">
                         <input type="hidden" name="addType" value="Redirect">
                         <div class="row">
                             <div class="col-xs-2 text-right">
                                 URL:
                             </div>
-                            <div class="col-xs-10">
+                            <div class="col-xs-10 text-left">
                                 <input type="text" name="url" class="trim-on-submit check-url" size="64">
                                 <div class="form-errors text-danger"></div>
                             </div>
@@ -121,13 +136,13 @@
                     </form>
                 </div>
                 <div id="text" class="tab-pane fade">
-                    <form class="add-chainy" action="/add" method="POST">
+                    <form class="add-chainy" action="" method="POST">
                         <input type="hidden" name="addType" value="Text">
                         <div class="row">
                             <div class="col-xs-2 text-right">
                                 Text:
                             </div>
-                            <div class="col-xs-10">
+                            <div class="col-xs-10 text-left">
                                 <textarea name="description" class="check-empty check-description"></textarea>
                                 <div class="form-errors text-danger"></div>
                             </div>
@@ -135,13 +150,13 @@
                     </form>
                 </div>
                 <div id="data-hash" class="tab-pane fade">
-                    <form class="add-chainy" action="/add" method="POST">
+                    <form class="add-chainy" action="" method="POST">
                         <input type="hidden" name="addType" value="Hash">
                         <div class="row">
                             <div class="col-xs-2 text-right">
                                 Data:
                             </div>
-                            <div class="col-xs-10">
+                            <div class="col-xs-10 text-left">
                                 <textarea name="description" class="check-empty check-description"></textarea>
                                 <div class="form-errors text-danger"></div>
                             </div>
@@ -149,7 +164,7 @@
                     </form>
                 </div>
                 <div id="encrypted-text" class="tab-pane fade">
-                    <form class="add-chainy" action="/add" method="POST">
+                    <form class="add-chainy" action="" method="POST">
                         <input type="hidden" name="addType" value="Encrypted Text">
                         <input type="hidden" name="encrypted">
                         <input type="hidden" name="hash">
@@ -158,7 +173,7 @@
                         <div class="col-xs-2 text-right">
                             Text:
                         </div>
-                        <div class="col-xs-10">
+                        <div class="col-xs-10 text-left">
                             <textarea id="enc-text" class="check-empty check-description"></textarea>
                             <div class="form-errors text-danger"></div>
                         </div>
@@ -167,7 +182,7 @@
                         <div class="col-xs-2 text-right">
                             Password:
                         </div>
-                        <div class="col-xs-10">
+                        <div class="col-xs-10 text-left">
                             <input type="password" id="password1">
                             <div class="form-errors text-danger"></div>
                         </div>
@@ -176,7 +191,7 @@
                         <div class="col-xs-2 text-right">
                             Repeat Password:
                         </div>
-                        <div class="col-xs-10">
+                        <div class="col-xs-10 text-left">
                             <input type="password" id="password2">
                             <div class="form-errors text-danger"></div>
                         </div>
@@ -267,4 +282,11 @@ function clearLocalFileData(){
     $('#local-filesize').text('');
     $('#local-fileinfo').hide();
 }
+
+$("a[data-toggle=tab]").click(function(){
+    setTimeout(function(){
+        cover_init("8550993");
+    }, 500);
+});
 </script>
+</div>
