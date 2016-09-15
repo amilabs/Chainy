@@ -125,8 +125,9 @@ class indexController extends Controller {
                 default:
                     $result = array('error' => 'Invalid operation');
             }
+            $result['mist'] = $oRequest->get('mist', FALSE, INPUT_POST);
             $success = $result && is_array($result) && !isset($result['error']);
-            if($success){
+            if($success && !$result['mist']){
                 $tx = TX::publishData($result['data']);
                 if(is_array($tx)){
                     $result += $tx;
@@ -135,7 +136,6 @@ class indexController extends Controller {
             $message = ($success) ? (ucfirst($type) . ' JSON:') : ('ERROR: Unable to add ' . $type . ($result && is_array($result) && isset($result['error']) ? ' (' . $result['error'] . ')' : ''));
             $result['success'] = $success;
             $result['message'] = $message;
-            $result['mist'] = $oRequest->get('mist', FALSE, INPUT_POST);
             $_SESSION['add_result'] = $result;
             header('Location: ?');
             die();
