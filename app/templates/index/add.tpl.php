@@ -317,12 +317,12 @@ $("a[data-toggle=tab]").click(function(){
                                     var chainyShortLinkWatcher = chainy.chainyShortLink();
                                     chainyShortLinkWatcher.watch(function(error, result){
                                         chainyShortLinkWatcher.stopWatching();
-                                        if(!error && result.args && result.args.code){
+                                        if(!error && result && result.args && result.args.code){
                                             console.log(result.args);
                                             var url = result.args.code;
                                             $('#chainyShortLink').html('<b>The Chainy short link is <a href="' + url + '">' + url + '</a></b>');
                                         }else{
-                                            $('#chainyShortLink').html('Error: ' + e.toString());
+                                            $('#chainyShortLink').html('Error: ' + (error ? error.toString() : 'Unknown error.'));
                                         }
                                     });
 
