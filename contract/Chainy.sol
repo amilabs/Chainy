@@ -132,7 +132,8 @@ contract Chainy is owned {
     // Constructor
     function Chainy(){
         setConfig("fee", 0);
-        setConfig("blockoffset", 1000000);
+        // change the block offset to 1000000 to use contract in testnet
+        setConfig("blockoffset", 2000000);
     }
 
     // Sets configuration option
