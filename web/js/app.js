@@ -173,6 +173,18 @@ var App = function() {
         }
     };
 
+    var mistInit = function(){
+        if(typeof mist !== 'undefined'){
+            if(typeof web3 !== 'undefined' && typeof Web3 !== 'undefined'){
+                web3 = new Web3(web3.currentProvider);
+            }else if(typeof Web3 !== 'undefined'){
+                web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
+            }else if(typeof web3 == 'undefined'){
+                return;
+            }
+        }
+    }
+
     $(document).on("click", "#checkhash", function(){
         var text = $('#checkhash-text').val();
         var hash = CryptoJS.SHA256(text).toString();
@@ -294,6 +306,7 @@ var App = function() {
               alert('File APIs are not fully supported in this browser. Please use latest Mozilla Firefox or Google Chrome.');
             }
             uiInit();
+            mistInit();
             try{
                 // Setup the dnd listeners.
                 var dropZone = document.getElementById('verifier');

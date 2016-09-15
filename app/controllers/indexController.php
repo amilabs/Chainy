@@ -74,18 +74,19 @@ class indexController extends Controller {
         $this->layoutName = 'add';
         $oRequest = $this->getRequest();
         session_start();
+        $this->getView()->set('contractAddress', $this->getConfig()->get('contractAddress'));
         if(isset($_SESSION['add_result'])){
             $result = $_SESSION['add_result'];
             session_unset();
             $this->getView()->set('success', $result['success']);
             $this->getView()->set('message', $result['message']);
-            if(isset($result['hash'])){
+            if(isset($result['hash']) && !$result['mist']){
                 $this->getView()->set('hash', $result['hash']);
             }
             if(isset($result['data'])){
                 $this->getView()->set('chainyJSON', json_encode($result['data'], JSON_UNESCAPED_SLASHES));
             }
-            if(isset($result['transaction'])){
+            if(isset($result['transaction']) && !$result['mist']){
                 $this->getView()->set('chainyTransaction', json_encode($result['transaction']));
             }
         }
@@ -134,6 +135,7 @@ class indexController extends Controller {
             $message = ($success) ? (ucfirst($type) . ' JSON:') : ('ERROR: Unable to add ' . $type . ($result && is_array($result) && isset($result['error']) ? ' (' . $result['error'] . ')' : ''));
             $result['success'] = $success;
             $result['message'] = $message;
+            $result['mist'] = $oRequest->get('mist', FALSE, INPUT_POST);
             $_SESSION['add_result'] = $result;
             header('Location: ?');
             die();
