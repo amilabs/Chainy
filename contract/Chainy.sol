@@ -113,7 +113,8 @@ contract owned {
 }
 
 contract Chainy is owned {
-    string constant CHAINY_URL = "https://txn.me/";
+    // Chainy viewer url
+    string CHAINY_URL;
 
     // Configuration
     mapping(string => uint256) private chainyConfig;
@@ -134,6 +135,17 @@ contract Chainy is owned {
         setConfig("fee", 0);
         // change the block offset to 1000000 to use contract in testnet
         setConfig("blockoffset", 2000000);
+        setChainyURL("https://txn.me/");
+    }
+
+    // Sets new Chainy viewer URL
+    function setChainyURL(string _url) onlyOwner {
+        CHAINY_URL = _url;
+    }
+
+    // Returns current Chainy viewer URL
+    function getChainyURL() constant returns(string){
+        return CHAINY_URL;
     }
 
     // Sets configuration option
@@ -212,6 +224,7 @@ contract Chainy is owned {
         if (!strUtils.isValidChainyJson(json)) throw;
     }
 
+    // Generates a shortlink code for this transaction
     function generateShortLink() internal returns (string) {
         var s1 = strUtils.toBase58(block.number - getConfig("blockoffset"), 11);
         var s2 = strUtils.toBase58(uint256(tx.origin), 2);
