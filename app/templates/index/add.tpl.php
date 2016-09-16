@@ -28,7 +28,20 @@
                     <textarea id="chainy-tx" readonly><?php echo $chainyTransaction ?></textarea>
                 <?php endif ?>
                 <?php if(isset($hash)): ?>
-                   Transaction: <a href="https://testnet.etherscan.io/tx/<?php echo $hash ?>" target="_blank"><?php echo $hash ?></a>
+                   Transaction: <a href="https://testnet.etherscan.io/tx/<?php echo $hash ?>" target="_blank"><?php echo $hash ?></a><br />
+                   Shortlink: <span id="shortlink"><i class="fa fa-spinner fa-spin"></i> please wait...</span>
+                   <script>
+                       var checkTm;
+                       var getShort = function(){
+                           $.get("getShort/<?php echo $hash ?>", {}, function(data){
+                               if(data){
+                                   $("#shortlink").html(data);
+                                   clearInterval(checkTm);
+                               }
+                           });
+                       }
+                       checkTm = setInterval(getShort, 5000);
+                    </script>
                 <?php endif ?>
                 <span id="chainy-contract" class="alert"></span>
             <?php endif ?>

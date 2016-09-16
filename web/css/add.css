@@ -26,10 +26,6 @@
     height:150px;
 }
 
-a.btn {
-    color: white !important;
-}
-
 .nav-tabs li a {
     color: #555 !important;
 }
@@ -45,6 +41,10 @@ a.btn {
 
 .check-url {
     width: 100%;
+}
+
+.container {
+    text-align: left;
 }
 
 @media screen and (max-width: 767px) {
