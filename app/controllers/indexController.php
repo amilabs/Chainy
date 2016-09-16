@@ -45,7 +45,7 @@ class indexController extends Controller {
             $oLogger->log('Code:' . $code . ', IP:' . $ipAddress . ', Referer:' . $referer);
             $result = TX::decodeChainyTransaction($code);
         }
-        if(is_array($result)){
+        if(is_array($result) && isset($result['type'])){
             switch($result['type']){
                 case TX::TX_TYPE_REDIRECT:
                     if(!isset($aParameters['noRedirect'])){
