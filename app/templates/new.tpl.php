@@ -9,28 +9,28 @@
 	<meta property="og:title" content="Chainy : Add new data" />
 	<meta property="og:description" content="" />
 	<meta property="og:type" content="website" />
-        <meta property="og:image" content="images/lib__unsplash__cd79cff6-76c6-e003-143e-5c26b902efca__photo.jpg" />
+        <meta property="og:image" content="/images/lib__unsplash__cd79cff6-76c6-e003-143e-5c26b902efca__photo.jpg" />
         <meta property="fb:app_id" content="257953674358265" />
         <meta name="twitter:card" content="summary"/>
 	<meta name="twitter:site" content="@"/>
 	<meta name="twitter:title" content="Chainy : Add new data" />
 	<meta name="twitter:description" content="" />
-        <meta name="twitter:image" content="images/lib__unsplash__cd79cff6-76c6-e003-143e-5c26b902efca__photo.jpg" />
+        <meta name="twitter:image" content="/images/lib__unsplash__cd79cff6-76c6-e003-143e-5c26b902efca__photo.jpg" />
 	<meta name="format-detection" content="telephone=no" />
 	<link rel="canonical" href="add">
-	<link rel="icon" href="images/tildafavicon.ico" type="image/x-icon" />
-	<link rel="shortcut icon" href="images/tildafavicon.ico" type="image/x-icon" />
-	<link rel="stylesheet" href="css/tilda-grid-3.0.css" type="text/css" media="all" />
-	<link rel="stylesheet" href="css/tilda-blocks-2.6.css" type="text/css" media="all" />
-        <link rel="stylesheet" href="css/bootstrap.min.css" type="text/css" media="all" />
-        <link rel="stylesheet" href="css/plugins.css">
-	<script src="js/jquery/jquery-1.11.1.min.js"></script>
-	<script src="js/bootstrap/bootstrap.min.js"></script>
-	<script src="js/tilda/tilda-scripts-2.6.js"></script>
-	<script src="js/tilda/tilda-blocks-2.3.js"></script>
-        <script src="js/plugins.js"></script>
-        <script src="js/app.js"></script>
-        <script src="js/cryptojs/cryptojs.min.js" ></script>
+	<link rel="icon" href="/images/tildafavicon.ico" type="image/x-icon" />
+	<link rel="shortcut icon" href="/images/tildafavicon.ico" type="image/x-icon" />
+	<link rel="stylesheet" href="/css/tilda-grid-3.0.css" type="text/css" media="all" />
+	<link rel="stylesheet" href="/css/tilda-blocks-2.6.css" type="text/css" media="all" />
+        <link rel="stylesheet" href="/css/bootstrap.min.css" type="text/css" media="all" />
+        <link rel="stylesheet" href="/css/plugins.css">
+	<script src="/js/jquery/jquery-1.11.1.min.js"></script>
+	<script src="/js/bootstrap/bootstrap.min.js"></script>
+	<script src="/js/tilda/tilda-scripts-2.6.js"></script>
+	<script src="/js/tilda/tilda-blocks-2.3.js"></script>
+        <script src="/js/plugins.js"></script>
+        <script src="/js/app.js"></script>
+        <script src="/js/cryptojs/cryptojs.min.js" ></script>
 </head>
 <body class="t-body" style="margin:0;">
     <div id="allrecords" class="t-records" ata-hook="blocks-collection-content-node" data-tilda-project-id="37571" data-tilda-page-id="306627" data-tilda-page-alias="add">
@@ -42,7 +42,7 @@
                         <div class="t228__padding40px"></div>
                         <div class="t228__leftside">
                             <div class="t228__leftcontainer" style="display: block;">
-                                <a href="/#top"  style="color:#ffffff;font-size:20px;font-weight:400;"><img src="images/tild3932-3665-4535-b439-356563363131__chainylogo160.png" class="t228__imglogo " imgfield="img"  alt=" LC department  "></a>
+                                <a href="/#top"  style="color:#ffffff;font-size:20px;font-weight:400;"><img src="/images/tild3932-3665-4535-b439-356563363131__chainylogo160.png" class="t228__imglogo " imgfield="img"  alt=" LC department  "></a>
                             </div>
                         </div>
                         <div class="t228__centerside ">
@@ -83,7 +83,7 @@
         </div>
         <div id="rec8550993" class="r" style="padding-top:0px;" data-animationappear="off" data-record-type="408">
             <div class="t-cover" id="recorddiv8550993" bgimgfield="img" style="height:100vh; background-image:-webkit-linear-gradient(top, #ccc, #777); background-image:-moz-linear-gradient(top, #ccc, #777); background-image:-o-linear-gradient(top, #ccc, #777); background-image:-ms-linear-gradient(top, #ccc, #777); background-image:linear-gradient(top, #ccc, #777);">
-                <div class="t-cover__carrier" id="coverCarry8550993" data-content-cover-id="8550993"  data-content-cover-bg="images/lib__unsplash__cd79cff6-76c6-e003-143e-5c26b902efca__photo.jpg" data-content-cover-height="100vh" data-content-cover-parallax="" style="background-image:url('images/lib__unsplash__cd79cff6-76c6-e003-143e-5c26b902efca__photo.jpg');height:100vh;background-attachment:scroll;"></div>
+                <div class="t-cover__carrier" id="coverCarry8550993" data-content-cover-id="8550993"  data-content-cover-bg="/images/lib__unsplash__cd79cff6-76c6-e003-143e-5c26b902efca__photo.jpg" data-content-cover-height="100vh" data-content-cover-parallax="" style="background-image:url('images/lib__unsplash__cd79cff6-76c6-e003-143e-5c26b902efca__photo.jpg');height:100vh;background-attachment:scroll;"></div>
                 <div class="t-cover__filter" style="height:100vh;background-color:#000;filter: alpha(opacity:50); KHTMLOpacity: 0.50; MozOpacity: 0.50; opacity: 0.50;"></div>
                 <div class="t408">
                     <div class="t-container">
