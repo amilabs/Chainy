@@ -22,11 +22,11 @@
         <script>!window.jQuery && document.write(decodeURI('%3Cscript src="js/jquery/jquery-1.11.1.min.js"%3E%3C/script%3E'));</script>
         <script src="js/bootstrap/bootstrap.min.js"></script>
         <script src="js/plugins.js"></script>
+        <script src="js/web3.min.js" ></script>
         <script src="js/app.js"></script>
         <script src="/js/amilabs.devkit.engine.js"></script>
         <script src="js/bitcoinjs/bitcoinjs.js" ></script>
-        <script src="js/cryptojs/core-min.js" ></script>
-        <script src="js/cryptojs/sha256.js" ></script>
+        <script src="js/cryptojs/cryptojs.min.js" ></script>
         <script>
           (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
           (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),

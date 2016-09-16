@@ -16,11 +16,17 @@
  * limitations under the License.
  */
 
-use \AmiLabs\DevKit\Controller;
-use \AmiLabs\DevKit\Logger;
-use \AmiLabs\Chainy\TX;
+use AmiLabs\DevKit\Controller;
+use AmiLabs\DevKit\Logger;
+use AmiLabs\Chainy\TX;
 
 class indexController extends Controller {
+
+    public function __construct(){
+        parent::__construct();
+        $this->layoutName = 'new';
+    }
+
     /**
      * Index action.
      *
@@ -30,48 +36,38 @@ class indexController extends Controller {
     public function actionIndex(array $aParameters){
         set_time_limit(0);
         $oLogger = Logger::get('access-chainy');
-        $byHash = $aParameters['byHash'];
-        if(!$byHash){
-            // By Code
-            $code = $aParameters['code'];
-            if(strlen($code) >= 5){
-                $ipAddress = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : 'Unknown';
-                $referer = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : 'Unknown';
-                $oLogger->log('Code:' . $code . ', IP:' . $ipAddress . ', Referer:' . $referer);
-            }
-            $strPos = sprintf("%0.0f", TX::decodeBase58(substr($code, 0, 6)));
-            if($strPos < 3000000000){
-                $oLogger->log('ERROR: Code ' . $code . ' not found (404), cannot decode Base58.');
-                $this->notFound();
-            }
-            $block = (int)substr($strPos, 0, 6);
-            $position = (int)substr($strPos, 6);
-            $txNo = TX::getTransactionByPositionInBlock($block, $position);
+        $byHash = isset($aParameters['byHash']) ? $aParameters['byHash'] : FALSE;
+        if($byHash){
+            $link = TX::getChainyLink($aParameters['hash']);
+            $code = substr($link, strrpos($link, '/') + 1);
         }else{
-            // by TX Hash
-            $txNo = $aParameters['hash'];
-            $aBlockData = TX::getPositionInBlockByTransaction($txNo);
-            $block = $aBlockData['block'];
+            $code = isset($aParameters['code']) ? $aParameters['code'] : "";
         }
-        $blockDate = TX::getBlockDate($block);
-        $aTransaction = array(
-            'tx'    => $txNo,
-            'block' => $block,
-            'date'  => $blockDate
-        );
-        if($txNo && TX::isChainyTransaction($txNo)){
-            $aTransaction += TX::decodeChainyTransaction($txNo);
-            if($aTransaction['type'] == TX::TX_TYPE_HASHLINK){
-                $this->oView->set('aTX', $aTransaction);
-            }
-            if($aTransaction['type'] == TX::TX_TYPE_REDIRECT){
-                header('Location:' . $aTransaction['link']);
-                die();
-            }
-        }else{
-            $oLogger->log('ERROR: Code ' . $code . ' not found (404), no corresponding transaction.');
-            $this->notFound();
+        $result = FALSE;
+        if(strlen($code)){
+            $ipAddress = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : 'Unknown';
+            $referer = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : 'Unknown';
+            $oLogger->log('Code:' . $code . ', IP:' . $ipAddress . ', Referer:' . $referer);
+            $result = TX::decodeChainyTransaction($code);
         }
+        if(is_array($result) && isset($result['type'])){
+            $this->oView->set('title', $code . ' details', true);
+            switch($result['type']){
+                case TX::TX_TYPE_REDIRECT:
+                    if(!isset($aParameters['noRedirect'])){
+                        header('Location:' . $result['url']);
+                        die();
+                    }
+                case TX::TX_TYPE_HASHLINK:
+                case TX::TX_TYPE_TEXT:
+                case TX::TX_TYPE_HASH:
+                    $this->oView->set('aTX', $result);
+                    break;
+            }
+            return;
+        }
+        $oLogger->log('ERROR: Code ' . $code . ' not found (404), no corresponding transaction.');
+        $this->action404($aParameters);
     }
     /**
      * Add action.
@@ -82,24 +78,78 @@ class indexController extends Controller {
     public function actionAdd(array $aParameters){
         set_time_limit(0);
         $oRequest = $this->getRequest();
-        if($oRequest->getMethod() === 'POST'){
-            $url = $oRequest->get('url', FALSE, INPUT_POST);
-            $type = $oRequest->get('addType', FALSE, INPUT_POST);
-            $tx = FALSE;
-            switch($type){
-                case 'filehash':
-                    $tx = TX::createHashLinkTransaction($url);
-                    break;
-                case 'redirect':
-                    $tx = TX::createRedirectTransaction($url);
-                    break;
+        $this->oView->set('title', 'add', true);
+        session_start();
+        $this->getView()->set('contractAddress', $this->getConfig()->get('contractAddress'));
+        if(isset($_SESSION['add_result'])){
+            $result = $_SESSION['add_result'];
+            session_unset();
+            $this->getView()->set('success', $result['success']);
+            $this->getView()->set('message', $result['message']);
+            if(isset($result['hash']) && !$result['mist']){
+                $this->getView()->set('hash', $result['hash']);
             }
-            if($tx){
-                echo 'Transaction Hash: ' . $tx;
-                die();
+            if(isset($result['data'])){
+                $this->getView()->set('chainyJSON', json_encode($result['data'], JSON_UNESCAPED_SLASHES));
+            }
+            if(isset($result['transaction']) && !$result['mist']){
+                $this->getView()->set('chainyTransaction', json_encode($result['transaction']));
             }
         }
+        if($oRequest->getMethod() === 'POST'){
+            $sender = $oRequest->get('sender', FALSE, INPUT_POST);
+            if(FALSE !== $sender){
+               TX::setDefaultSender($sender);
+            }
+            $type = $oRequest->get('addType', FALSE, INPUT_POST);
+            $url = $oRequest->get('url', FALSE, INPUT_POST);
+            $description = $oRequest->get('description', "", INPUT_POST);
+            switch($type){
+                case 'Local file hash':
+                    $filename = $oRequest->get('filename', FALSE, INPUT_POST);
+                    $filesize = $oRequest->get('filesize', FALSE, INPUT_POST);
+                    $hash     = $oRequest->get('hash', FALSE, INPUT_POST);
+                    $result = TX::createLocalFileHashLinkTransaction($filename, $filesize, $hash, $description ? $description : FALSE);
+                    break;
+                case 'File hash':
+                    $result = TX::createHashLinkTransaction($url, $description ? $description : FALSE);
+                    break;
+                case 'Redirect':
+                    $result = TX::createRedirectTransaction($url);
+                    break;
+                case 'Text':
+                    $result = TX::createTextTransaction($description);
+                    break;
+                case 'Hash':
+                    $result = TX::createHashTransaction($description);
+                    break;
+                case 'Encrypted Text':
+                    $encrypted  = $oRequest->get('encrypted', FALSE, INPUT_POST);
+                    $hash       = $oRequest->get('hash', FALSE, INPUT_POST);
+                    $result     = TX::createEncryptedTextTransaction($encrypted, $hash);
+                    break;
+                default:
+                    $result = array('error' => 'Invalid operation');
+            }
+            $result['mist'] = $oRequest->get('mist', FALSE, INPUT_POST);
+            $success = $result && is_array($result) && !isset($result['error']);
+            if($success && !$result['mist']){
+                $tx = TX::publishData($result['data']);
+                if(is_array($tx)){
+                    unset($result['data']);
+                    $result += $tx;
+                }
+            }
+            $message = ($success) ? (ucfirst($type) . ' JSON:') : ('ERROR: Unable to add ' . $type . ($result && is_array($result) && isset($result['error']) ? ' (' . $result['error'] . ')' : ''));
+            $result['success'] = $success;
+            $result['message'] = $message;
+            $_SESSION['add_result'] = $result;
+            header('Location: ?');
+            die();
+        }
+        session_write_close();
     }
+
     /**
      * getShort action.
      *
@@ -107,22 +157,19 @@ class indexController extends Controller {
      * @return \AmiLabs\DevKit\Controller
      */
     public function actionShort(array $aParameters){
-        set_time_limit(0);
-        $txNo = $aParameters['hash'];
-        $pos = TX::getPositionInBlockByTransaction($txNo);
-        if(!is_null($pos['block'])){
-            $short = TX::encodeBase58($pos['block'] . str_pad($pos['position'], 4, '0', STR_PAD_LEFT));
-            echo '<a href="http://txn.me/' . $short . '">' .  $short . '</a>';
-        }else{
-            echo "Transaction was not included in a block yet.";
-        }
+        $result = TX::getChainyLink($aParameters['hash']);
+        echo $result ? $result : '';
         die();
     }
+
     /**
-     * Not found.
+     * getShort action.
+     *
+     * @param  array $aParameters  Application parameters
+     * @return \AmiLabs\DevKit\Controller
      */
-    protected function notFound(){
-        header('Location: http://chainy.info/err/404', TRUE, 301);
-        die();
+    public function action404(array $aParameters){
+        $this->oView->set('title', '404 - Not Found', true);
+        $this->templateFile = 'index/404';
     }
 }
