@@ -2,11 +2,10 @@
 
 contract('Chainy', function(accounts){
 
-    //nohup testrpc --account="0x967a7b8992be2482650fc470fc28bee8aab5f71c23a05db26e15878ad600af72, 81408483200000000000" --account="0x202ad4c87a83317e8180f88255b4017c65cde113b0314807bba0802758317134, 97538264000000000000" --account="0xe7b4cb45748ef5f3c953dbce5097b4ad84aec901d1613266a84a252af87953c3, 100000000000000000000" --account="0x72714ddb2ccad9c0d4c64cb645a6cff299b0c3eb8726c8a015c2b6c0fb4badd1, 100000000000000000000" --account="0x3f7a166c8e07f3731ea298642189a76ffbe9e5978852684f2e9d29bf194efae4, 100000000000000000000" --account="0x94a61afbe400c53b2bc30cd88fb3899d37afbf8e9a424fbfbaad26a2a397ba03, 0" --account="0x02ab91143f14eaaed7a84e61a51e7abb6f5c876dbcaeda580736a3b1f1c0bfad, 2000000000000000" --account="0x00d6b4b7ca5b6bb394bb96a5fb7ee52c820fab2a71108f45dbe3e9ce047bb19a, 4000000000000000" --account="0xe53790d832901b920328fb0c225644ba6037b7a304f6031aec33c35635f70486, 78765137500000000000" --account="0x4164bb78e401a6b045139dc76890cd436df0f65be81f0bc002740d1133edf7c8, 100000000000000000000" > /var/log/testrpc.log 2>&1 &
+    //nohup testrpc --account="0x967a7b8992be2482650fc470fc28bee8aab5f71c23a05db26e15878ad600af72, 81408483200000000000" --account="0x202ad4c87a83317e8180f88255b4017c65cde113b0314807bba0802758317134, 97538264000000000000" --account="0xe7b4cb45748ef5f3c953dbce5097b4ad84aec901d1613266a84a252af87953c3, 100000000000000000000" --account="0x72714ddb2ccad9c0d4c64cb645a6cff299b0c3eb8726c8a015c2b6c0fb4badd1, 100000000000000000000" --account="0x3f7a166c8e07f3731ea298642189a76ffbe9e5978852684f2e9d29bf194efae4, 100000000000000000000" --account="0x94a61afbe400c53b2bc30cd88fb3899d37afbf8e9a424fbfbaad26a2a397ba03, 100000000000000000000" --account="0x02ab91143f14eaaed7a84e61a51e7abb6f5c876dbcaeda580736a3b1f1c0bfad, 2000000000000000" --account="0x00d6b4b7ca5b6bb394bb96a5fb7ee52c820fab2a71108f45dbe3e9ce047bb19a, 4000000000000000" --account="0xe53790d832901b920328fb0c225644ba6037b7a304f6031aec33c35635f70486, 78765137500000000000" --account="0x4164bb78e401a6b045139dc76890cd436df0f65be81f0bc002740d1133edf7c8, 100000000000000000000" > /var/log/testrpc.log 2>&1 &
 
     // owner = accounts[0]
     // not_owner = accounts[8]
-    // 0 balance = accounts[5]
     // 0.002 balance = accounts[6]
     // 0.004 balance = accounts[7]
 
@@ -159,6 +158,72 @@ contract('Chainy', function(accounts){
                 }
             ],
         },
+        // addChainyData from service account
+        {
+            'contract': 'Chainy',
+            'method'  : 'addChainyData',
+            'tests'   : [
+                {
+                    'params': ['ne|{"id":"CHAINY", version: 1, type: "L", url: "http:\/\/site.com\/file.zip", hash: "24356450ab5de1cf7b07a85cda0ff91c0b44a347b731402c4fa6729ec7c98", filetype: "arc", filesize: 1024, description: "reports.everex.one"}'],
+                    'from'  : 'accounts[2]',
+                    'result': 'success'
+                }
+            ],
+        },
+        // change owner
+        {
+            'contract': 'Chainy',
+            'method'  : 'transferOwnership',
+            'tests'   : [
+                {
+                    'params': ['accounts[5]'],
+                    'from'  : 'owner',
+                    'result': 'success'
+                }
+            ],
+        },
+        {
+            'contract': 'Chainy',
+            'method'  : 'addChainyData',
+            'tests'   : [
+                {
+                    'params': ['ne|{"id":"CHAINY", version: 1, type: "L", url: "http:\/\/site.com\/file.zip", hash: "24356450ab5de1cf7b07a85cda0ff91c0b44a347b731402c4fa6729ec7c98", filetype: "arc", filesize: 1024, description: "reports.everex.one"}'],
+                    'from'  : 'accounts[8]',
+                    // value = fee + 3000000000000000
+                    'value' : '8000000000000001',
+                    'result': 'success'
+                }
+            ],
+        },
+        {
+            'contract': 'Chainy',
+            'method'  : 'releaseFunds',
+            'tests'   : [
+                {
+                    'params': [],
+                    'from'  : 'not_owner',
+                    'result': 'fail'
+                },
+                {
+                    'params': [],
+                    // 2852200000000000 gas used
+                    'from'  : 'accounts[5]',
+                    'result': 'success'
+                }
+            ],
+        },
+        {
+            'contract': 'Chainy',
+            'method'  : 'transferOwnership',
+            'tests'   : [
+                {
+                    'params': ['accounts[0]'],
+                    // 2821800000000000 gas used
+                    'from'  : 'accounts[5]',
+                    'result': 'success'
+                }
+            ],
+        },
         {
             'contract': 'Chainy',
             'method'  : 'setConfig',
@@ -170,11 +235,49 @@ contract('Chainy', function(accounts){
                 }
             ],
         },
+        {
+            'contract': 'Chainy',
+            'method'  : 'getChainyURL',
+            'type'    : 'call',
+            'tests'   : [
+                {
+                    'params': [],
+                    'from'  : 'not_owner',
+                    'result': 'https://txn.me/'
+                },
+                {
+                    'params': [],
+                    'from'  : 'owner',
+                    'result': 'https://txn.me/'
+                }
+            ],
+        },
+        {
+            'contract': 'Chainy',
+            'method'  : 'setChainyURL',
+            'tests'   : [
+                {
+                    'params': ['ne|https://new-txn.com/'],
+                    'from'  : 'not_owner',
+                    'result': 'fail'
+                },
+                {
+                    'params': ['ne|https://new-txn-site.io/'],
+                    'from'  : 'owner',
+                    'result': 'success'
+                }
+            ],
+        },
     ];
 
     it("/Should check initial balance of receiver address/", function(){
         clog(web3.eth.getBalance(accounts[4]));
         assert.equal(web3.eth.getBalance(accounts[4]), 100000000000000000000, '');
+    });
+
+    it("/Should check initial balance of owner (accounts[5])/", function(){
+        clog(web3.eth.getBalance(accounts[5]));
+        assert.equal(web3.eth.getBalance(accounts[5]), 100000000000000000000, '');
     });
 
     aTests.forEach(function(oTest){
@@ -216,7 +319,8 @@ contract('Chainy', function(accounts){
                     }
                     callMethod += 'aParams[' + i + ']';
                 }
-                callMethod += ',{from: from' + (curTest.value ? (',value: ' + curTest.value) : '') + '})';
+                if(curTest.params.length > 0) callMethod += ',';
+                callMethod += '{from: from' + (curTest.value ? (',value: ' + curTest.value) : '') + '})';
                 clog('Contract method = ' + callMethod);
 
                 return eval(callMethod)
@@ -224,6 +328,9 @@ contract('Chainy', function(accounts){
                     if(oTest.type == 'tx'){
                         result = 'success';
                         clog("Tx: " + res);
+                        //var txReceipt = web3.eth.getTransactionReceipt(res);
+                        //clog(txReceipt);
+                        //clog(web3.eth.getTransaction(res));
                     }else{
                         result = res;
                         clog("Call result: " + res);
@@ -319,7 +426,7 @@ contract('Chainy', function(accounts){
 
     it("/Should check Chainy short link/", function(){
         var chainyLink = aEventsData[0].code.slice(0, -2),
-            correctLink = 'https://txn.me/' + int2base58(parseInt(aTxData[0].blockNumber));
+            correctLink = 'https://new-txn-site.io/' + int2base58(parseInt(aTxData[0].blockNumber));
 
         assert.equal(chainyLink, correctLink, '');
     });
@@ -360,9 +467,21 @@ contract('Chainy', function(accounts){
         });
     });
 
+    it("/Should check final balance of service account (accounts[2])/", function(){
+        clog(web3.eth.getBalance(accounts[2]));
+        // 99974233800000000000 = 100000000000000000000 - 25766200000000000 (only gas used, fee = 0)
+        assert.equal(web3.eth.getBalance(accounts[2]), 99974233800000000000, '');
+    });
+
     it("/Should check final balance of receiver address/", function(){
         clog(web3.eth.getBalance(accounts[4]));
-        assert.equal(web3.eth.getBalance(accounts[4]), 100005000000000000001, '');
+        assert.equal(web3.eth.getBalance(accounts[4]), 100010000000000000002, '');
+    });
+
+    it("/Should check final balance of owner (accounts[5])/", function(){
+        clog(web3.eth.getBalance(accounts[5]));
+        // 99997326000000000000 = 100000000000000000000 - 2852200000000000 - 2821800000000000 + 3000000000000000 (releaseFunds)
+        assert.equal(web3.eth.getBalance(accounts[5]), 99997326000000000000, '');
     });
 
 });

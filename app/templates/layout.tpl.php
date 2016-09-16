@@ -22,6 +22,7 @@
         <script>!window.jQuery && document.write(decodeURI('%3Cscript src="js/jquery/jquery-1.11.1.min.js"%3E%3C/script%3E'));</script>
         <script src="js/bootstrap/bootstrap.min.js"></script>
         <script src="js/plugins.js"></script>
+        <script src="js/web3.min.js" ></script>
         <script src="js/app.js"></script>
         <script src="/js/amilabs.devkit.engine.js"></script>
         <script src="js/bitcoinjs/bitcoinjs.js" ></script>
