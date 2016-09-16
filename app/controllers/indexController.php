@@ -38,7 +38,6 @@ class indexController extends Controller {
         $oLogger = Logger::get('access-chainy');
         $byHash = isset($aParameters['byHash']) ? $aParameters['byHash'] : FALSE;
         if($byHash){
-            $txNo = $aParameters['hash'];
             $link = TX::getChainyLink($aParameters['hash']);
             $code = substr($link, strrpos($link, '/') + 1);
         }else{
@@ -65,10 +64,10 @@ class indexController extends Controller {
                     $this->oView->set('aTX', $result);
                     break;
             }
-        }else{
-            $oLogger->log('ERROR: Code ' . $code . ' not found (404), no corresponding transaction.');
-            $this->notFound();
+            return;
         }
+        $oLogger->log('ERROR: Code ' . $code . ' not found (404), no corresponding transaction.');
+        $this->action404($aParameters);
     }
     /**
      * Add action.
@@ -137,6 +136,7 @@ class indexController extends Controller {
             if($success && !$result['mist']){
                 $tx = TX::publishData($result['data']);
                 if(is_array($tx)){
+                    unset($result['data']);
                     $result += $tx;
                 }
             }
@@ -161,12 +161,15 @@ class indexController extends Controller {
         echo $result ? $result : '';
         die();
     }
+
     /**
-     * Not found.
+     * getShort action.
+     *
+     * @param  array $aParameters  Application parameters
+     * @return \AmiLabs\DevKit\Controller
      */
-    protected function notFound(){
-        $link404 = $this->getConfig()->get('link404');
-        die($link404);
-        header('Location: ' . $link404, TRUE, 301);
+    public function action404(array $aParameters){
+        $this->oView->set('title', '404 - Not Found', true);
+        $this->templateFile = 'index/404';
     }
 }
