@@ -134,10 +134,20 @@ class indexController extends Controller {
             $result['mist'] = $oRequest->get('mist', FALSE, INPUT_POST);
             $success = $result && is_array($result) && !isset($result['error']);
             if($success && !$result['mist']){
-                $tx = TX::publishData($result['data']);
-                if(is_array($tx)){
-                    unset($result['data']);
-                    $result += $tx;
+                $oCfg = $this->getConfig();
+                if($oCfg->get('autopublish', FALSE)){
+                    $strData = json_encode($result['data'], JSON_UNESCAPED_SLASHES);
+                    if(strlen($strData) > 512){
+                        // @todo: limits to config
+                        $success = false;
+                        $result = array('error' => 'Data is too big to publish');
+                    }else{
+                        $tx = TX::publishData($result['data']);
+                        if(is_array($tx)){
+                            unset($result['data']);
+                            $result += $tx;
+                        }
+                    }
                 }
             }
             $message = ($success) ? (ucfirst($type) . ' JSON:') : ('ERROR: Unable to add ' . $type . ($result && is_array($result) && isset($result['error']) ? ' (' . $result['error'] . ')' : ''));

@@ -293,16 +293,13 @@ class TX extends \AmiLabs\CryptoKit\TX {
      */
     public static function publishData(array $data){
         $result = FALSE;
-        $oCfg = Application::getInstance()->getConfig();
         $sender = (FALSE !== self::$sender) ? self::$sender : $oCfg->get('sender');
-        if($oCfg->get('autopublish', FALSE)){
-            $tx = self::_callRPC("add", array($sender, json_encode($data, JSON_UNESCAPED_SLASHES)));
-            // Transaction hash length should be 66 bytes
-            if(strlen($tx) == 66){
-                $result = array('hash' => $tx);
-            }elseif(strlen($tx) > 66){
-                $result = array('transaction' => $tx);
-            }
+        $tx = self::_callRPC("add", array($sender, json_encode($data, JSON_UNESCAPED_SLASHES)));
+        // Transaction hash length should be 66 bytes
+        if(strlen($tx) == 66){
+            $result = array('hash' => $tx);
+        }elseif(strlen($tx) > 66){
+            $result = array('transaction' => $tx);
         }
         return $result;
     }
