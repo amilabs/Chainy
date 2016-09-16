@@ -52,6 +52,7 @@ class indexController extends Controller {
             $result = TX::decodeChainyTransaction($code);
         }
         if(is_array($result) && isset($result['type'])){
+            $this->oView->set('title', $code . ' details', true);
             switch($result['type']){
                 case TX::TX_TYPE_REDIRECT:
                     if(!isset($aParameters['noRedirect'])){
@@ -78,6 +79,7 @@ class indexController extends Controller {
     public function actionAdd(array $aParameters){
         set_time_limit(0);
         $oRequest = $this->getRequest();
+        $this->oView->set('title', 'add', true);
         session_start();
         $this->getView()->set('contractAddress', $this->getConfig()->get('contractAddress'));
         if(isset($_SESSION['add_result'])){
