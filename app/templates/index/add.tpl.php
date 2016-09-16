@@ -331,7 +331,7 @@ function addChainyData(chainyJSON){
                     chainy.addChainyData(chainyJSON, addChainyDataParams);
                 }else{
                     $('#chainy-contract').addClass("alert-warning");
-                    $('#chainy-contract').html('<b>Please open the account menu in the upper right corner and select the account which you would like to make visible to the Chainy DAPP.</b>');
+                    $('#chainy-contract').html('<b>Please select the account in the upper right corner which you would like to make visible to the Chainy DAPP.</b>');
                 }
 
                 /*mist.requestAccount(function(e, address){
