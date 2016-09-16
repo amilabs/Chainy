@@ -2554,3 +2554,7 @@ h3.site-heading {
     word-break: break-all;
     word-wrap: break-word;
 }
+
+a.btn {
+    color: white !important;
+}

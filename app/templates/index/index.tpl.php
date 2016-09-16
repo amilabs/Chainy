@@ -187,9 +187,11 @@
                     </div>
                     <?php if(1 || $aTX["type"] == 'H'): ?>
                     <div class="row visibility-none" data-toggle="animation-appear" data-animation-class="animation-fadeInQuick" data-element-offset="-100">
-                        <div class="col-sm-10 col-md-9 site-block">
+                        <div class="col-sm-10 col-md-9 site-block text-left">
                             Text:<br />
                             <textarea id="checkhash-text" style="width: 100%; height: 100px;"></textarea><Br />
+                        </div>
+                        <div class="col-sm-10 col-md-9 site-block text-right">
                             <a id="checkhash" class="btn btn-lg btn-success">Verify</a>
                         </div>
                     </div>
