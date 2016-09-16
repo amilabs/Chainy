@@ -103,7 +103,8 @@ Chainy = {
             return web3.eth.getTransactionReceipt('0x' + txHash.crop0x(), function(cb){
                 return function(error, receipt){
                     var link = '';
-                    if(!error && receipt && receipt.logs && receipt.logs.length){
+                    if(!error && receipt && receipt.blockNumber && receipt.logs && receipt.logs.length){
+                        console.log(JSON.stringify(receipt));
                         for(var i=0; i<receipt.logs.length; i++){
                             var log = receipt.logs[i];
                             if(chainyConfig.topic === log.topics[0]){
@@ -113,6 +114,8 @@ Chainy = {
                                 }catch(e){}
                             }
                         }
+                    }else{
+                        console.log('Link for ' + txHash + ' is not ready yet');
                     }
                     cb(null, link);
                 }
