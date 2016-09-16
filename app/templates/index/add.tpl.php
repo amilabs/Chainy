@@ -46,6 +46,9 @@
             </ul>
             <div class="tab-content">
                 <div id="local-filehash" class="tab-pane fade in active">
+                    <div class="alert alert-info text-left">
+                        Select a file to calculate its hash (there are no file type or size limitations).
+                    </div>
                     <form class="add-chainy" action="" method="POST">
                         <input type="hidden" name="addType" value="Local file hash">
                         <div class="row">
@@ -97,6 +100,9 @@
                     </form>
                 </div>
                 <div id="remote-filehash" class="tab-pane fade">
+                    <div class="alert alert-info text-left">
+                        Enter a link to a remote file with maximum size of 50 megabytes.
+                    </div>
                     <form class="add-chainy" action="" method="POST">
                         <input type="hidden" name="addType" value="File hash">
                         <div class="row">
@@ -137,6 +143,10 @@
                     </form>
                 </div>
                 <div id="text" class="tab-pane fade">
+                    <div class="alert alert-info text-left">
+                        The text entered below will be stored with its SHA256 hash in the blockchain.<br />
+                        Text length is limited to 4500 chars due to transaction cost limitations.
+                    </div>
                     <form class="add-chainy" action="" method="POST">
                         <input type="hidden" name="addType" value="Text">
                         <div class="row">
@@ -151,6 +161,9 @@
                     </form>
                 </div>
                 <div id="data-hash" class="tab-pane fade">
+                    <div class="alert alert-info text-left">
+                        Only SHA256 hash of the data entered below will be stored in the blockchain.
+                    </div>
                     <form class="add-chainy" action="" method="POST">
                         <input type="hidden" name="addType" value="Hash">
                         <div class="row">
@@ -165,6 +178,9 @@
                     </form>
                 </div>
                 <div id="encrypted-text" class="tab-pane fade">
+                    <div class="alert alert-info text-left">
+                        Encrypted text will be stored in blockchain and can be read by only those who have a password.
+                    </div>
                     <form class="add-chainy" action="" method="POST">
                         <input type="hidden" name="addType" value="Encrypted Text">
                         <input type="hidden" name="encrypted">
@@ -347,5 +363,5 @@ $("a[data-toggle=tab]").click(function(){
                     </script>
         <?php endif ?>
     <?php endif ?>
-<?php endif; ?>               
+<?php endif; ?>
 </div>
