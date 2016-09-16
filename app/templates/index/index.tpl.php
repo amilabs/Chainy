@@ -17,7 +17,7 @@
                             <p class="promo-content">
                                 This page contains information about digitally signed file embedded in the Ethereum blockchain. Since transaction is confirmed this file is permanently certified and proven to exist.
                                 <br /><strong>Hash amount  SHA256</strong>
-                                <br /><?=$aTX['hash']?> <input type="hidden" id="file-hash" value="<?=$aTX['hash']?>">
+                                <br /><span class="long-hash"><?=$aTX['hash']?></span><input type="hidden" id="file-hash" value="<?=$aTX['hash']?>">
                                 <?php if(isset($aTX['url'])): ?>
                                 <br /><strong>Link to the original file is</strong>
                                 <br /><a href="<?=$aTX['url']?>" target="_blank"><?=$aTX['url']?></a>
@@ -26,7 +26,7 @@
                                 <br /> <?php if(isset($aTX['date'])): ?><?=$aTX['date']?><?php else: ?>Unknown yet<?php endif; ?>
                                 <?php if(isset($aTX['tx']) && $aTX['tx']): ?>
                                 <br /><strong>Transaction id</strong>
-                                <br /> <?=$aTX['tx']?>
+                                <br /><span class="long-hash"><?=$aTX['tx']?></span>
                                 <?php endif; ?>
                                 <?php if(isset($aTX['description'])): ?>
                                 <br /><strong>Description:</strong>
@@ -67,7 +67,11 @@
                             </a>
                         </div>
                         <div class="col-md-4 visibility-none" data-toggle="animation-appear" data-animation-class="animation-fadeInQuick" data-element-offset="-100">
-                            <a href="<?=$aTX['link']?>" target=_blank class="store-item">
+                                <?php if(isset($aTX['url'])): ?>
+                                <a href="<?=$aTX['url']?>" target=_blank class="store-item">
+                                <?php else: ?>
+                                <a class="store-item">
+                                <?php endif; ?>
                                 <div class="store-item-info  text-center clearfix">
                                     <span class="store-item-price themed-color">Signed file</span>
                                     <div><strong>File name:</strong> <?=$aTX['filename']?></div>
@@ -162,7 +166,7 @@
                                 <br /><?=$aTX['description']?>
                                 <?php endif; ?>
                                 <br /><strong>Hash amount  SHA256</strong>
-                                <br /><?=$aTX['hash']?> <input type="hidden" id="file-hash" value="<?=$aTX['hash']?>">
+                                <br /><span class="long-hash"><?=$aTX['hash']?></span><input type="hidden" id="file-hash" value="<?=$aTX['hash']?>">
                                 <?php if(isset($aTX['url'])): ?>
                                 <br /><strong>Link to the original file is</strong>
                                 <br /><a href="<?=$aTX['url']?>" target="_blank"><?=$aTX['url']?></a>
@@ -171,7 +175,7 @@
                                 <br /> <?php if(isset($aTX['date'])): ?><?=$aTX['date']?><?php else: ?>Unknown yet<?php endif; ?>
                                 <?php if(isset($aTX['tx']) && $aTX['tx']): ?>
                                 <br /><strong>Transaction id</strong>
-                                <br /> <?=$aTX['tx']?>
+                                <br /><span class="long-hash"><?=$aTX['tx']?></span>
                                 <?php endif; ?>
                             </p>
                             <?php
@@ -219,7 +223,7 @@
                                 <br /> <?php if(isset($aTX['date'])): ?><?=$aTX['date']?><?php else: ?>Unknown yet<?php endif; ?>
                                 <?php if(isset($aTX['tx']) && $aTX['tx']): ?>
                                 <br /><strong>Transaction id</strong>
-                                <br /> <?=$aTX['tx']?>
+                                <br /><span class="long-hash"><?=$aTX['tx']?></span>
                                 <?php endif; ?>
                             </p>
                         </div>
