@@ -30,7 +30,7 @@
                 <?php if(isset($hash)): ?>
                    Transaction: <a href="https://testnet.etherscan.io/tx/<?php echo $hash ?>" target="_blank"><?php echo $hash ?></a>
                 <?php endif ?>
-                <span id="chainyShortLink"></span>
+                <span id="chainy-contract" class="alert"></span>
             <?php endif ?>
             <div class="text-right">
                 <a href="#" class="btn btn-success btn-lg" onclick="document.location.reload(); return false;">Back</a>
@@ -206,11 +206,14 @@
 <script>
 var addForm = true;
 var contractAddress = '<?php if(isset($contractAddress)): echo $contractAddress; endif;?>';
-var contractABI = [ { "constant": false, "inputs": [ { "name": "json", "type": "string" } ], "name": "addChainyData", "outputs": [], "type": "function" }, { "anonymous": false, "inputs": [ { "indexed": false, "name": "timestamp", "type": "uint256" }, { "indexed": false, "name": "code", "type": "string" } ], "name": "chainyShortLink", "type": "event" } ];
-$('#chainyShortLink').text('');
+var contractABI = [ { "constant": false, "inputs": [ { "name": "json", "type": "string" } ], "name": "addChainyData", "outputs": [], "type": "function" }, { "anonymous": false, "inputs": [ { "indexed": false, "name": "timestamp", "type": "uint256" }, { "indexed": false, "name": "code", "type": "string" } ], "name": "chainyShortLink", "type": "event" }, { "constant": true, "inputs": [ { "name": "_key", "type": "string" } ], "name": "getConfig", "outputs": [ { "name": "_value", "type": "uint256", "value": "0" } ], "type": "function" } ];
+$('#chainy-contract').text('');
+$('#chainy-contract').removeClass("alert-danger alert-success alert-warning");
+
 var isDapp = function(){
-    return (typeof mist !== 'undefined' && typeof web3 !== 'undefined');
+    return (typeof mist !== 'undefined' && typeof web3 !== 'undefined' && contractAddress);
 }
+
 function submitAdd(){
     $('.trim-on-submit:visible').each(function(){
         this.value = this.value.replace(/^\s+/, '').replace(/\s+$/, '');
@@ -278,52 +281,77 @@ function submitAdd(){
         $('.add-chainy:visible').submit();
     }
 }
+
+function addChainyData(chainyJSON){
+    if(isDapp()){
+        console.log(contractAddress);
+        console.log(contractABI);
+        console.log(web3.eth.accounts);
+        $('#chainy-contract').addClass("alert-warning");
+        $('#chainy-contract').html('<i class="fa fa-spinner fa-spin fa-1x fa-fw"></i> <b>Please wait..</b>');
+
+        web3.eth.getCode(contractAddress, function(e, r){
+            if(!e && r.length > 3){
+                var chainyContract = web3.eth.contract(contractABI);
+                var chainy = chainyContract.at(contractAddress);
+
+                var chainyShortLinkWatcher = chainy.chainyShortLink();
+                chainyShortLinkWatcher.watch(function(error, result){
+                    chainyShortLinkWatcher.stopWatching();
+                    if(!error && result && result.args && result.args.code){
+                        console.log(result.args);
+                        var url = result.args.code;
+                        $('#chainy-contract').addClass("alert-success");
+                        $('#chainy-contract').html('<b>The Chainy short link is <a href="' + url + '">' + url + '</a></b>');
+                    }else{
+                        $('#chainy-contract').addClass("alert-danger");
+                        $('#chainy-contract').html('<b>Error: ' + (error ? error.toString() : 'Unknown error.') + '</b>');
+                    }
+                });
+
+                // currently use first authorized account
+                if(web3.eth.accounts.length > 0){
+                    // get fee value
+                    var fee = chainy.getConfig('fee', {from: web3.eth.accounts[0]});
+                    console.log(fee.toString());
+                    // get account balance
+                    var balance = web3.eth.getBalance(web3.eth.accounts[0]);
+                    console.log(balance.toString());
+
+                    var addChainyDataParams = {from: web3.eth.accounts[0]};
+                    if(fee.cmp(0) == 1){
+                        if(fee.cmp(balance) == 1){
+                            $('#chainy-contract').addClass("alert-danger");
+                            $('#chainy-contract').html('<b>Error: Insufficient funds in account.</b>');
+                            return;
+                        }
+                        addChainyDataParams.value = fee.toString();
+                    }
+
+                    chainy.addChainyData(chainyJSON, addChainyDataParams);
+                }else{
+                    $('#chainy-contract').addClass("alert-warning");
+                    $('#chainy-contract').html('<b>Please open the account menu in the upper right corner and select the account which you would like to make visible to the Chainy DAPP.</b>');
+                }
+
+                /*mist.requestAccount(function(e, address){
+                    console.log('Select account');
+                    if(e){
+                        console.log(e.toString());
+                    }else{
+                        console.log('Address selected: ' + address);
+                        chainy.addChainyData(chainyJSON, {from: address});
+                    }
+                });*/
+            }
+        });
+    }
+}
 </script>
 <?php if(isset($success)): ?>
     <?php if($success): ?>
         <?php if(isset($chainyJSON)): ?>
-                    <script>
-                        if(isDapp()){
-                            console.log(contractAddress);
-                            console.log(contractABI);
-                            console.log(web3.eth.accounts);
-                            $('#chainyShortLink').html('<i class="fa fa-spinner fa-spin fa-3x fa-fw"></i> Please wait..');
-                            web3.eth.getCode(contractAddress, function(e, r){
-                                if(!e && r.length > 3){
-                                    var chainyContract = web3.eth.contract(contractABI);
-                                    var chainy = chainyContract.at(contractAddress);
-
-                                    var chainyShortLinkWatcher = chainy.chainyShortLink();
-                                    chainyShortLinkWatcher.watch(function(error, result){
-                                        chainyShortLinkWatcher.stopWatching();
-                                        if(!error && result && result.args && result.args.code){
-                                            console.log(result.args);
-                                            var url = result.args.code;
-                                            $('#chainyShortLink').html('<b>The Chainy short link is <a href="' + url + '">' + url + '</a></b>');
-                                        }else{
-                                            $('#chainyShortLink').html('Error: ' + (error ? error.toString() : 'Unknown error.'));
-                                        }
-                                    });
-
-                                    if(web3.eth.accounts.length > 0){
-                                        chainy.addChainyData('<?php echo $chainyJSON ?>', {from: web3.eth.accounts[0]});
-                                    }else{
-                                        $('#chainyShortLink').html('<b>Please open the account menu in the upper right corner and select the account which you would like to make visible to the Chainy DAPP.</b>');
-                                    }
-
-                                    /*mist.requestAccount(function(e, address){
-                                        console.log('Select account');
-                                        if(e){
-                                            console.log(e.toString());
-                                        }else{
-                                            console.log('Address selected: ' + address);
-                                            chainy.addChainyData('<?php echo $chainyJSON ?>', {from: address});
-                                        }
-                                    });*/
-                                }
-                            });
-                        }
-                    </script>
+            <script>addChainyData('<?php echo $chainyJSON ?>');</script>
         <?php endif ?>
     <?php endif ?>
 <?php endif; ?>
