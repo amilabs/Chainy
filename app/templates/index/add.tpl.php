@@ -35,8 +35,11 @@
                        var getShort = function(){
                            $.get("getShort/<?php echo $hash ?>", {}, function(data){
                                if(data){
-                                   $("#shortlink").html(data);
                                    clearInterval(checkTm);
+                                   var link = $('<a>');
+                                   link.attr('href', data);
+                                   link.text(data);
+                                   $("#shortlink").empty().append(link);
                                }
                            });
                        }
