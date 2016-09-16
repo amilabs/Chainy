@@ -21,6 +21,12 @@ use AmiLabs\DevKit\Logger;
 use AmiLabs\Chainy\TX;
 
 class indexController extends Controller {
+
+    public function __construct(){
+        parent::__construct();
+        $this->layoutName = 'new';
+    }
+
     /**
      * Index action.
      *
@@ -71,7 +77,6 @@ class indexController extends Controller {
      */
     public function actionAdd(array $aParameters){
         set_time_limit(0);
-        $this->layoutName = 'add';
         $oRequest = $this->getRequest();
         session_start();
         $this->getView()->set('contractAddress', $this->getConfig()->get('contractAddress'));

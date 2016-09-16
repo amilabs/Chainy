@@ -2514,3 +2514,20 @@ a.store-item:hover {
     text-overflow: ellipsis;
 }
 
+
+.t-container section  {
+    color: white !important;
+}
+
+.promo-content {
+    text-align: justify !important;
+    line-height: 24px;
+}
+
+.site-block p, .site-block li  {
+    text-align: justify !important;
+}
+
+section .store-item-icon {
+    color: white;
+}
