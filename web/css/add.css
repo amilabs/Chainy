@@ -29,3 +29,26 @@
 a.btn {
     color: white !important;
 }
+
+.nav-tabs li a {
+    color: #555 !important;
+}
+
+.nav-tabs li.active a {
+    color: #000 !important;
+}
+
+.col-header {
+    font-weight: bold;
+    text-align: right;
+}
+
+.check-url {
+    width: 100%;
+}
+
+@media screen and (max-width: 767px) {
+    .col-header {
+        text-align: left;
+    }
+}

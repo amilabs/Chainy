@@ -52,33 +52,33 @@
                     <form class="add-chainy" action="" method="POST">
                         <input type="hidden" name="addType" value="Local file hash">
                         <div class="row">
-                            <div id="verifier" class="col-xs-4">
+                            <div id="verifier" class="col-xs-12 col-sm-4">
                                 <a href="javascript:void(0)" class="store-item">
                                     <div class="store-item-icon"><input type="file" id="select-file" style="display: none;">
                                         <i class="fa fa-cloud-upload themed-color"></i>
-                                            <div style="font-size:16px;">Click or drag and drop file here</div>
+                                        <div style="font-size:16px;">Click or drag and drop file here</div>
                                     </div>
                                 </a>
                                 <div class="form-errors text-danger"></div>
                             </div>
-                            <div class="col-xs-8" style="display:none;" id="local-fileinfo">
+                            <div class="col-xs-12 col-sm-8" style="display:none;" id="local-fileinfo">
                                 <div class="row">
-                                    <div class="col-xs-2 text-right">Filename:</div>
-                                    <div class="col-xs-10 text-left">
+                                    <div class="col-xs-12 col-sm-4 col-md-2 col-header">Filename:</div>
+                                    <div class="col-xs-12 col-sm-8 col-md-10 text-left">
                                         <span id="local-filename"></span>
                                         <input type="hidden" name="filename">
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-xs-2 text-right">Filesize:</div>
-                                    <div class="col-xs-10 text-left">
-                                        <span id="local-filesize"></span>
+                                    <div class="col-xs-12 col-sm-4 col-md-2 col-header">Filesize:</div>
+                                    <div class="col-xs-12 col-sm-8 col-md-10 text-left">
+                                        <span id="local-filesize"></span> bytes
                                         <input type="hidden" name="filesize">
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-xs-2 text-right">Hash:</div>
-                                    <div class="col-xs-10 text-left">
+                                    <div class="col-xs-12 col-sm-4 col-md-2 col-header">Hash:</div>
+                                    <div class="col-xs-12 col-sm-8 col-md-10 text-left" style="max-width: 80vw; overflow: hidden; text-overflow: ellipsis;">
                                         <div class="progress" id="local-hash-progress">
                                           <div class="progress-bar" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width:0%"></div>
                                         </div>
@@ -87,10 +87,8 @@
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-xs-2 text-right">
-                                        Descrtiption:
-                                    </div>
-                                    <div class="col-xs-10 text-left">
+                                    <div class="col-xs-12 col-sm-4 col-md-2 col-header">Descrtiption:</div>
+                                    <div class="col-xs-12 col-sm-8 col-md-10 text-left">
                                         <textarea name="description" class="check-description"></textarea>
                                         <div class="form-errors text-danger">Description is too big</div>
                                     </div>
@@ -106,19 +104,15 @@
                     <form class="add-chainy" action="" method="POST">
                         <input type="hidden" name="addType" value="File hash">
                         <div class="row">
-                            <div class="col-xs-2 text-right">
-                                URL:
-                            </div>
-                            <div class="col-xs-10 text-left">
-                                <input type="text" name="url" class="trim-on-submit check-url" size="64">
+                            <div class="col-xs-12 col-sm-4 col-md-2 col-header">URL:</div>
+                            <div class="col-xs-12 col-sm-8 col-md-10 text-left">
+                                <input type="text" name="url" class="trim-on-submit check-url">
                                 <div class="form-errors text-danger"></div>
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-xs-2 text-right">
-                                Descrtiption:
-                            </div>
-                            <div class="col-xs-10 text-left">
+                            <div class="col-xs-12 col-sm-4 col-md-2 col-header">Descrtiption:</div>
+                            <div class="col-xs-12 col-sm-8 col-md-10 text-left">
                                 <textarea name="description" class="check-description"></textarea>
                                 <div class="form-errors text-danger">Description is too big</div>
                             </div>
@@ -132,11 +126,9 @@
                     <form class="add-chainy" action="" method="POST">
                         <input type="hidden" name="addType" value="Redirect">
                         <div class="row">
-                            <div class="col-xs-2 text-right">
-                                URL:
-                            </div>
-                            <div class="col-xs-10 text-left">
-                                <input type="text" name="url" class="trim-on-submit check-url" size="64">
+                            <div class="col-xs-12 col-sm-4 col-md-2 col-header">URL:</div>
+                            <div class="col-xs-12 col-sm-8 col-md-10 text-left">
+                                <input type="text" name="url" class="trim-on-submit check-url">
                                 <div class="form-errors text-danger"></div>
                             </div>
                         </div>
@@ -150,10 +142,8 @@
                     <form class="add-chainy" action="" method="POST">
                         <input type="hidden" name="addType" value="Text">
                         <div class="row">
-                            <div class="col-xs-2 text-right">
-                                Text:
-                            </div>
-                            <div class="col-xs-10 text-left">
+                            <div class="col-xs-12 col-sm-4 col-md-2 col-header">Text:</div>
+                            <div class="col-xs-12 col-sm-8 col-md-10 text-left">
                                 <textarea name="description" class="check-empty check-description"></textarea>
                                 <div class="form-errors text-danger"></div>
                             </div>
@@ -167,10 +157,8 @@
                     <form class="add-chainy" action="" method="POST">
                         <input type="hidden" name="addType" value="Hash">
                         <div class="row">
-                            <div class="col-xs-2 text-right">
-                                Data:
-                            </div>
-                            <div class="col-xs-10 text-left">
+                            <div class="col-xs-12 col-sm-4 col-md-2 col-header">Data:</div>
+                            <div class="col-xs-12 col-sm-8 col-md-10 text-left">
                                 <textarea name="description" class="check-empty check-description"></textarea>
                                 <div class="form-errors text-danger"></div>
                             </div>
@@ -187,28 +175,22 @@
                         <input type="hidden" name="hash">
                     </form>
                     <div class="row">
-                        <div class="col-xs-2 text-right">
-                            Text:
-                        </div>
-                        <div class="col-xs-10 text-left">
+                        <div class="col-xs-12 col-sm-4 col-md-2 col-header">Text:</div>
+                        <div class="col-xs-12 col-sm-8 col-md-10 text-left">
                             <textarea id="enc-text" class="check-empty check-description"></textarea>
                             <div class="form-errors text-danger"></div>
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-xs-2 text-right">
-                            Password:
-                        </div>
-                        <div class="col-xs-10 text-left">
+                        <div class="col-xs-12 col-sm-4 col-md-2 col-header">Password:</div>
+                        <div class="col-xs-12 col-sm-8 col-md-10 text-left">
                             <input type="password" id="password1">
                             <div class="form-errors text-danger"></div>
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-xs-2 text-right">
-                            Repeat Password:
-                        </div>
-                        <div class="col-xs-10 text-left">
+                        <div class="col-xs-12 col-sm-4 col-md-2 col-header">Repeat Password:</div>
+                        <div class="col-xs-12 col-sm-8 col-md-10 text-left">
                             <input type="password" id="password2">
                             <div class="form-errors text-danger"></div>
                         </div>
@@ -292,29 +274,10 @@ function submitAdd(){
         if(isDapp()){
             $('.add-chainy:visible').append('<input type="hidden" name="mist" value="1" />');
         }
-
         $('.form-errors').hide();
         $('.add-chainy:visible').submit();
     }
 }
-function clearLocalFileData(){
-    $('#local-hash-progress').hide();
-    $('#local-hash-progress .progress-bar').css('width', '0%');
-    $('#local-hash-progress .progress-bar').attr('aria-valuenow', 0);
-    $('#local-hash-progress .progress-bar').text('');
-    $('#local-fileinfo [name=filename]').val('');
-    $('#local-fileinfo [name=filesize]').val('');
-    $('#local-fileinfo [name=hash]').val('');
-    $('#local-filename').text('');
-    $('#local-filesize').text('');
-    $('#local-fileinfo').hide();
-}
-
-$("a[data-toggle=tab]").click(function(){
-    setTimeout(function(){
-        cover_init("8550993");
-    }, 500);
-});
 </script>
 <?php if(isset($success)): ?>
     <?php if($success): ?>

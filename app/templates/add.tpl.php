@@ -23,6 +23,7 @@
 	<link rel="stylesheet" href="css/tilda-grid-3.0.css" type="text/css" media="all" />
 	<link rel="stylesheet" href="css/tilda-blocks-2.6.css" type="text/css" media="all" />
         <link rel="stylesheet" href="css/bootstrap.min.css" type="text/css" media="all" />
+        <link rel="stylesheet" href="css/plugins.css">
 	<script src="js/jquery/jquery-1.11.1.min.js"></script>
 	<script src="js/bootstrap/bootstrap.min.js"></script>
 	<script src="js/tilda/tilda-scripts-2.6.js"></script>

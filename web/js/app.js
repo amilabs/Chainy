@@ -6,6 +6,16 @@
 
 var App = function() {
 
+    var __fht = false;
+    function updateHeight(){
+        if(__fht){
+            clearTimeout(__fht);
+        }
+        __fht = setTimeout(function(){
+            cover_init("8550993");
+        }, 500);
+    }
+
     /* Initialization UI Code */
     var uiInit = function() {
 
@@ -83,6 +93,9 @@ var App = function() {
                .parent('li')
                .toggleClass('open');
         });
+
+        $(window).resize(updateHeight);
+        $("a[data-toggle=tab]").click(updateHeight);
     };
 
     /* Handles Header */
@@ -230,7 +243,22 @@ var App = function() {
             $('#local-hash').hide();
             $('#local-hash-progress').show();
             $('#local-fileinfo').show();
+            updateHeight();
         }
+
+        var clearLocalFileData = function(){
+            $('#local-hash-progress').hide();
+            $('#local-hash-progress .progress-bar').css('width', '0%');
+            $('#local-hash-progress .progress-bar').attr('aria-valuenow', 0);
+            $('#local-hash-progress .progress-bar').text('');
+            $('#local-fileinfo [name=filename]').val('');
+            $('#local-fileinfo [name=filesize]').val('');
+            $('#local-fileinfo [name=hash]').val('');
+            $('#local-filename').text('');
+            $('#local-filesize').text('');
+            $('#local-fileinfo').hide();
+            updateHeight();
+        };
 
         var readNextChunk = function() {
             var start = currentChunk * chunkSize;
@@ -267,6 +295,7 @@ var App = function() {
                     $('#local-hash-progress .progress-bar').attr('aria-valuenow', 0);
                     $('#local-hash-progress .progress-bar').text('');
                     $('#local-fileinfo [name=hash]').val(hash);
+                    updateHeight();
                     console.info("computed hash", hash, 'for file', file.name, 'in', elapsed, 'ms');
                 }
             }
