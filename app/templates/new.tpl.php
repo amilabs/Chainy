@@ -42,16 +42,16 @@
                         <div class="t228__padding40px"></div>
                         <div class="t228__leftside">
                             <div class="t228__leftcontainer" style="display: block;">
-                                <a href="/#top"  style="color:#ffffff;font-size:20px;font-weight:400;"><img src="/images/tild3932-3665-4535-b439-356563363131__chainylogo160.png" class="t228__imglogo " imgfield="img"  alt=" LC department  "></a>
+                                <a href="https://chainy.info/#top"  style="color:#ffffff;font-size:20px;font-weight:400;"><img src="/images/tild3932-3665-4535-b439-356563363131__chainylogo160.png" class="t228__imglogo " imgfield="img"  alt=" LC department  "></a>
                             </div>
                         </div>
                         <div class="t228__centerside ">
                             <div class="t228__centercontainer">
                                 <ul class="t228__list">
-                                    <li class="t228__list_item"><a href="/#about"  style="color:#ffffff;font-size:20px;font-weight:300;" data-menu-item-number="1">About</a></li>
-                                    <li class="t228__list_item"><a href="/#how"  style="color:#ffffff;font-size:20px;font-weight:300;" data-menu-item-number="2">How it works</a></li>
-                                    <li class="t228__list_item"><a href="/#hmm"  style="color:#ffffff;font-size:20px;font-weight:300;" data-menu-item-number="3">Hmm?</a></li>
-                                    <li class="t228__list_item"><a href="/#contact"  style="color:#ffffff;font-size:20px;font-weight:300;" data-menu-item-number="4">Contact</a></li>
+                                    <li class="t228__list_item"><a href="https://chainy.info/#about"  style="color:#ffffff;font-size:20px;font-weight:300;" data-menu-item-number="1">About</a></li>
+                                    <li class="t228__list_item"><a href="https://chainy.info/#how"  style="color:#ffffff;font-size:20px;font-weight:300;" data-menu-item-number="2">How it works</a></li>
+                                    <li class="t228__list_item"><a href="https://chainy.info/#hmm"  style="color:#ffffff;font-size:20px;font-weight:300;" data-menu-item-number="3">Hmm?</a></li>
+                                    <li class="t228__list_item"><a href="https://chainy.info/#contact"  style="color:#ffffff;font-size:20px;font-weight:300;" data-menu-item-number="4">Contact</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -109,8 +109,8 @@
                             <div class="t389__col t389__col_center t-align_center">
                                 <div class="t389__centercontainer">
                                     <ul class="t389__list">
-                                        <li class="t389__list_item t-name t-name_xs"><a class="t389__typo" style="color: #222" href="/#about"  data-menu-item-number="1">About</a></li>
-                                        <li class="t389__list_item t-name t-name_xs"><a class="t389__typo" style="color: #222" href="/add"  data-menu-item-number="2">Create your data</a></li>
+                                        <li class="t389__list_item t-name t-name_xs"><a class="t389__typo" style="color: #222" href="https://chainy.info/#about"  data-menu-item-number="1">About</a></li>
+                                        <li class="t389__list_item t-name t-name_xs"><a class="t389__typo" style="color: #222" href="https://chainy.info/add"  data-menu-item-number="2">Create your data</a></li>
                                         <li class="t389__list_item t-name t-name_xs"><a class="t389__typo" style="color: #222" href="https://github.com/EverexIO/Chainy"  data-menu-item-number="3">Source code</a></li>
                                         <li class="t389__list_item t-name t-name_xs"><a class="t389__typo" style="color: #222" href="https:/facebook.com/everexone"  data-menu-item-number="4">Facebook</a></li>
                                     </ul>
