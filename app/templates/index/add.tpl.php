@@ -47,6 +47,8 @@
                     </script>
                 <?php endif ?>
                 <span id="chainy-contract" class="alert"></span>
+            <?php else: ?>
+                <?php if($message): ?><h3 class="text-danger">ERROR: <?=$message?></h3><?php endif; ?>
             <?php endif ?>
             <div class="text-right">
                 <a href="#" class="btn btn-success btn-lg" onclick="document.location.reload(); return false;">Back</a>
@@ -212,6 +214,28 @@
                         </div>
                     </div>
                 </div>
+                <?php
+                    $oCfg = \AmiLabs\DevKit\Application::getInstance()->getConfig();
+                    if($oCfg->get('captcha', FALSE)):
+                ?>
+                <div style="padding-left: 15px; margin-top: -15px;">
+                    <div class="row">
+                        <div class="hidden-xs col-sm-4 col-md-2 col-header">&nbsp;</div>
+                        <div class="col-xs-12 col-sm-8 col-md-10 text-left">
+                            <input type="checkbox" id="publish">&nbsp;Publish transaction
+                        </div>
+                    </div>
+                    <div class="row" style="min-height: 50px;">
+                        <div class="col-xs-12 col-sm-4 col-md-2 col-header">Captcha:</div>
+                        <div class="col-xs-12 col-sm-8 col-md-10 text-left">
+                            <script src='https://www.google.com/recaptcha/api.js'></script>
+                            <script> var hasCaptcha = true; </script>
+                            <div class="g-recaptcha" data-sitekey="<?=$oCfg->get('captcha')?>"></div>
+                            <div id="captcha-err" class="form-errors text-danger"></div>
+                        </div>
+                    </div>
+                </div>
+                <?php endif; ?>
                 <div class="text-right">
                     <a class="btn btn-success btn-lg" id="add-btn" onclick="submitAdd(); return false;">ADD</a>
                 </div>
@@ -231,6 +255,7 @@ var isDapp = function(){
 }
 
 function submitAdd(){
+    $('#captcha-err').text('');
     $('.trim-on-submit:visible').each(function(){
         this.value = this.value.replace(/^\s+/, '').replace(/\s+$/, '');
     });
@@ -294,9 +319,31 @@ function submitAdd(){
             $('.add-chainy:visible').append('<input type="hidden" name="mist" value="1" />');
         }
         $('.form-errors').hide();
+
+        // Check and process captcha
+        var capthcaStr = $('#g-recaptcha-response').val();
+        if(hasCaptcha && capthcaStr){
+            var inp = $('<INPUT name="g-recaptcha-response" type="hidden">');
+            inp.val(capthcaStr);
+            $('.add-chainy:visible').append(inp);
+        }else{
+            $('#captcha-err').text('Please check the captcha').show();
+            return false;
+        }
+
+        if($('#publish:checked').length){
+            $('.add-chainy:visible').append($('<INPUT name="publish" type="hidden" value="1">'));
+        }
+
         $('.add-chainy:visible').submit();
     }
 }
+
+$(document).ready(function(){
+    if(isDapp()){
+        $('#publish').parent().hide();
+    }
+});
 
 function addChainyData(chainyJSON){
     if(isDapp()){
