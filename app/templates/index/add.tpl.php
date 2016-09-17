@@ -1,3 +1,6 @@
+<?php
+    $oCfg = \AmiLabs\DevKit\Application::getInstance()->getConfig();
+?>
 <div class="t408__textwrapper t-width t-width_8">
     <div class="t408__uptitle t-uptitle t-uptitle_md" field="subtitle">
         <br /><br />AEON links + Proof of Existence + Files + Messages
@@ -28,7 +31,7 @@
                     <textarea id="chainy-tx" readonly><?php echo $chainyTransaction ?></textarea>
                 <?php endif ?>
                 <?php if(isset($hash)): ?>
-                   Transaction: <a href="https://testnet.etherscan.io/tx/<?php echo $hash ?>" target="_blank"><?php echo $hash ?></a><br />
+                   Transaction: <a href="https://<?php echo $oCfg->get('testnet', FALSE) ? 'testnet.' : ''; ?>etherscan.io/tx/<?php echo $hash ?>" target="_blank"><?php echo $hash ?></a><br />
                    Shortlink: <span id="shortlink"><i class="fa fa-spinner fa-spin"></i> please wait...</span>
                    <script>
                        var checkTm;
@@ -215,7 +218,6 @@
                     </div>
                 </div>
                 <?php
-                    $oCfg = \AmiLabs\DevKit\Application::getInstance()->getConfig();
                     if($oCfg->get('captcha', FALSE)):
                 ?>
                 <div style="padding-left: 15px; margin-top: -15px;">
