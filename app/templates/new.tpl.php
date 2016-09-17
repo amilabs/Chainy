@@ -65,7 +65,7 @@
                                             </a>
                                         </div>
                                         <div class="t228__right_buttons_but">
-                                            <a href="/#find" target="" class="t-btn" style="color:#ffffff; border:3px solid #ffffff;  border-radius: 10px; -moz-border-radius: 10px; -webkit-border-radius: 10px;">
+                                            <a href="https://chainy.info/#find" target="" class="t-btn" style="color:#ffffff; border:3px solid #ffffff;  border-radius: 10px; -moz-border-radius: 10px; -webkit-border-radius: 10px;">
                                                 <table style="width:100%; height:100%;"><tr><td>Find data</td></tr></table>
                                             </a>
                                         </div>
