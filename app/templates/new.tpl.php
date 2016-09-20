@@ -45,7 +45,7 @@
                                 <a href="https://chainy.info/#top"  style="color:#ffffff;font-size:20px;font-weight:400;"><img src="/images/tild3932-3665-4535-b439-356563363131__chainylogo160.png" class="t228__imglogo " imgfield="img"  alt=" LC department  "></a>
                             </div>
                         </div>
-                        <div class="t228__centerside ">
+                        <div class="t228__centerside">
                             <div class="t228__centercontainer">
                                 <ul class="t228__list">
                                     <li class="t228__list_item"><a href="https://chainy.info/#about"  style="color:#ffffff;font-size:20px;font-weight:300;" data-menu-item-number="1">About</a></li>

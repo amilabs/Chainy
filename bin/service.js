@@ -115,7 +115,14 @@ Chainy = {
                             }
                         }
                     }else{
-                        console.log('Link for ' + txHash + ' is not ready yet');
+                        if(receipt.blockNumber){
+                            // Tx is minet but has no chainy event
+                            console.log('Invalid or failed TX ' + txHash);
+                            link = 'ERROR';
+                        }else{
+                            // Tx is not mined
+                            console.log('Link for ' + txHash + ' is not ready yet');
+                        }
                     }
                     cb(null, link);
                 }

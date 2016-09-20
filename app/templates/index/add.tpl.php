@@ -20,7 +20,7 @@
 <div class="t408__blockswrapper">
 <link rel="stylesheet" href="css/add.css">
 <div class="container">
-    <div style="background:#fff;padding:20px;border-radius:16px;opacity:0.9;margin-top:-50px;">
+    <div id="publish-result">
         <?php if(isset($success)): ?>
             <?php if($success): ?>
                 <?php if(isset($chainyJSON)): ?>
@@ -31,20 +31,24 @@
                     <textarea id="chainy-tx" readonly><?php echo $chainyTransaction ?></textarea>
                 <?php endif ?>
                 <?php if(isset($hash)): ?>
-                   Transaction: <a href="https://<?php echo $oCfg->get('testnet', FALSE) ? 'testnet.' : ''; ?>etherscan.io/tx/<?php echo $hash ?>" target="_blank"><?php echo $hash ?></a><br />
-                   Shortlink: <span id="shortlink"><i class="fa fa-spinner fa-spin"></i> please wait...</span>
-                   <script>
-                       var checkTm;
-                       var getShort = function(){
-                           $.get("getShort/<?php echo $hash ?>", {}, function(data){
-                               if(data){
-                                   clearInterval(checkTm);
-                                   var link = $('<a>');
-                                   link.attr('href', data);
-                                   link.text(data);
-                                   $("#shortlink").empty().append(link);
-                               }
-                           });
+                    <p>Transaction: <a href="https://<?php echo $oCfg->get('testnet', FALSE) ? 'testnet.' : ''; ?>etherscan.io/tx/<?php echo $hash ?>" target="_blank"><?php echo $hash ?></a></p>
+                    <p>Shortlink: <span id="shortlink"><i class="fa fa-spinner fa-spin"></i> please wait...</span></p>
+                    <script>
+                        var checkTm;
+                        var getShort = function(){
+                            $.get("getShort/<?php echo $hash ?>", {}, function(data){
+                                if(data){
+                                    clearInterval(checkTm);
+                                    if('ERR' !== data){
+                                        var link = $('<a>');
+                                        link.attr('href', data);
+                                        link.text(data);
+                                        $("#shortlink").empty().append(link);
+                                    }else{
+                                        $("#shortlink").html('<span class="text-danger">Transaction failed</span>');
+                                    }
+                                }
+                            });
                        }
                        checkTm = setInterval(getShort, 5000);
                     </script>
