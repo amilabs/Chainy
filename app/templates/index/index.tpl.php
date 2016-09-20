@@ -30,7 +30,11 @@
                             <?php if(isset($aTX['tx']) && $aTX['tx']): ?>
                                 <div class="grey-line"></div>
                                 <p><strong>Transaction id</strong></p>
-                                <p><span class="long-hash"><?=$aTX['tx']?></span></p>
+                                <p>
+                                    <span class="long-hash">
+                                        <a href="https://ethplorer.io/tx/<?=$aTX['tx']?>" class="external-link" target="_blank"><?=$aTX['tx']?></a>
+                                    </span>
+                                </p>
                             <?php endif; ?>
                             <?php if(isset($aTX['description']) && $aTX['description']): ?>
                                 <div class="grey-line"></div>
@@ -203,7 +207,11 @@
                             <?php if(isset($aTX['tx']) && $aTX['tx']): ?>
                                 <div class="grey-line"></div>
                                 <p><strong>Transaction id</strong></p>
-                                <p><span class="long-hash"><?=$aTX['tx']?></span></p>
+                                <p>
+                                    <span class="long-hash">
+                                        <a href="https://ethplorer.io/tx/<?=$aTX['tx']?>" class="external-link" target="_blank"><?=$aTX['tx']?></a>
+                                    </span>
+                                </p>
                             <?php endif; ?>
                             <?php
                             /*
@@ -244,7 +252,11 @@
                             <?php if(isset($aTX['tx']) && $aTX['tx']): ?>
                                 <div class="grey-line"></div>
                                 <p><strong>Transaction id</strong></p>
-                                <p><span class="long-hash"><?=$aTX['tx']?></span></p>
+                                <p>
+                                    <span class="long-hash">
+                                        <a href="https://ethplorer.io/tx/<?=$aTX['tx']?>" class="external-link" target="_blank"><?=$aTX['tx']?></a>
+                                    </span>
+                                </p>
                             <?php endif; ?>
                         </div>
                     </div>
