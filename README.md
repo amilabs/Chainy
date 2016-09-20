@@ -1,9 +1,24 @@
-# Chainy - Explore aeon links 
+![Chainy](/web/images/chainy-logo-180-black.png)
+
+# Chainy — blockchain engravings 
 
 [Chainy.info](https://chainy.info)
 
-Proof of Existence + Links + Files + Blockchain
+###AEON links + Proof of Existence + Files + Messages 
 
-Publicly verifiable and time stamped proof of existence documentation service encrypted and stored on Bitcoin blockchain. Allows storing any types of files in term of cryptographic digest linked to the exact time of document submission. Permanent short weblinks in the bitcoin transaction allow more information in document description.
+Chainy is the most independent Ethereum based smart contract, which exists for as long as blockchain lives. It's independent from anybody. Even if we abandon this project, and it will be impossible to look up the data using other viewers or blockchain explorers or scanners, all previously stored proofs and data will be available via the Ethereum API, for example through Mist or open source viewer.
+*Just as we all like it :)*
 
-[Sample proof](https://chainy.link/6SbEY9)
+[Sample AEON link](https://chainy.link/2oit2z) [and info about the record](https://chainy.link/i/2oit2z)
+[Sample Message](https://chainy.link/6SbEY9)
+
+### Add your data
+https://chainy.link/add
+
+### Find existing data
+https://chainy.info/#find
+
+
+
+
+
