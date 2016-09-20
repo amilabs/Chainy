@@ -134,7 +134,7 @@
                             <div class="grey-line"></div>
                             <p><strong>What does it mean</strong></p>
                             <p class="remove-margin">
-                                It means that this confirmed bitcoin transaction contains a file (a document), hash amount of which has been permanently stored inside transaction. It is now impossible to modify or backdate this file based on bitcoin principle (link). If at later date you want to verify this document, and you have a copy of it, you can upload it using form above, calculate its hash amount and compare with the hash amount stored in the blockchain. Matching hash amounts is a 100% probability that the document is authentic.<br>
+                                It means that this confirmed blockchain transaction contains a file (a document), hash amount of which has been permanently stored inside transaction. It is now impossible to modify or backdate this file based on blockchain principle (link). If at later date you want to verify this document, and you have a copy of it, you can upload it using form above, calculate its hash amount and compare with the hash amount stored in the blockchain. Matching hash amounts is a 100% probability that the document is authentic.<br>
                                 Hash function algorithm of SHA256 has been developed by NSA. More info <a href='http://en.wikipedia.org/wiki/SHA-2' class="external-link" target=_blank>http://en.wikipedia.org/wiki/SHA-2</a>
                             </p>
                         </div>
@@ -162,7 +162,7 @@
                                 </div>
                                 <div class="t419__textwrapper" style="">
                                     <div class="t419__descr t-descr t-descr_xs" field="descr">
-                                        <p>Upload file into the form on this page. Hash will be calculated inside the browser and never send over internet. Calculated result will be compared with the file previously saved and result will be shown to you.</p>
+                                        <p>Upload file (or paste in case of text data) into the form on this page. Hash will be calculated inside the browser and never send over internet. Calculated result will be compared with the file previously saved and result will be shown to you.</p>
                                     </div>
                                 </div>
                             </div>
@@ -258,6 +258,90 @@
                         </div>
                         <div class="col-sm-10 col-md-9 site-block text-center">
                             <a id="checkhash" class="btn btn-lg btn-success" style="width: 200px;">Verify</a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="site-content site-section">
+                <div class="container">
+                    <div class="grey-line"></div>
+                    <div class="site-block visibility-none" data-toggle="animation-appear" data-animation-class="animation-fadeInQuick" data-element-offset="-100">
+                        <h1 class="site-heading"><i class="fa fa-question-circle"></i> <strong>How does it work</strong></h1>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12 col-md-10 site-block">
+                            <p class="remove-margin">Cryptographic digest (or hash amount) has been calculated from this file using SHA256 algorithm and then saved in the blockchain. <?php if($aTX["type"] == 'T'):?>The original data is also now permanently saved.<?php endif; ?></p>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-12 col-md-10 site-block">
+                            <div class="grey-line"></div>
+                            <p><strong>What does it mean</strong></p>
+                            <p class="remove-margin">
+                                It means that this confirmed blockchain transaction contains a file or a text, hash amount of which has been permanently stored inside transaction. It is now impossible to modify or backdate this data based on blockchain principle (link). If at later date you want to verify this data, and(or) you have a copy of it, you can paste it using form above, calculate its hash amount and compare with the hash amount stored in the blockchain. Matching hash amounts is a 100% probability that the data is authentic.<br>
+                                Hash function algorithm of SHA256 has been developed by NSA. More info <a href='http://en.wikipedia.org/wiki/SHA-2' class="external-link" target=_blank>http://en.wikipedia.org/wiki/SHA-2</a>
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-12 col-md-10 site-block">
+                            <div class="grey-line"></div>
+                            <p><strong>How to make sure that data matches the signature </strong></p>
+                            <p class="remove-margin">You need to calculate SHA256 hash amount and compare it with the one saved in the blockchain.</p>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-12 col-md-10 site-block">
+                            <div class="grey-line"></div>
+                            <p><strong>How to calculate SHA256 hash amount</strong></p>
+                            <div class="t419__col t-col t-col_10 ">
+                                <div class="t419__numberwrapper">
+                                    <div class="t419__number">
+                                        <div class="t419__circle" style="width: 40px; height: 40px; border-width: 0px;  background: #b0b0b0;"></div>
+                                        <div class="t419__digit t-name t-name_md" field="number" style="font-size: 16px;">1</div>
+                                    </div>
+                                    <div class="t419__line" style="width: 0px;"></div>
+                                </div>
+                                <div class="t419__textwrapper" style="">
+                                    <div class="t419__descr t-descr t-descr_xs" field="descr">
+                                        <p>Upload file (or paste in case of text data) into the form on this page. Hash will be calculated inside the browser and never send over internet. Calculated result will be compared with the hash amount previously saved and result will be shown to you.</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="t419__col t-col t-col_10 ">
+                                <div class="t419__numberwrapper">
+                                    <div class="t419__number">
+                                        <div class="t419__circle" style="width: 40px; height: 40px; border-width: 0px;  background: #b0b0b0;"></div>
+                                        <div class="t419__digit t-name t-name_md" field="number" style="font-size: 16px;">2</div>
+                                    </div>
+                                    <div class="t419__line" style="width: 0px;"></div>
+                                </div>
+                                <div class="t419__textwrapper" style="">
+                                    <div class="t419__descr t-descr t-descr_xs" field="descr">
+                                        <p>If you don't trust our page, feel free to calculate hash amount of your file using independent tools. Just google “calculate sha256 hash”.</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="t419__col t-col t-col_10 ">
+                                <div class="t419__numberwrapper">
+                                    <div class="t419__number">
+                                        <div class="t419__circle" style="width: 40px; height: 40px; border-width: 0px;  background: #b0b0b0;"></div>
+                                        <div class="t419__digit t-name t-name_md" field="number" style="font-size: 16px;">3</div>
+                                    </div>
+                                    <div class="t419__line" style="width: 0px;"></div>
+                                </div>
+                                <div class="t419__textwrapper" style="">
+                                    <div class="t419__descr t-descr t-descr_xs" field="descr">
+                                        <p>You can also calculate hash by yourself, using open source code.</p>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

@@ -21,6 +21,7 @@ p {
 .site-section {
     text-align: left;
 }
+
 .site-section h1 {
     font-weight: bold;
     font-size: 38px;
@@ -49,6 +50,27 @@ p {
 @media screen and (max-width: 767px) {
     .site-section-top {
         margin-top: 0px;
+    }
+    .site-section h1 {
+        font-size: 34px;
+    }
+}
+
+@media screen and (max-width: 639px) {
+    .site-section-top {
+        margin-top: 0px;
+    }
+    .site-section h1 {
+        font-size: 30px;
+    }
+}
+
+@media screen and (max-width: 479px) {
+    .site-section-top {
+        margin-top: 0px;
+    }
+    .site-section h1 {
+        font-size: 28px;
     }
 }
 
