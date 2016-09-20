@@ -30,6 +30,18 @@ p {
     margin-top: 90px;
 }
 
+@media screen and (max-width: 980px) {
+    .site-section-top {
+        margin-top: 40px;
+    }
+}
+
+@media screen and (max-width: 767px) {
+    .site-section-top {
+        margin-top: 0px;
+    }
+}
+
 .date-of-transaction {
     font-size:18px;
     line-height: 60px;

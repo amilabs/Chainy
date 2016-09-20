@@ -22,7 +22,7 @@
                             <?php if(isset($aTX['url'])): ?>
                                 <div class="grey-line"></div>
                                 <p><strong>Link to the original file is</strong></p>
-                                <p><a href="<?=$aTX['url']?>" class="external-link" target="_blank"><?=$aTX['url']?></a></p>
+                                <p><span class="long-hash"><a href="<?=$aTX['url']?>" class="external-link" target="_blank"><?=$aTX['url']?></a></span></p>
                             <?php endif; ?>
                             <div class="grey-line"></div>
                             <p><strong>Transaction date</strong></p>
@@ -78,13 +78,13 @@
                                 <?php endif; ?>
                                 <div class="store-item-info  text-center clearfix">
                                     <span class="store-item-price themed-color">Signed file</span>
-                                    <div><strong>File name:</strong> <?=$aTX['filename']?></div>
+                                    <div><strong>File name:</strong> <?php if(isset($aTX['filename']) && $aTX['filename']){ echo $aTX['filename']; } elseif(isset($aTX['url'])){ echo substr($aTX['url'], strrpos($aTX['url'], '/') + 1); }?></div>
                                 </div>
                                 <div class="store-item-icon">
                                     <i class="fa fa-file<?=$aTX['filetype']?'-':''?><?=$aTX['filetype']?>-o themed-color-fire"></i>
                                     <div class="store-item-price themed-color-dark" style="font-size:16px;"><?=$aTX['filesize']?></div>
                                 </div>
-                                <div class="store-item-info clearfix">
+                                <div class="store-item-info clearfix" style="word-break: break-all">
                                     <?php if(isset($aTX['url'])): ?>
                                     <strong>Link:&nbsp;</strong><?=$aTX['url']?><br>
                                     <?php endif; ?>
