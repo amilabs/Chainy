@@ -2534,3 +2534,12 @@ h3.site-heading {
 a.btn {
     color: white !important;
 }
+
+a.external-link {
+    border-bottom-width: 1px;
+    border-bottom-style: solid;
+    border-bottom-color: rgb(71, 194, 255);
+    box-shadow: rgb(71, 194, 255) 0px -1px 0px 0px inset;
+    color: #000 !important;
+    font-weight: bold;
+}
