@@ -86,7 +86,7 @@
                 <div class="t-cover__carrier" id="coverCarry8550993" data-content-cover-height="100vh" data-content-cover-parallax="" style="height:100vh;"></div>
                 <div class="t408">
                     <div class="t-container">
-                        <div class="t-cover__wrapper t-valign_middle" style="height:100vh;">
+                        <div class="t-cover__wrapper" style="height:100vh; width: 100vw;">
                             <div class="t408__wrapper" data-hook-content="covercontent">
                                 <?=$content?>
                             </div>
