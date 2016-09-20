@@ -196,7 +196,9 @@
                             <?php if(isset($aTX['description']) && $aTX['description']): ?>
                                 <div class="grey-line"></div>
                                 <p><strong>Text:</strong></p>
-                                <p class="triangle-border"><?=htmlspecialchars($aTX['description']);?></p>
+                                <div class="rectangle-speech-border">
+                                    <p><?=htmlspecialchars($aTX['description']);?></p>
+                                </div>
                             <?php endif; ?>
                             <div class="grey-line"></div>
                             <p><strong>Hash amount  SHA256</strong></p>
