@@ -187,7 +187,7 @@ section .store-item-icon {
 
 .rectangle-speech-border {
   position:relative;
-  padding:50px 15px;
+  padding:15px 15px;
   margin:1em 0 3em;
   border:3px solid #888;
   text-align:center;
