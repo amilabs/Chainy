@@ -97,7 +97,7 @@ class TX extends \AmiLabs\CryptoKit\TX {
                 $result = self::_callRPC("get", array($code));
                 if(is_array($result) && isset($result['data']) && isset($result['timestamp']) && $result['timestamp']){
                     $result['data'] = json_decode($result['data'], JSON_OBJECT_AS_ARRAY);
-                    $result['data']['date'] = date("d.m.Y H:i:s", $result['timestamp']);
+                    $result['data']['date'] = $result['timestamp'];
                     $result['data']['tx'] = TX::_getTxByCode($code);
                     $result = $result['data'];
                     switch($result['type']){

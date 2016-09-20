@@ -3,7 +3,7 @@
         <section class="site-section site-section-light site-section-top">
             <div class="container">
                 <h1 class="animation-slideDown"><i class="fa fa-check-square"></i> Blockchain data found</h1>
-                <h2 class="date-of-transaction animation-slideUp"><strong>Date of transaction:</strong> <?php if(isset($aTX['date'])): ?><?=$aTX['date']?><?php else: ?>Unknown yet<?php endif; ?></h2>
+                <h2 class="date-of-transaction animation-slideUp"><strong>Date of transaction:</strong> <span class="ts2date" data-ts="<?php if(isset($aTX['date'])): ?><?=$aTX['date']?><?php endif; ?>"></span></h2>
             </div>
         </section>
         <!-- END Intro -->
@@ -26,7 +26,7 @@
                             <?php endif; ?>
                             <div class="grey-line"></div>
                             <p><strong>Transaction date</strong></p>
-                            <p><?php if(isset($aTX['date'])): ?><?=$aTX['date']?><?php else: ?>Unknown yet<?php endif; ?></p>
+                            <p class="ts2date" data-ts="<?php if(isset($aTX['date'])): ?><?=$aTX['date']?><?php endif; ?>"></p>
                             <?php if(isset($aTX['tx']) && $aTX['tx']): ?>
                                 <div class="grey-line"></div>
                                 <p><strong>Transaction id</strong></p>
@@ -199,7 +199,7 @@
                             <p><span class="long-hash"><?=$aTX['hash']?></span><input type="hidden" id="file-hash" value="<?=$aTX['hash']?>"></p>
                             <div class="grey-line"></div>
                             <p><strong>Transaction date</strong></p>
-                            <p><?php if(isset($aTX['date'])): ?><?=$aTX['date']?><?php else: ?>Unknown yet<?php endif; ?></p>
+                            <p class="ts2date" data-ts="<?php if(isset($aTX['date'])): ?><?=$aTX['date']?><?php endif; ?>"></p>
                             <?php if(isset($aTX['tx']) && $aTX['tx']): ?>
                                 <div class="grey-line"></div>
                                 <p><strong>Transaction id</strong></p>
@@ -250,3 +250,45 @@
                 </div>
             </section>
         <?php endif; ?>
+        <script>
+            $(document).ready(function(){
+                $('.ts2date').each(function(){
+                    var ts = parseInt($(this).attr('data-ts'));
+                    var res = '';
+                    if(ts){
+                        var date = new Date(ts * 1000);
+                        res = date.getFullYear() + '-';
+                        var month = date.getMonth() + 1;
+                        if(month < 10){
+                            month = '0' + month;
+                        }
+                        res = res + month + '-';
+                        var day = date.getDate();
+                        if(day < 10){
+                            day = '0' + day;
+                        }
+                        res = res + day + ' ';
+                        var hour = date.getHours();
+                        if(hour < 10){
+                            hour = '0' + hour;
+                        }
+                        res = res + hour + ':';
+                        var min = date.getMinutes();
+                        if(min < 10){
+                            min = '0' + min;
+                        }
+                        res = res + min + ':';
+                        var sec = date.getSeconds();
+                        if(sec < 10){
+                            sec = '0' + sec;
+                        }
+                        res = res + sec;
+                        var userOffset = -Math.round(date.getTimezoneOffset() / 60);
+                        res += (' (GMT' + (userOffset >= 0 ? '+' : '') + userOffset + ')');
+                    }else{
+                        res = 'Unknown yet';
+                    }
+                    $(this).text(res);
+                })
+            });
+        </script>
