@@ -237,6 +237,8 @@
                         </div>
                     </div>
                 </div>
+                <?php else: ?>
+                <script> var hasCaptcha = false; </script>
                 <?php endif; ?>
                 <div class="text-right">
                     <a class="btn btn-success btn-lg" id="add-btn" onclick="submitAdd(); return false;">ADD</a>
