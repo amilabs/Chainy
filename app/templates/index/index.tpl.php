@@ -1,4 +1,4 @@
-        <link rel="stylesheet" href="css/view.css">
+        <link rel="stylesheet" href="/css/view.css">
         <!-- Intro -->
         <section class="site-section site-section-light site-section-top">
             <div class="container">
@@ -229,22 +229,23 @@
         <?php if($aTX["type"] == 'R'): ?>
             <section class="site-content site-section site-slide-content">
                 <div class="container">
+                    <div class="blue-line"></div>
                     <h2 class="site-heading"><strong>Redirect details</strong></h2>
-                    <hr>
                     <div class="row visibility-none" data-toggle="animation-appear" data-animation-class="animation-fadeInQuick" data-element-offset="-100">
                         <div class="col-sm-10 col-md-9 site-block">
-                            <p class="promo-content">
-                                <?php if(isset($aTX['url'])): ?>
-                                <br /><strong>Redirects to</strong>
-                                <br /><a href="<?=$aTX['url']?>" target="_blank"><?=$aTX['url']?></a>
-                                <?php endif; ?>
-                                <br /><strong>Transaction date</strong>
-                                <br /> <?php if(isset($aTX['date'])): ?><?=$aTX['date']?><?php else: ?>Unknown yet<?php endif; ?>
-                                <?php if(isset($aTX['tx']) && $aTX['tx']): ?>
-                                <br /><strong>Transaction id</strong>
-                                <br /><span class="long-hash"><?=$aTX['tx']?></span>
-                                <?php endif; ?>
-                            </p>
+                            <?php if(isset($aTX['url'])): ?>
+                                <div class="grey-line"></div>
+                                <p><strong>Redirects to:</strong></p>
+                                <p><span class="long-hash"><a href="<?=$aTX['url']?>" class="external-link" target="_blank"><?=$aTX['url']?></a></span></p>
+                            <?php endif; ?>
+                            <div class="grey-line"></div>
+                            <p><strong>Transaction date</strong></p>
+                            <p class="ts2date" data-ts="<?php if(isset($aTX['date'])): ?><?=$aTX['date']?><?php endif; ?>"></p>
+                            <?php if(isset($aTX['tx']) && $aTX['tx']): ?>
+                                <div class="grey-line"></div>
+                                <p><strong>Transaction id</strong></p>
+                                <p><span class="long-hash"><?=$aTX['tx']?></span></p>
+                            <?php endif; ?>
                         </div>
                     </div>
                 </div>
