@@ -94,6 +94,7 @@ var App = function() {
                .toggleClass('open');
         });
 
+        $(document).ready(updateHeight);
         $(window).resize(updateHeight);
         $("a[data-toggle=tab]").click(updateHeight);
     };

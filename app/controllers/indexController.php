@@ -35,6 +35,7 @@ class indexController extends Controller {
      */
     public function actionIndex(array $aParameters){
         set_time_limit(0);
+        $this->layoutName = 'view';
         $oLogger = Logger::get('access-chainy');
         $byHash = isset($aParameters['byHash']) ? $aParameters['byHash'] : FALSE;
         if($byHash){

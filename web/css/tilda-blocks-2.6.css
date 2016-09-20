@@ -2514,36 +2514,12 @@ a.store-item:hover {
     text-overflow: ellipsis;
 }
 
-
-.t-container section  {
-    color: white !important;
-}
-
-.promo-content {
-    text-align: justify !important;
-    line-height: 24px;
-}
-
-.site-block p, .site-block li  {
-    text-align: justify !important;
-}
-
-section .store-item-icon {
-    color: white;
-}
-
 h3.site-heading {
     text-align: left;
 }
 
 .t-container {
     max-width: 100vw !important;
-}
-
-.site-section-light {
-    background-color: #333;
-    opacity: 0.6;
-    width: 100vw;    
 }
 
 .container {
