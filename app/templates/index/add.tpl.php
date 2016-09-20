@@ -158,7 +158,7 @@
                 <div id="text" class="tab-pane fade">
                     <div class="alert alert-info text-left">
                         The text entered below will be stored with its SHA256 hash in the blockchain.<br />
-                        Text length is limited to 200 chars due to transaction cost limitations.
+                        Text length is limited to 4500 chars due to transaction cost limitations.
                     </div>
                     <form class="add-chainy" action="" method="POST">
                         <input type="hidden" name="addType" value="Text">
@@ -273,7 +273,7 @@ function submitAdd(){
         }
     });
     $('.check-description:visible').each(function(){
-        if(this.value && this.value.length > 200){
+        if(this.value && this.value.length > 4500){
             $(this).addClass('has-error');
             $(this).next('.form-errors').text('Text is too long').show();
             checked = false;
