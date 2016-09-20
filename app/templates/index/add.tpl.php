@@ -39,7 +39,7 @@
                             $.get("getShort/<?php echo $hash ?>", {}, function(data){
                                 if(data){
                                     clearInterval(checkTm);
-                                    if('ERR' !== data){
+                                    if('ERROR' !== data){
                                         var link = $('<a>');
                                         link.attr('href', data);
                                         link.text(data);
