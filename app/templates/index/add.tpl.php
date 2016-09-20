@@ -158,7 +158,7 @@
                 <div id="text" class="tab-pane fade">
                     <div class="alert alert-info text-left">
                         The text entered below will be stored with its SHA256 hash in the blockchain.<br />
-                        Text length is limited to 4500 chars due to transaction cost limitations.
+                        Text length is limited to <?=abs($oCfg->get('maxJsonSize', 4700) - 200)?> chars due to transaction cost limitations.
                     </div>
                     <form class="add-chainy" action="" method="POST">
                         <input type="hidden" name="addType" value="Text">
