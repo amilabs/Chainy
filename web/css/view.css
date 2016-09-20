@@ -146,3 +146,41 @@ section .store-item-icon {
 .t419__hide-last-line .t419__col:last-child .t419__textwrapper {
   padding-bottom: 0;
 }
+
+
+.triangle-border {
+  position:relative;
+  padding:15px;
+  margin:1em 0 3em;
+  border:3px solid #888;
+  color:#333;
+  background:#fff;
+  /* css3 */
+  -webkit-border-radius:10px;
+  -moz-border-radius:10px;
+  border-radius:10px;
+}
+
+.triangle-border:before {
+  content:"";
+  position:absolute;
+  bottom:-20px;
+  left:40px;
+  border-width:20px 20px 0;
+  border-style:solid;
+  border-color:#888 transparent;
+  display:block;
+  width:0;
+}
+
+.triangle-border:after {
+  content:"";
+  position:absolute;
+  bottom:-15px;
+  left:43px;
+  border-width:17px 17px 0;
+  border-style:solid;
+  border-color:#fff transparent;
+  display:block;
+  width:0;
+}
