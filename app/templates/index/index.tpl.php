@@ -184,28 +184,27 @@
         <?php if(($aTX["type"] == 'T') || ($aTX["type"] == 'H')): ?>
             <section class="site-content site-section site-slide-content">
                 <div class="container">
+                    <div class="blue-line"></div>
                     <h2 class="site-heading"><strong>Signed text details</strong></h2>
-                    <hr>
                     <div class="row visibility-none" data-toggle="animation-appear" data-animation-class="animation-fadeInQuick" data-element-offset="-100">
                         <div class="col-sm-10 col-md-9 site-block">
-                            <p class="promo-content">
-                                <?php if(isset($aTX['description'])): ?>
-                                <br /><strong>Text:</strong>
-                                <br /><?=$aTX['description']?>
-                                <?php endif; ?>
-                                <br /><strong>Hash amount  SHA256</strong>
-                                <br /><span class="long-hash"><?=$aTX['hash']?></span><input type="hidden" id="file-hash" value="<?=$aTX['hash']?>">
-                                <?php if(isset($aTX['url'])): ?>
-                                <br /><strong>Link to the original file is</strong>
-                                <br /><a href="<?=$aTX['url']?>" target="_blank"><?=$aTX['url']?></a>
-                                <?php endif; ?>
-                                <br /><strong>Transaction date</strong>
-                                <br /> <?php if(isset($aTX['date'])): ?><?=$aTX['date']?><?php else: ?>Unknown yet<?php endif; ?>
-                                <?php if(isset($aTX['tx']) && $aTX['tx']): ?>
-                                <br /><strong>Transaction id</strong>
-                                <br /><span class="long-hash"><?=$aTX['tx']?></span>
-                                <?php endif; ?>
-                            </p>
+                            <p>This page contains information about digitally signed file embedded in the Ethereum blockchain. Since transaction is confirmed this file is permanently certified and proven to exist.</p>
+                            <?php if(isset($aTX['description']) && $aTX['description']): ?>
+                                <div class="grey-line"></div>
+                                <p><strong>Text:</strong></p>
+                                <p class="alert alert-heading" style="border:1px solid #999;"><?=htmlspecialchars($aTX['description']);?></p>
+                            <?php endif; ?>
+                            <div class="grey-line"></div>
+                            <p><strong>Hash amount  SHA256</strong></p>
+                            <p><span class="long-hash"><?=$aTX['hash']?></span><input type="hidden" id="file-hash" value="<?=$aTX['hash']?>"></p>
+                            <div class="grey-line"></div>
+                            <p><strong>Transaction date</strong></p>
+                            <p><?php if(isset($aTX['date'])): ?><?=$aTX['date']?><?php else: ?>Unknown yet<?php endif; ?></p>
+                            <?php if(isset($aTX['tx']) && $aTX['tx']): ?>
+                                <div class="grey-line"></div>
+                                <p><strong>Transaction id</strong></p>
+                                <p><span class="long-hash"><?=$aTX['tx']?></span></p>
+                            <?php endif; ?>
                             <?php
                             /*
                                 <p class="promo-content">Look up this transaction on 3rd party services: <a href="http://coinsecrets.org/<?php if($aTX['block']): ?>?to=<?=($aTX['block'] + 1)?>.000000<?php endif; ?>">CoinSecrets</a> and <a href="http://blockchain.info/tx/<?=$aTX['tx']?>">Blockchain.info</a></p>
@@ -213,17 +212,16 @@
                             ?>
                         </div>
                     </div>
-                    <?php if(1 || $aTX["type"] == 'H'): ?>
                     <div class="row visibility-none" data-toggle="animation-appear" data-animation-class="animation-fadeInQuick" data-element-offset="-100">
                         <div class="col-sm-10 col-md-9 site-block text-left">
-                            Text:<br />
-                            <textarea id="checkhash-text" style="width: 100%; height: 100px; color: #000;"></textarea><Br />
+                            <div class="grey-line"></div>
+                            <p><strong>Paste text for verification:</strong></p>
+                            <textarea id="checkhash-text" style="width: 100%; height: 100px; color: #000; border-radius: 4px; resize: none; height: 200px;"></textarea>
                         </div>
-                        <div class="col-sm-10 col-md-9 site-block text-right">
-                            <a id="checkhash" class="btn btn-lg btn-success">Verify</a>
+                        <div class="col-sm-10 col-md-9 site-block text-center">
+                            <a id="checkhash" class="btn btn-lg btn-success" style="width: 200px;">Verify</a>
                         </div>
                     </div>
-                    <?php endif; ?>
                 </div>
             </section>
         <?php endif; ?>
