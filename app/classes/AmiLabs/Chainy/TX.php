@@ -98,7 +98,11 @@ class TX extends \AmiLabs\CryptoKit\TX {
                 if(is_array($result) && isset($result['data']) && isset($result['timestamp']) && $result['timestamp']){
                     $result['data'] = json_decode($result['data'], JSON_OBJECT_AS_ARRAY);
                     $result['data']['date'] = $result['timestamp'];
-                    $result['data']['tx'] = TX::_getTxByCode($code);
+                    $aTx = TX::_getTxByCode($code);
+                    if(is_array($aTx) && isset($aTx['hash'])){
+                        $result['data']['tx'] = $aTx['hash'];
+                        $result['data']['sender'] = $aTx['sender'];
+                    }
                     $result = $result['data'];
                     switch($result['type']){
                         case self::TX_TYPE_HASHLINK:

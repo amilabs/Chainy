@@ -36,6 +36,15 @@
                                     </span>
                                 </p>
                             <?php endif; ?>
+                            <?php if(isset($aTX['sender']) && $aTX['sender']): ?>
+                                <div class="grey-line"></div>
+                                <p><strong>Sent by</strong></p>
+                                <p>
+                                    <span class="long-hash">
+                                        <a href="https://ethplorer.io/address/<?=$aTX['sender']?>" class="external-link" target="_blank"><?=$aTX['sender']?></a>
+                                    </span>
+                                </p>
+                            <?php endif; ?>
                             <?php if(isset($aTX['description']) && $aTX['description']): ?>
                                 <div class="grey-line"></div>
                                 <p><strong>Description:</strong></p>
@@ -215,6 +224,15 @@
                                     </span>
                                 </p>
                             <?php endif; ?>
+                            <?php if(isset($aTX['sender']) && $aTX['sender']): ?>
+                                <div class="grey-line"></div>
+                                <p><strong>Sent by</strong></p>
+                                <p>
+                                    <span class="long-hash">
+                                        <a href="https://ethplorer.io/address/<?=$aTX['sender']?>" class="external-link" target="_blank"><?=$aTX['sender']?></a>
+                                    </span>
+                                </p>
+                            <?php endif; ?>
                             <?php
                             /*
                                 <p class="promo-content">Look up this transaction on 3rd party services: <a href="http://coinsecrets.org/<?php if($aTX['block']): ?>?to=<?=($aTX['block'] + 1)?>.000000<?php endif; ?>">CoinSecrets</a> and <a href="http://blockchain.info/tx/<?=$aTX['tx']?>">Blockchain.info</a></p>
@@ -257,6 +275,15 @@
                                 <p>
                                     <span class="long-hash">
                                         <a href="https://ethplorer.io/tx/<?=$aTX['tx']?>" class="external-link" target="_blank"><?=$aTX['tx']?></a>
+                                    </span>
+                                </p>
+                            <?php endif; ?>
+                            <?php if(isset($aTX['sender']) && $aTX['sender']): ?>
+                                <div class="grey-line"></div>
+                                <p><strong>Sent by</strong></p>
+                                <p>
+                                    <span class="long-hash">
+                                        <a href="https://ethplorer.io/address/<?=$aTX['sender']?>" class="external-link" target="_blank"><?=$aTX['sender']?></a>
                                     </span>
                                 </p>
                             <?php endif; ?>
