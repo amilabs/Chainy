@@ -37,7 +37,7 @@
                                         <?php
                                             $viewer = "ethplorer.io";
                                             if(0 !== strpos($aTX['tx'], "0x")){
-                                                $viewer = "blockchain.info"
+                                                $viewer = "blockchain.info";
                                             }
                                         ?>
                                         <a href="https://<?=$viewer?>/tx/<?=$aTX['tx']?>" class="external-link" target="_blank"><?=$aTX['tx']?></a>
