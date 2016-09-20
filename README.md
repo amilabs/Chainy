@@ -10,7 +10,7 @@ Chainy is the most independent Ethereum based smart contract, which exists for a
 *Just as we all like it :)*
 
 
-**Sample Message** — Hello World! (https://chainy.link/2vsxtH)
+**Sample Message** — "Hello World!": https://chainy.link/2vsxtH
 
 **Sample AEON link**: https://chainy.link/2vsYtH, alias: https://txn.me/2vsYtH
 
