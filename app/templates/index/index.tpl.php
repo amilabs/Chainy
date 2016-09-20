@@ -28,7 +28,7 @@
                                 <br /><strong>Transaction id</strong>
                                 <br /><span class="long-hash"><?=$aTX['tx']?></span>
                                 <?php endif; ?>
-                                <?php if(isset($aTX['description'])): ?>
+                                <?php if(isset($aTX['description']) && $aTX['description']): ?>
                                 <br /><strong>Description:</strong>
                                 <br /><?=$aTX['description']?>
                                 <?php endif; ?>
