@@ -56,7 +56,7 @@
                             <?php if(isset($aTX['description']) && $aTX['description']): ?>
                                 <div class="grey-line"></div>
                                 <p><strong>Description:</strong></p>
-                                <p><?=htmlspecialchars($aTX['description']);?></p>
+                                <p><?=str_replace("\n", "<br>", htmlspecialchars($aTX['description']))?></p>
                             <?php endif; ?>
                             <?php
                             /*
@@ -214,7 +214,7 @@
                                 <div class="grey-line"></div>
                                 <p><strong>Text:</strong></p>
                                 <div class="rectangle-speech-border">
-                                    <p><?=htmlspecialchars($aTX['description']);?></p>
+                                    <p><?=str_replace("\n", "<br>", htmlspecialchars($aTX['description']))?></p>
                                 </div>
                             <?php endif; ?>
                             <div class="grey-line"></div>
