@@ -35,6 +35,7 @@ class indexController extends Controller {
      */
     public function actionIndex(array $aParameters){
         set_time_limit(0);
+        $this->layoutName = 'view';
         $oLogger = Logger::get('access-chainy');
         $byHash = isset($aParameters['byHash']) ? $aParameters['byHash'] : FALSE;
         if($byHash){
@@ -97,6 +98,24 @@ class indexController extends Controller {
             }
         }
         if($oRequest->getMethod() === 'POST'){
+            if($this->getConfig()->get('captcha', FALSE)){
+                // Check Captcha
+                $recaptcha = $oRequest->get('g-recaptcha-response', FALSE, INPUT_POST);
+                $url = "https://www.google.com/recaptcha/api/siteverify";
+                $res = $this->_post($url, array(
+                    'secret' => $this->getConfig()->get('captchaSecret', ""),
+                    'response' => $recaptcha
+                ));
+                if(!is_array($res) || !isset($res['success']) || !$res['success']){
+                    $_SESSION['add_result'] = array(
+                        'success' => false,
+                        'message' => "Invalid captcha"
+                    );
+                    header('Location: ?');
+                    die();
+                }
+            }
+            $publish = $oRequest->get('publish', FALSE, INPUT_POST);
             $sender = $oRequest->get('sender', FALSE, INPUT_POST);
             if(FALSE !== $sender){
                TX::setDefaultSender($sender);
@@ -134,10 +153,21 @@ class indexController extends Controller {
             $result['mist'] = $oRequest->get('mist', FALSE, INPUT_POST);
             $success = $result && is_array($result) && !isset($result['error']);
             if($success && !$result['mist']){
-                $tx = TX::publishData($result['data']);
-                if(is_array($tx)){
-                    unset($result['data']);
-                    $result += $tx;
+                $oCfg = $this->getConfig();
+                if($oCfg->get('autopublish', FALSE) && $publish){
+                    $strData = json_encode($result['data'], JSON_UNESCAPED_SLASHES);
+                    $limit = $oCfg->get('maxJsonSize', 4700);
+                    if(strlen($strData) > $limit){
+                        // @todo: limits to config
+                        $success = false;
+                        $result = array('error' => 'Data is too big to publish (' . $limit . ' bytes maximum allowed)');
+                    }else{
+                        $tx = TX::publishData($result['data']);
+                        if(is_array($tx)){
+                            unset($result['data']);
+                            $result += $tx;
+                        }
+                    }
                 }
             }
             $message = ($success) ? (ucfirst($type) . ' JSON:') : ('ERROR: Unable to add ' . $type . ($result && is_array($result) && isset($result['error']) ? ' (' . $result['error'] . ')' : ''));
@@ -171,5 +201,28 @@ class indexController extends Controller {
     public function action404(array $aParameters){
         $this->oView->set('title', '404 - Not Found', true);
         $this->templateFile = 'index/404';
+    }
+
+    /**
+     * JSON RPC request implementation.
+     *
+     * @param string $method  Method name
+     * @param array $params   Parameters
+     * @return array
+     */
+    protected function _post($url, $params = array()){
+        $result = false;
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $params );
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+        $result = curl_exec($ch);
+        if($result && $result[0] == '{'){
+            $result = json_decode($result, JSON_OBJECT_AS_ARRAY);
+        }
+        curl_close($ch);
+        return $result;
     }
 }

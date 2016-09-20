@@ -82,12 +82,11 @@
             </div>
         </div>
         <div id="rec8550993" class="r" style="padding-top:0px;" data-animationappear="off" data-record-type="408">
-            <div class="t-cover" id="recorddiv8550993" bgimgfield="img" style="height:100vh; background-image:-webkit-linear-gradient(top, #ccc, #777); background-image:-moz-linear-gradient(top, #ccc, #777); background-image:-o-linear-gradient(top, #ccc, #777); background-image:-ms-linear-gradient(top, #ccc, #777); background-image:linear-gradient(top, #ccc, #777);">
-                <div class="t-cover__carrier" id="coverCarry8550993" data-content-cover-id="8550993"  data-content-cover-bg="/images/lib__unsplash__cd79cff6-76c6-e003-143e-5c26b902efca__photo.jpg" data-content-cover-height="100vh" data-content-cover-parallax="" style="background-image:url('images/lib__unsplash__cd79cff6-76c6-e003-143e-5c26b902efca__photo.jpg');height:100vh;background-attachment:scroll;"></div>
-                <div class="t-cover__filter" style="height:100vh;background-color:#000;filter: alpha(opacity:50); KHTMLOpacity: 0.50; MozOpacity: 0.50; opacity: 0.50;"></div>
+            <div class="t-cover" id="recorddiv8550993" bgimgfield="img" style="height:100vh; background-color:#fff;">
+                <div class="t-cover__carrier" id="coverCarry8550993" data-content-cover-height="100vh" data-content-cover-parallax="" style="height:100vh;"></div>
                 <div class="t408">
                     <div class="t-container">
-                        <div class="t-cover__wrapper t-valign_middle" style="height:100vh;">
+                        <div class="t-cover__wrapper" style="height:100vh; width: 100vw;">
                             <div class="t408__wrapper" data-hook-content="covercontent">
                                 <?=$content?>
                             </div>

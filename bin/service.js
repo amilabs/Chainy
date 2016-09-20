@@ -146,7 +146,7 @@ Chainy = {
                                     var data = log.data.slice(192).replace(/0+$/, '');
                                     var link = new Buffer(data, 'hex').toString();
                                     if(link && link.length && (link.length > code.length) && (code === link.slice(-code.length))){
-                                        callback(null, tx.hash);
+                                        callback(null, {hash: tx.hash, sender: tx.from});
                                         return;
                                     }
                                 }

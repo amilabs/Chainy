@@ -47,6 +47,13 @@
     text-align: left;
 }
 
+@media screen and (min-width: 1000px) {
+    .t-cover__wrapper {
+        display: block;
+        width: 100%;
+    }
+}
+
 @media screen and (max-width: 767px) {
     .col-header {
         text-align: left;

@@ -97,8 +97,12 @@ class TX extends \AmiLabs\CryptoKit\TX {
                 $result = self::_callRPC("get", array($code));
                 if(is_array($result) && isset($result['data']) && isset($result['timestamp']) && $result['timestamp']){
                     $result['data'] = json_decode($result['data'], JSON_OBJECT_AS_ARRAY);
-                    $result['data']['date'] = date("d.m.Y H:i:s", $result['timestamp']);
-                    $result['data']['tx'] = TX::_getTxByCode($code);
+                    $result['data']['date'] = $result['timestamp'];
+                    $aTx = TX::_getTxByCode($code);
+                    if(is_array($aTx) && isset($aTx['hash'])){
+                        $result['data']['tx'] = $aTx['hash'];
+                        $result['data']['sender'] = $aTx['sender'];
+                    }
                     $result = $result['data'];
                     switch($result['type']){
                         case self::TX_TYPE_HASHLINK:
@@ -120,7 +124,6 @@ class TX extends \AmiLabs\CryptoKit\TX {
                                     $result['filetype'] = '';
                             }
                             $result['block'] = FALSE;
-                            $result['tx'] = FALSE;
                             break;
                     }
                     $oCache->save($result);
@@ -293,16 +296,14 @@ class TX extends \AmiLabs\CryptoKit\TX {
      */
     public static function publishData(array $data){
         $result = FALSE;
-        $oCfg = Application::getInstance()->getConfig();
+        $oCfg = \AmiLabs\DevKit\Application::getInstance()->getConfig();
         $sender = (FALSE !== self::$sender) ? self::$sender : $oCfg->get('sender');
-        if($oCfg->get('autopublish', FALSE)){
-            $tx = self::_callRPC("add", array($sender, json_encode($data, JSON_UNESCAPED_SLASHES)));
-            // Transaction hash length should be 66 bytes
-            if(strlen($tx) == 66){
-                $result = array('hash' => $tx);
-            }elseif(strlen($tx) > 66){
-                $result = array('transaction' => $tx);
-            }
+        $tx = self::_callRPC("add", array($sender, json_encode($data, JSON_UNESCAPED_SLASHES)));
+        // Transaction hash length should be 66 bytes
+        if(strlen($tx) == 66){
+            $result = array('hash' => $tx);
+        }elseif(strlen($tx) > 66){
+            $result = array('transaction' => $tx);
         }
         return $result;
     }
