@@ -30,6 +30,17 @@ p {
     margin-top: 90px;
 }
 
+.less500 {
+    display: none;
+}
+
+@media screen and (max-width: 500px) {
+    .less500 {
+        display: inline;
+    }
+}
+
+
 @media screen and (max-width: 980px) {
     .site-section-top {
         margin-top: 40px;

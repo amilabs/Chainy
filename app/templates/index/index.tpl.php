@@ -3,7 +3,7 @@
         <section class="site-section site-section-light site-section-top">
             <div class="container">
                 <h1 class="animation-slideDown"><i class="fa fa-check-square"></i> Blockchain data found</h1>
-                <h2 class="date-of-transaction animation-slideUp"><strong>Date of transaction:</strong> <span class="ts2date" data-ts="<?php if(isset($aTX['date'])): ?><?=$aTX['date']?><?php endif; ?>"></span></h2>
+                <h2 class="date-of-transaction animation-slideUp"><strong>Date of transaction:</strong> <br class="less500" /><span class="ts2date" data-ts="<?php if(isset($aTX['date'])): ?><?=$aTX['date']?><?php endif; ?>"></span></h2>
             </div>
         </section>
         <!-- END Intro -->
