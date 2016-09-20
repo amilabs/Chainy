@@ -120,7 +120,6 @@ class TX extends \AmiLabs\CryptoKit\TX {
                                     $result['filetype'] = '';
                             }
                             $result['block'] = FALSE;
-                            $result['tx'] = FALSE;
                             break;
                     }
                     $oCache->save($result);
