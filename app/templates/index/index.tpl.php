@@ -24,9 +24,11 @@
                                 <p><strong>Link to the original file is</strong></p>
                                 <p><span class="long-hash"><a href="<?=$aTX['url']?>" class="external-link" target="_blank"><?=$aTX['url']?></a></span></p>
                             <?php endif; ?>
+                            <?php /*
                             <div class="grey-line"></div>
                             <p><strong>Transaction date</strong></p>
                             <p class="ts2date" data-ts="<?php if(isset($aTX['date'])): ?><?=$aTX['date']?><?php endif; ?>"></p>
+                             */?>
                             <?php if(isset($aTX['tx']) && $aTX['tx']): ?>
                                 <div class="grey-line"></div>
                                 <p><strong>Transaction id</strong></p>
@@ -212,9 +214,11 @@
                             <div class="grey-line"></div>
                             <p><strong>Hash amount  SHA256</strong></p>
                             <p><span class="long-hash"><?=$aTX['hash']?></span><input type="hidden" id="file-hash" value="<?=$aTX['hash']?>"></p>
+                            <?php /*
                             <div class="grey-line"></div>
                             <p><strong>Transaction date</strong></p>
                             <p class="ts2date" data-ts="<?php if(isset($aTX['date'])): ?><?=$aTX['date']?><?php endif; ?>"></p>
+                             */?>
                             <?php if(isset($aTX['tx']) && $aTX['tx']): ?>
                                 <div class="grey-line"></div>
                                 <p><strong>Transaction id</strong></p>
@@ -266,9 +270,11 @@
                                 <p><strong>Redirects to:</strong></p>
                                 <p><span class="long-hash"><a href="<?=$aTX['url']?>" class="external-link" target="_blank"><?=$aTX['url']?></a></span></p>
                             <?php endif; ?>
+                            <?php /*
                             <div class="grey-line"></div>
                             <p><strong>Transaction date</strong></p>
                             <p class="ts2date" data-ts="<?php if(isset($aTX['date'])): ?><?=$aTX['date']?><?php endif; ?>"></p>
+                             */?>
                             <?php if(isset($aTX['tx']) && $aTX['tx']): ?>
                                 <div class="grey-line"></div>
                                 <p><strong>Transaction id</strong></p>
