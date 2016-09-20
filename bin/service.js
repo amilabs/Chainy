@@ -115,7 +115,7 @@ Chainy = {
                             }
                         }
                     }else{
-                        if(receipt.blockNumber){
+                        if(receipt && receipt.blockNumber){
                             // Tx is minet but has no chainy event
                             console.log('Invalid or failed TX ' + txHash);
                             link = 'ERROR';
