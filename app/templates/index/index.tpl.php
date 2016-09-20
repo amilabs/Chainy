@@ -188,7 +188,7 @@
                     <h2 class="site-heading"><strong>Signed text details</strong></h2>
                     <div class="row visibility-none" data-toggle="animation-appear" data-animation-class="animation-fadeInQuick" data-element-offset="-100">
                         <div class="col-sm-10 col-md-9 site-block">
-                            <p>This page contains information about digitally signed file embedded in the Ethereum blockchain. Since transaction is confirmed this file is permanently certified and proven to exist.</p>
+                            <p>This page contains information about digitally signed text embedded in the Ethereum blockchain.</p>
                             <?php if(isset($aTX['description']) && $aTX['description']): ?>
                                 <div class="grey-line"></div>
                                 <p><strong>Text:</strong></p>
