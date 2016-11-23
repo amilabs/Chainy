@@ -71,6 +71,9 @@ p {
     .site-section h1 {
         font-size: 28px;
     }
+    #password {
+        width:100px;
+    }
 }
 
 section {

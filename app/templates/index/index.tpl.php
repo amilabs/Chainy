@@ -223,12 +223,12 @@
                                 <p><strong>Text:</strong></p>
                                 <div class="rectangle-speech-border" id="decrypted" style="">
                                     <i style="color:#aaa;">Text is encrypted</i>
-                                </div>
-                                <div class="enter-password">
-                                    <form id="encrypted-form">
-                                        Password: <input type="password" id="password" style="border-radius: 4px; border:1px solid #aaa;"> <button type="submit" id="decrypt">Decrypt</button><br>
-                                        <span id="invalid-password" style="color:red; display:none;">Invalid password!</span>
-                                    </form>
+                                    <div class="enter-password" style="margin-top:10px;">
+                                        <form id="encrypted-form">
+                                            Password: <input type="password" id="password" style="border-radius: 4px; border:1px solid #aaa;"> <button type="submit" id="decrypt">Decrypt</button><br>
+                                            <span id="invalid-password" style="color:red; display:none;">Invalid password!</span>
+                                        </form>
+                                    </div>
                                 </div>
                             <?php endif; ?>
                             <div class="grey-line"></div>
