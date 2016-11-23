@@ -202,7 +202,7 @@
             </section>
         <?php endif; ?>
 
-        <?php if(($aTX["type"] == 'T') || ($aTX["type"] == 'H')): ?>
+        <?php if(($aTX["type"] == 'T') || ($aTX["type"] == 'H') || ($aTX["type"] == 'E')): ?>
             <section class="site-content site-section site-slide-content">
                 <div class="container">
                     <div class="blue-line"></div>
@@ -215,6 +215,20 @@
                                 <p><strong>Text:</strong></p>
                                 <div class="rectangle-speech-border">
                                     <p><?=str_replace("\n", "<br>", htmlspecialchars($aTX['description']))?></p>
+                                </div>
+                            <?php endif; ?>
+                            <?php if($aTX["type"] === 'E'): ?>
+                                <input type="hidden" id="encrypted" value="<?=$aTX['encrypted']?>">
+                                <div class="grey-line"></div>
+                                <p><strong>Text:</strong></p>
+                                <div class="rectangle-speech-border" id="decrypted" style="">
+                                    <i style="color:#aaa;">Text is encrypted</i>
+                                </div>
+                                <div class="enter-password">
+                                    <form id="encrypted-form">
+                                        Password: <input type="password" id="password" style="border-radius: 4px; border:1px solid #aaa;"> <button type="submit" id="decrypt">Decrypt</button><br>
+                                        <span id="invalid-password" style="color:red; display:none;">Invalid password!</span>
+                                    </form>
                                 </div>
                             <?php endif; ?>
                             <div class="grey-line"></div>
@@ -250,6 +264,7 @@
                             ?>
                         </div>
                     </div>
+                    <?php if($aTX["type"] !== 'E'): ?>
                     <div class="row visibility-none" data-toggle="animation-appear" data-animation-class="animation-fadeInQuick" data-element-offset="-100">
                         <div class="col-sm-10 col-md-9 site-block text-left">
                             <div class="grey-line"></div>
@@ -260,6 +275,7 @@
                             <a id="checkhash" class="btn btn-lg btn-success" style="width: 200px;">Verify</a>
                         </div>
                     </div>
+                    <?php endif; ?>
                 </div>
             </section>
 

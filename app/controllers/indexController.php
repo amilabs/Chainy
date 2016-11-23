@@ -62,6 +62,7 @@ class indexController extends Controller {
                 case TX::TX_TYPE_HASHLINK:
                 case TX::TX_TYPE_TEXT:
                 case TX::TX_TYPE_HASH:
+                case TX::TX_TYPE_ENCRYPTED:
                     $this->oView->set('aTX', $result);
                     break;
             }
