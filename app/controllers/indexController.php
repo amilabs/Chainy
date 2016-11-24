@@ -157,7 +157,7 @@ class indexController extends Controller {
                 $oCfg = $this->getConfig();
                 if($oCfg->get('autopublish', FALSE) && $publish){
                     $strData = json_encode($result['data'], JSON_UNESCAPED_SLASHES);
-                    $limit = $oCfg->get('maxJsonSize', 4700);
+                    $limit = $oCfg->get('maxJsonSize', 4700) - 200;
                     if(strlen($strData) > $limit){
                         // @todo: limits to config
                         $success = false;
