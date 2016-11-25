@@ -52,6 +52,7 @@
                                     <li class="t228__list_item"><a href="https://chainy.info/#how"  style="color:#ffffff;font-size:15px;font-weight:400;font-family:Noto Sans;" data-menu-item-number="2">How it works</a></li>
                                     <li class="t228__list_item"><a href="https://chainy.info/#hmm"  style="color:#ffffff;font-size:15px;font-weight:400;font-family:Noto Sans;" data-menu-item-number="3">Hmm?</a></li>
                                     <li class="t228__list_item"><a href="https://chainy.info/#contact"  style="color:#ffffff;font-size:15px;font-weight:400;font-family:Noto Sans;" data-menu-item-number="4">Contact</a></li>
+                                    <li class="t228__list_item"><a href="https://chainy.info/discuss"  style="color:#ffffff;font-size:15px;font-weight:400;font-family:Noto Sans;" data-menu-item-number="4">Discuss</a></li>
                                 </ul>
                             </div>
                         </div>
