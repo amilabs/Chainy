@@ -174,6 +174,9 @@ class indexController extends Controller {
             $message = ($success) ? (ucfirst($type) . ' JSON:') : ('ERROR: Unable to add ' . $type . ($result && is_array($result) && isset($result['error']) ? ' (' . $result['error'] . ')' : ''));
             $result['success'] = $success;
             $result['message'] = $message;
+            $ipAddress = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : 'Unknown';
+            $referer = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : 'Unknown';
+            $oLogger->log('CREATE: ' . var_export($result, TRUE) . ' (IP=' . $ipAddress . ',referer=' . $referer . ')');
             $_SESSION['add_result'] = $result;
             header('Location: ?');
             die();
