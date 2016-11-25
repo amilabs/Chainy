@@ -59,6 +59,25 @@ var App = function() {
         // Initialize Placeholder
         $('input, textarea').placeholder();
 
+
+        $('#encrypted-form').submit(function(e){
+            e.preventDefault();
+            var encrypted = $('#encrypted').val();
+            var password = $('#password').val();
+            var text = CryptoJS.enc.Latin1.stringify(CryptoJS.AES.decrypt(encrypted.toString(16), password));
+            var storedHash = $('#file-hash').val();
+            var hash = CryptoJS.SHA256(text).toString();
+            if(hash === storedHash){
+                $('#invalid-password').hide();
+                $('.enter-password').hide();
+                $('#decrypted').html('<span>' + text + '</span>');
+                $('#decrypted').show();
+            }else{
+                $('#invalid-password').show();
+            }
+        });
+
+
         // Toggle animation class when an element appears with Jquery Appear plugin
         $('[data-toggle="animation-appear"]').each(function(){
             var $this       = $(this);

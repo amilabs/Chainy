@@ -20,7 +20,7 @@
 <div class="t408__blockswrapper">
 <link rel="stylesheet" href="css/add.css">
 <div class="container">
-    <div style="background:#fff;padding:20px;border-radius:16px;opacity:0.9;margin-top:-50px;">
+    <div id="publish-result">
         <?php if(isset($success)): ?>
             <?php if($success): ?>
                 <?php if(isset($chainyJSON)): ?>
@@ -31,20 +31,24 @@
                     <textarea id="chainy-tx" readonly><?php echo $chainyTransaction ?></textarea>
                 <?php endif ?>
                 <?php if(isset($hash)): ?>
-                   Transaction: <a href="https://<?php echo $oCfg->get('testnet', FALSE) ? 'testnet.' : ''; ?>etherscan.io/tx/<?php echo $hash ?>" target="_blank"><?php echo $hash ?></a><br />
-                   Shortlink: <span id="shortlink"><i class="fa fa-spinner fa-spin"></i> please wait...</span>
-                   <script>
-                       var checkTm;
-                       var getShort = function(){
-                           $.get("getShort/<?php echo $hash ?>", {}, function(data){
-                               if(data){
-                                   clearInterval(checkTm);
-                                   var link = $('<a>');
-                                   link.attr('href', data);
-                                   link.text(data);
-                                   $("#shortlink").empty().append(link);
-                               }
-                           });
+                    <p>Transaction: <a href="https://<?php echo $oCfg->get('testnet', FALSE) ? 'testnet.' : ''; ?>etherscan.io/tx/<?php echo $hash ?>" target="_blank"><?php echo $hash ?></a></p>
+                    <p>Shortlink: <span id="shortlink"><i class="fa fa-spinner fa-spin"></i> please wait...</span></p>
+                    <script>
+                        var checkTm;
+                        var getShort = function(){
+                            $.get("getShort/<?php echo $hash ?>", {}, function(data){
+                                if(data){
+                                    clearInterval(checkTm);
+                                    if('ERROR' !== data){
+                                        var link = $('<a>');
+                                        link.attr('href', data);
+                                        link.text(data);
+                                        $("#shortlink").empty().append(link);
+                                    }else{
+                                        $("#shortlink").html('<span class="text-danger">Transaction failed</span>');
+                                    }
+                                }
+                            });
                        }
                        checkTm = setInterval(getShort, 5000);
                     </script>
@@ -68,7 +72,7 @@
             <div class="tab-content">
                 <div id="local-filehash" class="tab-pane fade in active">
                     <div class="alert alert-info text-left">
-                        Select a file to calculate its hash (there are no file type or size limitations).
+                        Select a file to calculate its hash (there is no limit imposed on a file type or size.)
                     </div>
                     <form class="add-chainy" action="" method="POST">
                         <input type="hidden" name="addType" value="Local file hash">
@@ -120,7 +124,7 @@
                 </div>
                 <div id="remote-filehash" class="tab-pane fade">
                     <div class="alert alert-info text-left">
-                        Enter a link to a remote file with maximum size of 50 megabytes.
+                        Enter a link to a remote file with a limit set to 50 MB (megabytes).
                     </div>
                     <form class="add-chainy" action="" method="POST">
                         <input type="hidden" name="addType" value="File hash">
@@ -158,7 +162,7 @@
                 <div id="text" class="tab-pane fade">
                     <div class="alert alert-info text-left">
                         The text entered below will be stored with its SHA256 hash in the blockchain.<br />
-                        Text length is limited to <?=abs($oCfg->get('maxJsonSize', 4700) - 200)?> chars due to transaction cost limitations.
+                         Length of the text is limited to <?=abs($oCfg->get('maxJsonSize', 4700) - 200)?> chars due to transaction cost limitations.
                     </div>
                     <form class="add-chainy" action="" method="POST">
                         <input type="hidden" name="addType" value="Text">
@@ -188,7 +192,7 @@
                 </div>
                 <div id="encrypted-text" class="tab-pane fade">
                     <div class="alert alert-info text-left">
-                        Encrypted text will be stored in blockchain and can be read by only those who have a password.
+                        Encrypted text will be saved in the blockchain. The only people that will be able to view it are those you give your password to.
                     </div>
                     <form class="add-chainy" action="" method="POST">
                         <input type="hidden" name="addType" value="Encrypted Text">

@@ -47,6 +47,19 @@
     text-align: left;
 }
 
+#publish-result {
+    background:#fff;
+    padding:20px;
+    border-radius:16px;
+    opacity:0.9;
+    margin-top:0px;
+}
+
+#publish-result p {
+    font-size: 18px;
+    padding-bottom: 8px;
+}
+
 @media screen and (min-width: 1000px) {
     .t-cover__wrapper {
         display: block;

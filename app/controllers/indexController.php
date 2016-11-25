@@ -62,6 +62,7 @@ class indexController extends Controller {
                 case TX::TX_TYPE_HASHLINK:
                 case TX::TX_TYPE_TEXT:
                 case TX::TX_TYPE_HASH:
+                case TX::TX_TYPE_ENCRYPTED:
                     $this->oView->set('aTX', $result);
                     break;
             }
@@ -156,7 +157,7 @@ class indexController extends Controller {
                 $oCfg = $this->getConfig();
                 if($oCfg->get('autopublish', FALSE) && $publish){
                     $strData = json_encode($result['data'], JSON_UNESCAPED_SLASHES);
-                    $limit = $oCfg->get('maxJsonSize', 4700);
+                    $limit = $oCfg->get('maxJsonSize', 4700) - 200;
                     if(strlen($strData) > $limit){
                         // @todo: limits to config
                         $success = false;
@@ -173,6 +174,10 @@ class indexController extends Controller {
             $message = ($success) ? (ucfirst($type) . ' JSON:') : ('ERROR: Unable to add ' . $type . ($result && is_array($result) && isset($result['error']) ? ' (' . $result['error'] . ')' : ''));
             $result['success'] = $success;
             $result['message'] = $message;
+            $ipAddress = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : 'Unknown';
+            $referer = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : 'Unknown';
+            $oLogger = Logger::get('add-chainy');
+            $oLogger->log('CREATE: ' . var_export($result, TRUE) . ' (IP=' . $ipAddress . ',referer=' . $referer . ')');
             $_SESSION['add_result'] = $result;
             header('Location: ?');
             die();
