@@ -113,39 +113,46 @@
             </div>
         </div>
         <div id="footer" class="t-records" data-hook="blocks-collection-content-node" data-tilda-project-id="37571" data-tilda-page-id="306617"  >
-            <div id="rec8550719" class="r" style="background-color:#ffffff; " data-animationappear="off" data-record-type="389"   data-bg-color="#ffffff">
-                <div class="t389" id="t-footer_8550719">
-                    <div class="t389__maincontainer" style="height: 90px;">
-                        <div class="t389__content">
-                            <div class="t389__col t389__col_hiddenmobile">
-                                <div class="t389__typo t389__copyright t-name t-name_xs" field="text" style="color: #000000"></div>
-                            </div>
-                            <div class="t389__col t389__col_center t-align_center">
-                                <div class="t389__centercontainer">
-                                    <ul class="t389__list">
-                                        <li class="t389__list_item t-name t-name_xs"><a class="t389__typo" style="color: #000000" href="https://chainy.info/#about"  data-menu-item-number="1">About</a></li>
-                                        <li class="t389__list_item t-name t-name_xs"><a class="t389__typo" style="color: #000000" href="https://chainy.link/add"  data-menu-item-number="2">Create your data</a></li>
-                                        <li class="t389__list_item t-name t-name_xs"><a class="t389__typo" style="color: #000000" href="https://github.com/EverexIO/Chainy"  data-menu-item-number="3">Source code</a></li>
-                                        <li class="t389__list_item t-name t-name_xs"><a class="t389__typo" style="color: #000000" href="https:/facebook.com/everexone"  data-menu-item-number="4">Facebook</a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="t389__col t389__col_mobile">
-                                <div class="t389__typo t389__copyright t-name t-name_xs" field="text" style="color: #000000"></div>
-                            </div>
-                            <div class="t389__col">
-                                <div class="t389__scroll t-align_right">
-                                    <a class="t389__typo t-name t-name_xs t389_scrolltop" style="color: #000000" href="javascript:t389_scrollToTop();"></a>
-                                </div>
-                            </div>
-                        </div>
+            <div id="rec8550719" class="r" style="background-color:#ffffff; " data-animationappear="off" data-record-type="389" data-bg-color="#ffffff">
+            <div class="t389" id="t-footer_8550719">
+              <div class="t389__maincontainer" style="height: 90px;">
+                <div class="t389__content">
+                  <div class="t389__col t389__col_hiddenmobile">
+                    <div class="t389__typo t389__copyright t-name t-name_xs" field="text" style="color: #000000">
+
                     </div>
+                  </div>
+                  <div class="t389__col t389__col_center t-align_center">
+                            <div class="t389__centercontainer">
+                    <ul class="t389__list">
+                            <li class="t389__list_item t-name t-name_xs"><a class="t389__typo" style="color: #000000" href="/#about" data-menu-item-number="1">About</a></li>
+                            <li class="t389__list_item t-name t-name_xs"><a class="t389__typo" style="color: #000000" href="/add" data-menu-item-number="2">Create your data</a></li>
+                            <li class="t389__list_item t-name t-name_xs"><a class="t389__typo" style="color: #000000" href="https://github.com/EverexIO/Chainy" data-menu-item-number="3">Source code</a></li>
+                            <li class="t389__list_item t-name t-name_xs"><a class="t389__typo" style="color: #000000" href="/discuss" data-menu-item-number="4">Discuss</a></li>
+                            <li class="t389__list_item t-name t-name_xs"><a class="t389__typo" style="color: #000000" href="https:/facebook.com/everexone" data-menu-item-number="5">Facebook</a></li>
+
+                            </ul>
+                    </div>
+                          </div>
+                  <div class="t389__col t389__col_mobile">
+                    <div class="t389__typo t389__copyright t-name t-name_xs" field="text" style="color: #000000">
+
+                    </div>
+                  </div>
+                  <div class="t389__col">
+                    <div class="t389__scroll t-align_right">
+                      <a class="t389__typo t-name t-name_xs t389_scrolltop" style="color: #000000" href="javascript:t389_scrollToTop();">
+                                  </a>
+                    </div>
+                  </div>
                 </div>
+              </div>
+            </div>
             </div>
             <div id="rec8631245" class="r" style="padding-top:30px;padding-bottom:60px;background-color:#000000; " data-animationappear="off" data-record-type="144" data-bg-color="#000000">
                 <div class="t134">
                     <div class="t-container">
-                        <div class="t-col t-col_10 t-prefix_1" style="max-width: 1200px;">
+                        <div class="t-col t-col_10 t-prefix_1" style="padding-left:0px; max-width: 1200px;">
                             <img src="https://static.tildacdn.com/tild6162-6263-4234-b662-643634393564/chainylogo160.png" class="t134__img" imgfield="img" style="max-width: 130px; width: 100%;">
                             <div class="t134__descr" field="descr" style="color:#ffffff;">
                                 <div style="color:#ffffff;" data-customstyle="yes">
