@@ -145,7 +145,7 @@
             <div id="rec8631245" class="r" style="padding-top:30px;padding-bottom:60px;background-color:#000000; " data-animationappear="off" data-record-type="144" data-bg-color="#000000">
                 <div class="t134">
                     <div class="t-container">
-                        <div class="t-col t-col_10 t-prefix_1">
+                        <div class="t-col t-col_10 t-prefix_1" style="max-width: 1200px;">
                             <img src="https://static.tildacdn.com/tild6162-6263-4234-b662-643634393564/chainylogo160.png" class="t134__img" imgfield="img" style="max-width: 130px; width: 100%;">
                             <div class="t134__descr" field="descr" style="color:#ffffff;">
                                 <div style="color:#ffffff;" data-customstyle="yes">
