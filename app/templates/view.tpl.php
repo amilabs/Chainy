@@ -50,8 +50,9 @@
                                 <ul class="t228__list">
                                     <li class="t228__list_item"><a href="https://chainy.info/#about"  style="color:#ffffff;font-size:15px;font-weight:400;font-family:Noto Sans;" data-menu-item-number="1">About</a></li>
                                     <li class="t228__list_item"><a href="https://chainy.info/#how"  style="color:#ffffff;font-size:15px;font-weight:400;font-family:Noto Sans;" data-menu-item-number="2">How it works</a></li>
-                                    <li class="t228__list_item"><a href="https://chainy.info/#hmm"  style="color:#ffffff;font-size:15px;font-weight:400;font-family:Noto Sans;" data-menu-item-number="3">Hmm?</a></li>
+                                    <li class="t228__list_item"><a href="https://chainy.info/#hmm"  style="color:#ffffff;font-size:15px;font-weight:400;font-family:Noto Sans;" data-menu-item-number="3">Why?</a></li>
                                     <li class="t228__list_item"><a href="https://chainy.info/#contact"  style="color:#ffffff;font-size:15px;font-weight:400;font-family:Noto Sans;" data-menu-item-number="4">Contact</a></li>
+                                    <li class="t228__list_item"><a href="https://chainy.info/discuss"  style="color:#ffffff;font-size:15px;font-weight:400;font-family:Noto Sans;" data-menu-item-number="4">Discuss</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -112,40 +113,53 @@
             </div>
         </div>
         <div id="footer" class="t-records" data-hook="blocks-collection-content-node" data-tilda-project-id="37571" data-tilda-page-id="306617"  >
-            <div id="rec8550719" class="r" style="background-color:#ffffff; " data-animationappear="off" data-record-type="389"   data-bg-color="#ffffff">
-                <div class="t389" id="t-footer_8550719">
-                    <div class="t389__maincontainer" style="height: 90px;">
-                        <div class="t389__content">
-                            <div class="t389__col t389__col_hiddenmobile">
-                                <div class="t389__typo t389__copyright t-name t-name_xs" field="text" style="color: #000000"></div>
-                            </div>
-                            <div class="t389__col t389__col_center t-align_center">
-                                <div class="t389__centercontainer">
-                                    <ul class="t389__list">
-                                        <li class="t389__list_item t-name t-name_xs"><a class="t389__typo" style="color: #000000" href="https://chainy.info/#about"  data-menu-item-number="1">About</a></li>
-                                        <li class="t389__list_item t-name t-name_xs"><a class="t389__typo" style="color: #000000" href="https://chainy.link/add"  data-menu-item-number="2">Create your data</a></li>
-                                        <li class="t389__list_item t-name t-name_xs"><a class="t389__typo" style="color: #000000" href="https://github.com/EverexIO/Chainy"  data-menu-item-number="3">Source code</a></li>
-                                        <li class="t389__list_item t-name t-name_xs"><a class="t389__typo" style="color: #000000" href="https:/facebook.com/everexone"  data-menu-item-number="4">Facebook</a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="t389__col t389__col_mobile">
-                                <div class="t389__typo t389__copyright t-name t-name_xs" field="text" style="color: #000000"></div>
-                            </div>
-                            <div class="t389__col">
-                                <div class="t389__scroll t-align_right">
-                                    <a class="t389__typo t-name t-name_xs t389_scrolltop" style="color: #000000" href="javascript:t389_scrollToTop();"></a>
-                                </div>
-                            </div>
-                        </div>
+            <div id="rec8550719" class="r" style="background-color:#ffffff; " data-animationappear="off" data-record-type="389" data-bg-color="#ffffff">
+            <div class="t389" id="t-footer_8550719">
+              <div class="t389__maincontainer" style="height: 90px;">
+                <div class="t389__content">
+                  <div class="t389__col t389__col_hiddenmobile">
+                    <div class="t389__typo t389__copyright t-name t-name_xs" field="text" style="color: #000000">
+
                     </div>
+                  </div>
+                  <div class="t389__col t389__col_center t-align_center">
+                            <div class="t389__centercontainer">
+                    <ul class="t389__list">
+                            <li class="t389__list_item t-name t-name_xs"><a class="t389__typo" style="color: #000000" href="/#about" data-menu-item-number="1">About</a></li>
+                            <li class="t389__list_item t-name t-name_xs"><a class="t389__typo" style="color: #000000" href="/add" data-menu-item-number="2">Create your data</a></li>
+                            <li class="t389__list_item t-name t-name_xs"><a class="t389__typo" style="color: #000000" href="https://github.com/EverexIO/Chainy" data-menu-item-number="3">Source code</a></li>
+                            <li class="t389__list_item t-name t-name_xs"><a class="t389__typo" style="color: #000000" href="/discuss" data-menu-item-number="4">Discuss</a></li>
+                            <li class="t389__list_item t-name t-name_xs"><a class="t389__typo" style="color: #000000" href="https:/facebook.com/everexone" data-menu-item-number="5">Facebook</a></li>
+
+                            </ul>
+                    </div>
+                          </div>
+                  <div class="t389__col t389__col_mobile">
+                    <div class="t389__typo t389__copyright t-name t-name_xs" field="text" style="color: #000000">
+
+                    </div>
+                  </div>
+                  <div class="t389__col">
+                    <div class="t389__scroll t-align_right">
+                      <a class="t389__typo t-name t-name_xs t389_scrolltop" style="color: #000000" href="javascript:t389_scrollToTop();">
+                                  </a>
+                    </div>
+                  </div>
                 </div>
+              </div>
             </div>
-            <div id="rec8631245" class="r" style="padding-top:30px;padding-bottom:60px;background-color:#000000; " data-animationappear="off" data-record-type="144"   data-bg-color="#000000">
+            </div>
+            <div id="rec8631245" class="r" style="padding-top:30px;padding-bottom:60px;background-color:#000000; " data-animationappear="off" data-record-type="144" data-bg-color="#000000">
                 <div class="t134">
                     <div class="t-container">
-                        <div>
-                            <img src="https://static.tildacdn.com/tild6162-6263-4234-b662-643634393564/chainylogo160.png" class="t134__img" imgfield="img" style="max-width: 130px; width: 100%;">				<div class="t134__descr" field="descr" style="color:#ffffff;"><div style="color:#ffffff;" data-customstyle="yes"><span style="font-weight: 400;">© 2016 All rights reserved.</span> <a href="https://everex.one/" style="border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: rgb(71, 194, 255); box-shadow: rgb(71, 194, 255) 0px -1px 0px 0px inset; color: rgb(255, 255, 255) !important;"><strong>Everex</strong></a> <br /><span style="font-weight: 400;">email:</span> <a href="mailto:contact@everex.one" style="border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: rgb(71, 194, 255); box-shadow: rgb(71, 194, 255) 0px -1px 0px 0px inset; color: rgb(255, 255, 255) !important;"><strong>contact@everex.one</strong></a></div></div>
+                        <div class="t-col t-col_10 t-prefix_1" style="padding-left:0px; max-width: 1200px;">
+                            <img src="https://static.tildacdn.com/tild6162-6263-4234-b662-643634393564/chainylogo160.png" class="t134__img" imgfield="img" style="max-width: 130px; width: 100%;">
+                            <div class="t134__descr" field="descr" style="color:#ffffff;">
+                                <div style="color:#ffffff;" data-customstyle="yes">
+                                    <br><span style="font-weight: 400;">© 2016 All rights reserved.</span> <a href="https://everex.one/" style="color:#ffffff !important;text-decoration: none;border-bottom: 1px solid #47c2ff;box-shadow: inset 0px -1px 0px 0px #47c2ff;-webkit-box-shadow: inset 0px -1px 0px 0px #47c2ff;-moz-box-shadow: inset 0px -1px 0px 0px #47c2ff;">Everex</a> <br><span style="font-weight: 400;">email:</span> <strong></strong><a href="mailto://contact@everex.one" style="color:#ffffff !important;text-decoration: none;border-bottom: 1px solid #47c2ff;box-shadow: inset 0px -1px 0px 0px #47c2ff;-webkit-box-shadow: inset 0px -1px 0px 0px #47c2ff;-moz-box-shadow: inset 0px -1px 0px 0px #47c2ff;"><strong>contact@everex.one</strong></a><br>
+                                    <a href="/privacy" style="color:#ffffff !important;text-decoration: none;border-bottom: 1px solid #47c2ff;box-shadow: inset 0px -1px 0px 0px #47c2ff;-webkit-box-shadow: inset 0px -1px 0px 0px #47c2ff;-moz-box-shadow: inset 0px -1px 0px 0px #47c2ff;"><strong>Privacy &amp; Terms</strong></a><strong><br><br>Donation:</strong><br><strong>ETH</strong>: 0xc2BE1C765D622BcFa3ab30bEdb508b633aB79217<br><strong>BTC</strong>: 1MKVGqyJA9YkVRuDsGCvnYVJ6ivNtfe289<br>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
