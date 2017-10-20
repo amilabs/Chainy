@@ -1,0 +1,273 @@
+.t-body {
+  margin: 0px;
+}
+
+.t-container section  {
+    color: black !important;
+}
+
+p {
+    text-align: justify !important;
+    line-height: 24px;
+}
+
+.site-block p, .site-block li  {
+    font-size:16px;
+    font-family:'Noto Sans';
+    text-align: justify !important;
+}
+
+.site-section {
+    text-align: left;
+}
+
+.site-section h1 {
+    font-weight: bold;
+    font-size: 38px;
+}
+
+.site-section-top {
+    margin-top: 90px;
+}
+
+.less500 {
+    display: none;
+}
+
+@media screen and (max-width: 500px) {
+    .less500 {
+        display: inline;
+    }
+}
+
+@media screen and (max-width: 980px) {
+    .site-section-top {
+        margin-top: 40px;
+    }
+}
+
+@media screen and (max-width: 767px) {
+    .site-section-top {
+        margin-top: 0px;
+    }
+    .site-section h1 {
+        font-size: 34px;
+    }
+}
+
+@media screen and (max-width: 639px) {
+    .site-section-top {
+        margin-top: 0px;
+    }
+    .site-section h1 {
+        font-size: 30px;
+    }
+}
+
+@media screen and (max-width: 479px) {
+    .site-section-top {
+        margin-top: 0px;
+    }
+    .site-section h1 {
+        font-size: 28px;
+    }
+    #password {
+        width:100px;
+    }
+}
+
+section {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.date-of-transaction {
+    font-size:18px;
+    line-height: 60px;
+}
+
+.blue-line {
+    background-color: #47c2ff;
+    height: 3px;
+    width: 80px;
+    margin-bottom: 14px;
+}
+
+.grey-line {
+    background-color: #f7f7f7;
+    height: 3px;
+    width: 80px;
+    margin-bottom: 14px;
+    margin-top: 28px;
+}
+
+section .store-item-icon {
+    color: rgb(71, 194, 255);
+}
+
+.t419__numberwrapper {
+  position: relative;
+  display: table-cell;
+  vertical-align: top;
+  padding-bottom: 30px;
+}
+.t419__number {
+  position: relative;
+  z-index: 1;
+}
+.t419__circle {
+  width: 38px;
+  height: 38px;
+  background: #3E72E5;
+  border-radius: 100%;
+  border: 2px solid #3E72E5;
+}
+.t419__digit {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  text-align: center;
+  -moz-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  -webkit-transform: translateY(-50%);
+  -o-transform: translateY(-50%);
+  transform: translateY(-50%);
+  color: #fff;
+}
+
+.t419__line {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  background: #3E72E5;
+  left: 50%;
+  -moz-transform: translate(-50%,0);
+  -ms-transform: translate(-50%,0);
+  -webkit-transform: translate(-50%,0);
+  -o-transform: translate(-50%,0);
+  transform: translate(-50%,0);
+}
+.t419__textwrapper {
+  display: table-cell;
+  vertical-align: top;
+  padding-left: 20px;
+  padding-bottom: 30px;
+}
+.t419__descr {
+  margin-top: 4px;
+  margin-bottom: 5px;
+}
+.t419__hide-last-line .t419__col:last-child .t419__line {
+  display: none;
+}
+.t419__hide-last-line .t419__col:last-child .t419__numberwrapper,
+.t419__hide-last-line .t419__col:last-child .t419__textwrapper {
+  padding-bottom: 0;
+}
+
+
+.triangle-border {
+  position:relative;
+  padding:15px;
+  margin:1em 0 3em;
+  border:3px solid #888;
+  color:#333;
+  background:#fff;
+  /* css3 */
+  -webkit-border-radius:10px;
+  -moz-border-radius:10px;
+  border-radius:10px;
+}
+
+.triangle-border:before {
+  content:"";
+  position:absolute;
+  bottom:-20px;
+  left:40px;
+  border-width:20px 20px 0;
+  border-style:solid;
+  border-color:#888 transparent;
+  display:block;
+  width:0;
+}
+
+.triangle-border:after {
+  content:"";
+  position:absolute;
+  bottom:-15px;
+  left:43px;
+  border-width:17px 17px 0;
+  border-style:solid;
+  border-color:#fff transparent;
+  display:block;
+  width:0;
+}
+
+.rectangle-speech-border {
+  position:relative;
+  padding:15px 15px;
+  margin:1em 0 3em;
+  border:3px solid #888;
+  text-align:center;
+  color:#333;
+  background:#fff;
+  /* css3 */
+  -webkit-border-radius:20px;
+  -moz-border-radius:20px;
+  border-radius:20px;
+}
+
+/* creates larger curve */
+.rectangle-speech-border:before {
+  content:"";
+  position:absolute;
+  z-index:10;
+  bottom:-30px;
+  left:60px;
+  width:50px;
+  height:30px;
+  border-style:solid;
+  border-width:0 3px 3px 0;
+  border-color:#888;
+  background:transparent;
+  /* css3 */
+  -webkit-border-bottom-right-radius:80px 50px;
+  -moz-border-radius-bottomright:80px 50px;
+  border-bottom-right-radius:80px 50px;
+  /* reduce the damage in FF3.0 */
+  display:block;
+}
+
+/* creates smaller curve */
+.rectangle-speech-border:after {
+  content:"";
+  position:absolute;
+  z-index:10;
+  bottom:-30px;
+  left:56px;
+  width:20px;
+  height:30px;
+  border-style:solid;
+  border-width:0 3px 3px 0;
+  border-color:#888;
+  background:transparent;
+  /* css3 */
+  -webkit-border-bottom-right-radius:40px 50px;
+  -moz-border-radius-bottomright:40px 50px;
+  border-bottom-right-radius:40px 50px;
+  /* reduce the damage in FF3.0 */
+  display:block;
+}
+
+
+/* creates a white rectangle to cover part of the oval border*/
+.rectangle-speech-border > :first-child:after {
+  content:"";
+  position:absolute;
+  bottom:-10px;
+  left:76px;
+  width:34px;
+  height:15px;
+  background:#fff;
+}

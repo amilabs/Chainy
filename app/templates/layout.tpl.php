@@ -6,15 +6,6 @@
         <base href="/">
         <title>Chainy - proof of media</title>
         <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1.0">
-        <link rel="shortcut icon" href="img/favicon.png">
-        <link rel="apple-touch-icon" href="img/icon57.png" sizes="57x57">
-        <link rel="apple-touch-icon" href="img/icon72.png" sizes="72x72">
-        <link rel="apple-touch-icon" href="img/icon76.png" sizes="76x76">
-        <link rel="apple-touch-icon" href="img/icon114.png" sizes="114x114">
-        <link rel="apple-touch-icon" href="img/icon120.png" sizes="120x120">
-        <link rel="apple-touch-icon" href="img/icon144.png" sizes="144x144">
-        <link rel="apple-touch-icon" href="img/icon152.png" sizes="152x152">
-        <link rel="apple-touch-icon" href="img/icon180.png" sizes="180x180">
         <link rel="stylesheet" href="css/bootstrap.min.css">
         <link rel="stylesheet" href="css/plugins.css">
         <link rel="stylesheet" href="css/main.css">
@@ -27,14 +18,22 @@
         </div>
         <a href="#" id="to-top"><i class="fa fa-angle-up"></i></a>
         <a href="javascript:;" id="to-bottom"><i class="fa fa-angle-down"></i></a>
-        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
         <script>!window.jQuery && document.write(decodeURI('%3Cscript src="js/jquery/jquery-1.11.1.min.js"%3E%3C/script%3E'));</script>
         <script src="js/bootstrap/bootstrap.min.js"></script>
         <script src="js/plugins.js"></script>
+        <script src="js/web3.min.js" ></script>
         <script src="js/app.js"></script>
         <script src="/js/amilabs.devkit.engine.js"></script>
         <script src="js/bitcoinjs/bitcoinjs.js" ></script>
-        <script src="js/cryptojs/core-min.js" ></script>
-        <script src="js/cryptojs/sha256.js" ></script>
+        <script src="js/cryptojs/cryptojs.min.js" ></script>
+        <script>
+          (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+          (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+          })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+          ga('create', 'UA-58688985-11', 'auto');
+          ga('send', 'pageview');
+        </script>
     </body>
 </html>
